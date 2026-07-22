@@ -17,6 +17,8 @@ export default {
     sharePostIntro: "Compartilhe este artigo:",
     sharePostOn: "Compartilhar este artigo no {{platform}}",
     sharePostViaEmail: "Compartilhar este artigo por e-mail",
+    copyLink: "Copiar link",
+    copyLinkSuccess: "Link copiado!",
     tagLabel: "Tags",
     backToTop: "Voltar ao topo",
     goBack: "Voltar",
