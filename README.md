@@ -50,6 +50,32 @@ author: LuzTech Team
 ---
 ```
 
+### Using third-party assets in posts
+
+If a post embeds or references content you do **not** own (screenshots of
+documentation, diagrams, logos, photos, code snippets, etc.), that material
+is **not** covered by this repository's
+[CC BY-NC-SA 4.0 content license](LICENSE-content). It remains the property
+of its original owner.
+
+Whenever you include or reference a third-party asset, always give explicit
+attribution inline in the post — credit the original author/owner and link
+to the source when available. Mentioning the specific license or legal
+basis (fair use, CC BY, etc.) is encouraged when it's relevant, but not
+required for every reference (e.g., a passing mention like *"inspired by
+this AWS architecture diagram"* is fine as long as the source is credited).
+
+Example:
+
+```markdown
+![Kubernetes architecture](/posts/my-post/k8s-architecture.svg)
+*Image: [Kubernetes Authors](https://kubernetes.io/docs/concepts/overview/components/).*
+```
+
+When in doubt about whether an asset can be reused, prefer creating your own
+(e.g., Excalidraw, Mermaid, tldraw) or sourcing from openly licensed
+repositories (Unsplash, Wikimedia Commons, Simple Icons, etc.).
+
 ## Branding
 
 LuzTech typography, colors, and brand guidance live in the official repository:
