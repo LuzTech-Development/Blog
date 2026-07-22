@@ -32,6 +32,10 @@ export default {
     featured: "Em destaque",
     recentPosts: "Artigos recentes",
     allPosts: "Todos os artigos",
+    tagline:
+      "Blog técnico oficial da LuzTech com artigos, tutoriais e insights de engenharia.",
+    intro:
+      "Compartilhamos o que o time de engenharia da LuzTech está aprendendo e construindo com Astro, TypeScript, Tailwind CSS, Markdown/MDX, busca estática, RSS, sitemap, geração automática de imagens Open Graph e padrões acessíveis.",
   },
   footer: {
     copyright: "Copyright",
