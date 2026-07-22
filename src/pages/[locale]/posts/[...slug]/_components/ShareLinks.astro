@@ -31,14 +31,18 @@ const items = await Promise.all(
 );
 ---
 
-<div class="flex flex-none flex-col items-center justify-center gap-2 md:items-start">
+<div
+  class="flex flex-none flex-col items-center justify-center gap-2 md:items-start"
+>
   <span class="italic">{t.post.sharePostIntro}</span>
-  <div class="flex flex-wrap items-center justify-center gap-2 md:justify-start">
+  <div
+    class="flex flex-wrap items-center justify-center gap-2 md:justify-start"
+  >
     <button
       type="button"
       class:list={[
         "share-copy-link focus-outline inline-flex items-center gap-2 rounded-full",
-        "border border-accent/40 bg-accent/10 px-3 py-1.5 text-sm font-medium",
+        "border-accent/40 bg-accent/10 border px-3 py-1.5 text-sm font-medium",
         "text-accent hover:bg-accent/20 hover:border-accent",
         "transition-colors",
       ]}
@@ -48,7 +52,7 @@ const items = await Promise.all(
       aria-label={t.post.copyLink}
     >
       <IconLink class="share-copy-icon size-4 shrink-0" />
-      <IconCheck class="share-copy-check size-4 shrink-0 hidden" />
+      <IconCheck class="share-copy-check hidden size-4 shrink-0" />
       <span class="share-copy-label">{t.post.copyLink}</span>
     </button>
     {
@@ -104,9 +108,11 @@ const items = await Promise.all(
           ta.select();
           try {
             // Deprecated but still the only sync fallback for insecure contexts.
-            (document as unknown as {
-              execCommand(cmd: string): boolean;
-            }).execCommand("copy");
+            (
+              document as unknown as {
+                execCommand(cmd: string): boolean;
+              }
+            ).execCommand("copy");
           } finally {
             ta.remove();
           }

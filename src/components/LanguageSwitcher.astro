@@ -17,7 +17,9 @@ const activeLocale = isLocale(Astro.currentLocale)
 const pathWithoutBase = stripBase(Astro.url.pathname);
 const targets = LOCALES.map(locale => ({
   locale,
-  href: getAssetPath(swapLocaleInPath(pathWithoutBase, locale).replace(/^\//, "")),
+  href: getAssetPath(
+    swapLocaleInPath(pathWithoutBase, locale).replace(/^\//, "")
+  ),
   short: LOCALE_SHORT_LABELS[locale],
   label: LOCALE_LABELS[locale],
   isActive: locale === activeLocale,
@@ -39,7 +41,7 @@ const targets = LOCALES.map(locale => ({
         aria-current={isActive ? "true" : undefined}
         data-locale={locale}
         class:list={[
-          "focus-outline rounded px-2 py-1 text-sm font-semibold uppercase tracking-wide",
+          "focus-outline rounded px-2 py-1 text-sm font-semibold tracking-wide uppercase",
           isActive
             ? "text-accent underline decoration-dashed underline-offset-4"
             : "hover:text-accent opacity-75 hover:opacity-100",
