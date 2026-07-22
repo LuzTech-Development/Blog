@@ -1,7 +1,7 @@
 # LuzTech Blog
 
-[![Astro](https://img.shields.io/badge/Astro-5-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Astro](https://img.shields.io/badge/Astro-7-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![License: CC%20BY--NC--SA%204.0](https://img.shields.io/badge/Content-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-content)
 
@@ -9,7 +9,7 @@ Official LuzTech technical blog — engineering articles, tutorials and insights
 
 ## Features
 
-- AstroPaper-based blog foundation adapted for LuzTech
+- AstroPaper v6-based blog foundation adapted for LuzTech
 - Markdown and MDX content support
 - Tag pages, archives, pagination, and static search with Pagefind
 - RSS feed, sitemap, SEO metadata, and automatic Open Graph images
