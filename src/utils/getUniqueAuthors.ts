@@ -21,9 +21,7 @@ export type Author = {
  *   collapse). Kept intentionally simple: two authors with the same slug are
  *   assumed to be the same person, and their first-seen `name` + `email` wins.
  */
-export function getUniqueAuthors(
-  posts: CollectionEntry<"posts">[]
-): Author[] {
+export function getUniqueAuthors(posts: CollectionEntry<"posts">[]): Author[] {
   const seen = new Map<string, Author>();
   for (const post of posts.filter(postFilter)) {
     const name = post.data.author;

@@ -3,12 +3,7 @@ import { ClientRouter } from "astro:transitions";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath, stripBase, stripLocale } from "@/utils/withBase";
-import {
-  LOCALES,
-  isLocale,
-  DEFAULT_LOCALE,
-  localeToPath,
-} from "@/utils/i18n";
+import { LOCALES, isLocale, DEFAULT_LOCALE, localeToPath } from "@/utils/i18n";
 import config from "@/config";
 import "@/styles/global.css";
 import fontRegularHref from "@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff2?url";
@@ -40,7 +35,10 @@ const activeLocale = isLocale(Astro.currentLocale)
 // route under every configured locale for the hreflang alternates.
 const relativePath = stripBase(Astro.url.pathname);
 const logicalPath = stripLocale(relativePath, localeToPath(activeLocale));
-const rssHref = getRelativeLocaleUrl(activeLocale, "rss.xml").replace(/\/$/, "");
+const rssHref = getRelativeLocaleUrl(activeLocale, "rss.xml").replace(
+  /\/$/,
+  ""
+);
 
 const alternates = LOCALES.map(locale => ({
   hreflang: locale,
@@ -86,9 +84,11 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
     <meta name="author" content={site.author} />
     <link rel="sitemap" href={getAssetPath("sitemap-index.xml")} />
 
-    {alternates.map(alt => (
-      <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
-    ))}
+    {
+      alternates.map(alt => (
+        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+      ))
+    }
     <link rel="alternate" hreflang="x-default" href={xDefaultHref} />
 
     <meta property="og:type" content="website" />
@@ -98,9 +98,11 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImageURL} />
     <meta property="og:locale" content={activeLocale.replace("-", "_")} />
-    {LOCALES.filter(l => l !== activeLocale).map(l => (
-      <meta property="og:locale:alternate" content={l.replace("-", "_")} />
-    ))}
+    {
+      LOCALES.filter(l => l !== activeLocale).map(l => (
+        <meta property="og:locale:alternate" content={l.replace("-", "_")} />
+      ))
+    }
 
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />

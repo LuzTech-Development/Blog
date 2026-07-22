@@ -1,5 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { Image } from "astro:assets";
 import IconUnderline from "@/assets/icons/IconUnderline.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
@@ -7,14 +8,11 @@ import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconX from "@/assets/icons/IconX.svg";
+import luztechMark from "@/assets/luztech-mark.png";
 import LinkButton from "./LinkButton.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { stripBase, stripLocale } from "@/utils/withBase";
-import {
-  DEFAULT_LOCALE,
-  isLocale,
-  localeToPath,
-} from "@/utils/i18n";
+import { DEFAULT_LOCALE, isLocale, localeToPath } from "@/utils/i18n";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
@@ -51,24 +49,47 @@ const isActive = (path: string) => {
 </a>
 
 <header
-  class="app-layout flex flex-col items-center justify-between sm:flex-row"
+  class="app-layout flex flex-col items-center justify-between lg:flex-row"
 >
   <div
-    class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6"
+    class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 lg:items-center lg:py-6"
   >
     <a
       href={getRelativeLocaleUrl(locale, "")}
-      class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
+      aria-label={site.title}
+      class="absolute inline-flex items-center gap-2 py-1 lg:static lg:my-auto lg:gap-3"
     >
-      {site.title}
+      {
+        /*
+        Brandmark = the shared LuzTech "clean" icon (inverted color variant
+        — the mark already ships with the gradient tile built in, per
+        LuzTech-Development/Typography) followed by the "LuzTech Blog"
+        wordmark. Astro's <Image> handles hashing, WebP/AVIF conversion,
+        and hi-DPI srcset from the single 512x source.
+      */
+      }
+      <Image
+        src={luztechMark}
+        alt=""
+        width={40}
+        height={40}
+        densities={[1, 2, 3]}
+        loading="eager"
+        class="size-10 rounded-lg lg:size-11"
+      />
+      <span
+        class="text-xl leading-none font-semibold whitespace-nowrap sm:text-2xl lg:text-xl xl:text-2xl"
+      >
+        LuzTech Blog
+      </span>
     </a>
     <nav
       id="nav-menu"
-      class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"
+      class="flex w-full flex-col items-center lg:ms-2 lg:flex-row lg:justify-end lg:space-x-3 lg:py-0"
     >
       <button
         id="menu-btn"
-        class="focus-outline self-end p-2 sm:hidden"
+        class="focus-outline self-end p-2 lg:hidden"
         aria-label={t.a11y.openMenu}
         aria-expanded="false"
         aria-controls="menu-items"
@@ -80,7 +101,7 @@ const isActive = (path: string) => {
       </button>
       <ul
         id="menu-items"
-        class="[&>li>a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 sm:[&>li]:h-8 [&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium sm:[&>li>a]:px-2 sm:[&>li>a]:py-1"
+        class="[&>li>a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 lg:mt-0 lg:flex lg:w-auto lg:gap-x-3 lg:gap-y-0 lg:[&>li]:h-8 [&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium lg:[&>li>a]:px-2 lg:[&>li>a]:py-1"
       >
         <li class="col-span-2">
           <a
@@ -120,18 +141,18 @@ const isActive = (path: string) => {
               <LinkButton
                 href={getRelativeLocaleUrl(locale, "archives")}
                 class:list={[
-                  "focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0",
+                  "focus-outline flex size-full justify-center p-3 lg:relative lg:size-8 lg:p-0",
                   { "active-nav": isActive("/archives") },
                 ]}
                 title={t.nav.archives}
                 aria-label={t.nav.archives}
               >
-                <IconArchive class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" />
-                <span class="sm:sr-only">{t.nav.archives}</span>
+                <IconArchive class="hidden lg:absolute lg:top-1/2 lg:left-1/2 lg:block lg:size-6 lg:-translate-x-1/2 lg:-translate-y-1/2" />
+                <span class="lg:sr-only">{t.nav.archives}</span>
                 {isActive("/archives") && (
                   <IconUnderline
                     aria-hidden="true"
-                    class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:w-6"
+                    class="scale-125 max-lg:hidden lg:absolute lg:bottom-0 lg:w-6"
                   />
                 )}
               </LinkButton>
@@ -152,7 +173,7 @@ const isActive = (path: string) => {
                 {isActive("/search") && (
                   <IconUnderline
                     aria-hidden="true"
-                    class="absolute bottom-0 w-6 scale-125 max-sm:inset-s-2"
+                    class="absolute bottom-0 w-6 scale-125 max-lg:inset-s-2"
                   />
                 )}
               </LinkButton>
@@ -164,7 +185,7 @@ const isActive = (path: string) => {
             <li class="col-span-1 flex items-center justify-center">
               <button
                 id="theme-btn"
-                class="focus-outline hover:[&>svg]:stroke-accent relative size-12 p-4 sm:size-8"
+                class="focus-outline hover:[&>svg]:stroke-accent relative size-12 p-4 lg:size-8"
                 title={t.a11y.toggleTheme}
                 aria-label="auto"
                 aria-live="polite"
@@ -175,7 +196,7 @@ const isActive = (path: string) => {
             </li>
           )
         }
-        <li class="col-span-2 flex items-center justify-center sm:col-span-1">
+        <li class="col-span-2 flex items-center justify-center lg:col-span-1">
           <LanguageSwitcher />
         </li>
       </ul>

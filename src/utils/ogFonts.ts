@@ -19,14 +19,10 @@ export type OgFont = {
 export async function loadOgFonts(): Promise<OgFont[]> {
   const [regular, bold] = await Promise.all([
     readFile(
-      require.resolve(
-        "@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff"
-      )
+      require.resolve("@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff")
     ),
     readFile(
-      require.resolve(
-        "@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff"
-      )
+      require.resolve("@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff")
     ),
   ]);
 
