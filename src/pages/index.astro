@@ -1,137 +1,107 @@
 ---
-import { getCollection } from "astro:content";
+/**
+ * Root landing page.
+ *
+ * This page never renders content — it's a client-side language detector.
+ * Detection order:
+ *   1) `localStorage["preferred-locale"]` if the user explicitly picked one
+ *   2) `navigator.languages` (any `pt-*` collapses to `pt-BR`, `en-*` to `en-US`)
+ *   3) Fallback to `en-US`
+ *
+ * Every localized page has hreflang alternates so search engines can pick the
+ * right variant without depending on this JS-based redirect.
+ */
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconRss from "@/assets/icons/IconRss.svg";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
-import Card from "@/components/Card.astro";
-import LinkButton from "@/components/LinkButton.astro";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { useTranslations } from "@/i18n";
+import { getAssetPath } from "@/utils/withBase";
+import {
+  LOCALES,
+  LOCALE_LABELS,
+  LOCALE_URL_PATH,
+  DEFAULT_LOCALE,
+} from "@/utils/i18n";
 import config from "@/config";
 
-const { socials, posts: postsConfig } = config;
-
-const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
-
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-const homePath = getRelativeLocaleUrl(locale, "");
+const alternates = LOCALES.map(locale => ({
+  hreflang: locale,
+  href: new URL(getRelativeLocaleUrl(locale, ""), Astro.site ?? Astro.url).href,
+  label: LOCALE_LABELS[locale],
+}));
+const defaultTarget = getRelativeLocaleUrl(DEFAULT_LOCALE, "");
+// The detector needs to map canonical codes ("en-US") to their URL path
+// segment ("en-us") because Astro's routes are lowercase.
+const supportedJson = JSON.stringify(LOCALE_URL_PATH);
 ---
 
-<Layout>
-  <Header />
-  <main
-    id="main-content"
-    data-layout="index"
-    data-home-path={homePath}
-    class="app-layout"
-  >
-    <section id="hero" class="pt-8 pb-8">
-      <div class="hero-mesh overflow-hidden rounded-3xl border border-white/20 px-6 py-10 text-white shadow-lg sm:px-10 sm:py-14">
-        <div class="max-w-2xl">
-          <div class="mb-4 flex flex-wrap items-center gap-3">
-            <h1 class="inline-block text-4xl sm:text-5xl">LuzTech Blog</h1>
-            <a
-              target="_blank"
-              href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-              class="inline-block"
-              aria-label="RSS Feed"
-              title="RSS Feed"
-            >
-              <IconRss width={20} height={20} class="scale-125 stroke-white stroke-3 rtl:-rotate-90" />
-              <span class="sr-only">RSS Feed</span>
-            </a>
-          </div>
-
-          <p class="text-base/7 text-white/90 sm:text-lg/8">
-            Official LuzTech technical blog for engineering articles, tutorials and insights.
-          </p>
-          <p class="mt-3 text-white/80">
-            We share what the LuzTech engineering team is learning and building with Astro,
-            TypeScript, Tailwind CSS, Markdown/MDX, static search, RSS, sitemap support,
-            automatic Open Graph images, and accessible defaults.
-          </p>
-
-          <div class="mt-6 flex flex-wrap gap-4">
-            <LinkButton
-              href={getRelativeLocaleUrl(locale, "posts")}
-              class="rounded-full border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20 hover:text-white"
-            >
-              {t.home.allPosts}
-              <IconArrowRight class="inline-block" />
-            </LinkButton>
-            {
-              socials.length > 0 && (
-                <LinkButton
-                  href={socials[0].url}
-                  target="_blank"
-                  rel="noreferrer"
-                  class="rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 hover:text-white"
-                >
-                  GitHub
-                </LinkButton>
-              )
+<!doctype html>
+<html lang={DEFAULT_LOCALE}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{config.site.title}</title>
+    <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
+    <link rel="icon" href={getAssetPath("favicon.ico")} />
+    <link rel="canonical" href={new URL("/", Astro.site ?? Astro.url).href} />
+    {
+      alternates.map(alt => (
+        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+      ))
+    }
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(defaultTarget, Astro.site ?? Astro.url).href}
+    />
+    <meta http-equiv="refresh" content={`0; url=${defaultTarget}`} />
+    <script is:inline define:vars={{ supportedJson, defaultTarget }}>
+      // @ts-nocheck
+      (function () {
+        try {
+          // Map of canonical BCP-47 code -> URL path segment (lowercase).
+          const localeToPath = JSON.parse(supportedJson);
+          const stored = localStorage.getItem("preferred-locale");
+          const pick = tag => {
+            if (!tag) return null;
+            if (localeToPath[tag]) return tag;
+            const lower = tag.toLowerCase();
+            if (lower.startsWith("pt")) return "pt-BR";
+            if (lower.startsWith("en")) return "en-US";
+            return null;
+          };
+          let target = pick(stored);
+          if (!target) {
+            const candidates =
+              (navigator.languages && navigator.languages.length
+                ? navigator.languages
+                : [navigator.language]) || [];
+            for (const c of candidates) {
+              target = pick(c);
+              if (target) break;
             }
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-4 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
-          ]}
-        >
-          <h2 class="text-2xl tracking-wide">{t.home.featured}</h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-8 pb-6">
-          <h2 class="text-2xl tracking-wide">{t.home.recentPosts}</h2>
-          <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
-        {t.home.allPosts}
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
-    </div>
-  </main>
-  <Footer />
-</Layout>
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset;
-    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-    if (indexLayout?.layout) {
-      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
-    }
-  });
-</script>
+          }
+          if (!target) target = "en-US";
+          const path = localeToPath[target] || target.toLowerCase();
+          const base = document.baseURI.replace(/\/?$/, "/");
+          location.replace(base + path + "/");
+        } catch (_) {
+          location.replace(defaultTarget);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <h1>{config.site.title}</h1>
+      <p>Select a language / Selecione um idioma:</p>
+      <ul>
+        {
+          alternates.map(alt => (
+            <li>
+              <a href={alt.href}>{alt.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </noscript>
+  </body>
+</html>

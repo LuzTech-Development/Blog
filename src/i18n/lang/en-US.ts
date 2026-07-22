@@ -32,6 +32,10 @@ export default {
     featured: "Featured",
     recentPosts: "Recent Posts",
     allPosts: "All Posts",
+    tagline:
+      "Official LuzTech technical blog for engineering articles, tutorials and insights.",
+    intro:
+      "We share what the LuzTech engineering team is learning and building with Astro, TypeScript, Tailwind CSS, Markdown/MDX, static search, RSS, sitemap support, automatic Open Graph images, and accessible defaults.",
   },
   footer: {
     copyright: "Copyright",

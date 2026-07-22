@@ -18,5 +18,10 @@ export default [
     },
   },
   { rules: { "no-console": "error" } },
+  {
+    // CLI helper scripts print to the terminal by design.
+    files: ["scripts/**/*.{js,mjs,cjs,ts}"],
+    rules: { "no-console": "off" },
+  },
   { ignores: ["dist/**", ".astro/**", "public/pagefind/**"] },
 ];
