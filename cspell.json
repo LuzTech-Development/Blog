@@ -1,0 +1,40 @@
+{
+  "version": "0.2",
+  "language": "en,pt,pt-BR",
+  "words": [
+    "astro",
+    "astropaper",
+    "bcrypt",
+    "grotesk",
+    "hreflang",
+    "kebabcase",
+    "luztech",
+    "mdx",
+    "opengraph",
+    "pagefind",
+    "pubdatetime",
+    "shiki",
+    "shikijs",
+    "sitemap",
+    "slugify",
+    "tailwindcss",
+    "vercel"
+  ],
+  "overrides": [
+    {
+      "filename": "**/pt-BR/**",
+      "language": "en,pt,pt-BR"
+    },
+    {
+      "filename": "**/en-US/**",
+      "language": "en"
+    }
+  ],
+  "ignorePaths": [
+    "dist/**",
+    ".astro/**",
+    "node_modules/**",
+    "pnpm-lock.yaml",
+    "public/pagefind/**"
+  ]
+}
