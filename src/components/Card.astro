@@ -1,16 +1,20 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getPostUrl } from "@/utils/getPostPaths";
+import { getPostAuthor } from "@/utils/getUniqueAuthors";
 import { toTransitionName } from "@/utils/toTransitionName";
+import AuthorLink from "./AuthorLink.astro";
 import Datetime from "./Datetime.astro";
 
 type Props = {
   variant?: "h2" | "h3";
 } & CollectionEntry<"posts">;
 
-const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const post = Astro.props;
+const { variant: Heading = "h2", id, data, filePath } = post;
 
 const { title, description, ...props } = data;
+const author = getPostAuthor(post);
 ---
 
 <li class="my-6">
@@ -26,6 +30,18 @@ const { title, description, ...props } = data;
       {title}
     </Heading>
   </a>
-  <Datetime {...props} />
+  <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+    <Datetime {...props} />
+    {
+      author && (
+        <AuthorLink
+          slug={author.slug}
+          name={author.name}
+          email={author.email}
+          size="sm"
+        />
+      )
+    }
+  </div>
   <p>{description}</p>
 </li>

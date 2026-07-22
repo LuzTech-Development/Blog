@@ -5,6 +5,7 @@ export default {
     home: "Início",
     posts: "Artigos",
     tags: "Tags",
+    authors: "Autores",
     about: "Sobre",
     archives: "Arquivo",
     search: "Buscar",
@@ -12,6 +13,7 @@ export default {
   post: {
     publishedAt: "Publicado em",
     updatedAt: "Atualizado em",
+    byAuthor: "Por",
     sharePostIntro: "Compartilhe este artigo:",
     sharePostOn: "Compartilhar este artigo no {{platform}}",
     sharePostViaEmail: "Compartilhar este artigo por e-mail",
@@ -47,6 +49,12 @@ export default {
 
     tagsTitle: "Tags",
     tagsDesc: "Todas as tags utilizadas nos artigos.",
+
+    authorTitle: "Autor",
+    authorDesc: "Todos os artigos escritos por",
+
+    authorsTitle: "Autores",
+    authorsDesc: "Todas as pessoas que já contribuíram com o blog.",
 
     postsTitle: "Artigos",
     postsDesc: "Todos os artigos publicados.",

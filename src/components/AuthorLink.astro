@@ -1,0 +1,64 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { DEFAULT_LOCALE, isLocale } from "@/utils/i18n";
+import { gravatarUrl } from "@/utils/gravatar";
+
+type Props = {
+  slug: string;
+  name: string;
+  email: string | null | undefined;
+  size?: "sm" | "md";
+  /** Extra classes appended to the outer <a>. */
+  class?: string;
+};
+
+const {
+  slug,
+  name,
+  email,
+  size = "sm",
+  class: className = "",
+} = Astro.props;
+
+const locale = isLocale(Astro.currentLocale)
+  ? Astro.currentLocale
+  : DEFAULT_LOCALE;
+
+// Serve Gravatar images at 2x the visible pixel size so they stay crisp on
+// hi-DPI displays. The `s=` parameter is the source width in pixels.
+const avatarPx = size === "md" ? 40 : 24;
+const avatarSrc = gravatarUrl(email ?? undefined, avatarPx * 2);
+const avatarClass =
+  size === "md" ? "size-10" : "size-6";
+const textClass = size === "md" ? "text-base" : "text-sm";
+
+const href = getRelativeLocaleUrl(locale, `authors/${slug}/`);
+---
+
+<a
+  href={href}
+  rel="author"
+  data-pagefind-filter="author"
+  class:list={[
+    "inline-flex items-center gap-2 align-middle",
+    "text-muted-foreground hover:text-accent focus-visible:text-accent",
+    "decoration-dashed underline-offset-4 hover:underline",
+    "focus-visible:no-underline focus-visible:underline-offset-0",
+    textClass,
+    className,
+  ]}
+>
+  <img
+    src={avatarSrc}
+    alt=""
+    width={avatarPx}
+    height={avatarPx}
+    loading="lazy"
+    decoding="async"
+    class:list={[
+      "shrink-0 rounded-full border border-border bg-muted",
+      avatarClass,
+    ]}
+  />
+  <span class="font-medium">{name}</span>
+</a>
