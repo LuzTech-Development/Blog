@@ -185,8 +185,9 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
     </script>
     <script is:inline data-astro-rerun>
       function setupRouteLoadingIndicator() {
-        if (window.__routeLoadingBound) return;
-        window.__routeLoadingBound = true;
+        const routeLoadingKey = "__luztechBlogRouteLoadingBound";
+        if (window[routeLoadingKey]) return;
+        window[routeLoadingKey] = true;
 
         const indicator = document.getElementById("route-loading-indicator");
         const bar = document.getElementById("route-loading-bar");
@@ -197,7 +198,7 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
         let progress = 0;
         let rafId = 0;
         let isLoading = false;
-        let resetTimer = 0;
+        let resetTimer = null;
 
         const setProgress = value => {
           bar.style.transform = `scaleX(${Math.max(0, Math.min(1, value / 100))})`;
@@ -211,7 +212,10 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
         };
 
         const start = () => {
-          window.clearTimeout(resetTimer);
+          if (resetTimer !== null) {
+            window.clearTimeout(resetTimer);
+            resetTimer = null;
+          }
           window.cancelAnimationFrame(rafId);
           isLoading = true;
           progress = 12;
@@ -232,6 +236,7 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
             indicator.classList.add("opacity-0");
             progress = 0;
             setProgress(progress);
+            resetTimer = null;
           }, 240);
         };
 
