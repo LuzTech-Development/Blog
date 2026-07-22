@@ -1,8 +1,4 @@
-import {
-  defineConfig,
-  envField,
-  svgoOptimizer,
-} from "astro/config";
+import { defineConfig, envField, svgoOptimizer } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
@@ -87,6 +83,6 @@ export default defineConfig({
     svgOptimizer: svgoOptimizer(),
   },
   server: {
-    port: 3000
-  }
+    port: 3000,
+  },
 });

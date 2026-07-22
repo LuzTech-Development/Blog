@@ -52,8 +52,7 @@
     radial-gradient(at 0% 0%, #00ff9d 0%, transparent 50%),
     radial-gradient(at 100% 0%, #69dd96 0%, transparent 50%),
     radial-gradient(at 0% 100%, #4665c3 0%, transparent 50%),
-    radial-gradient(at 100% 100%, #1f6fef 0%, transparent 50%),
-    #1f6fef;
+    radial-gradient(at 100% 100%, #1f6fef 0%, transparent 50%), #1f6fef;
 }
 
 :target {
