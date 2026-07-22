@@ -5,7 +5,9 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Datetime from "@/components/Datetime.astro";
 import Tag from "@/components/Tag.astro";
+import AuthorLink from "@/components/AuthorLink.astro";
 import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
+import { getPostAuthor } from "@/utils/getUniqueAuthors";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
 import {
@@ -16,6 +18,7 @@ import {
 } from "@/utils/i18n";
 import { slugifyStr } from "@/utils/slugify";
 import { toTransitionName } from "@/utils/toTransitionName";
+import { useTranslations } from "@/i18n";
 import EditPost from "./_components/EditPost.astro";
 import ShareLinks from "./_components/ShareLinks.astro";
 import BackButton from "./_components/BackButton.astro";
@@ -72,6 +75,7 @@ type Props = {
 
 const { post, prevPost, nextPost } = Astro.props;
 const locale = assertLocaleParam(Astro.params.locale);
+const t = useTranslations(locale);
 
 const {
   title,
@@ -84,6 +88,8 @@ const {
   tags,
   hideEditPost,
 } = post.data;
+
+const author = getPostAuthor(post);
 
 const { Content } = await render(post);
 
@@ -132,8 +138,26 @@ const ogImage = ogImageUrl
       {title}
     </h1>
 
-    <div class="my-2 flex items-center gap-2">
+    <div class="my-2 flex flex-wrap items-center gap-x-3 gap-y-1">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      {
+        author && (
+          <>
+            <span aria-hidden="true" class="text-muted-foreground">
+              |
+            </span>
+            <span class="text-muted-foreground text-sm sm:text-base">
+              {t.post.byAuthor}
+            </span>
+            <AuthorLink
+              slug={author.slug}
+              name={author.name}
+              email={author.email}
+              size="md"
+            />
+          </>
+        )
+      }
       <span
         aria-hidden="true"
         class:list={[

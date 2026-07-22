@@ -40,7 +40,7 @@ const activeLocale = isLocale(Astro.currentLocale)
 // route under every configured locale for the hreflang alternates.
 const relativePath = stripBase(Astro.url.pathname);
 const logicalPath = stripLocale(relativePath, localeToPath(activeLocale));
-const rssHref = getRelativeLocaleUrl(activeLocale, "rss.xml");
+const rssHref = getRelativeLocaleUrl(activeLocale, "rss.xml").replace(/\/$/, "");
 
 const alternates = LOCALES.map(locale => ({
   hreflang: locale,
@@ -114,6 +114,9 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
       title={site.title}
       href={new URL(rssHref, Astro.site)}
     />
+
+    <link rel="preconnect" href="https://www.gravatar.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.gravatar.com" />
 
     <meta name="theme-color" content="" />
 

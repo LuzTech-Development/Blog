@@ -1,0 +1,46 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import AuthorLink from "@/components/AuthorLink.astro";
+import { getUniqueAuthors } from "@/utils/getUniqueAuthors";
+import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
+import { assertLocaleParam, getStaticLocalePaths } from "@/utils/i18n";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+export const getStaticPaths = getStaticLocalePaths;
+
+const locale = assertLocaleParam(Astro.params.locale);
+const t = useTranslations(locale);
+
+const posts = await getLocalizedPosts(locale);
+const authors = getUniqueAuthors(posts);
+---
+
+<Layout title={`${t.pages.authorsTitle} | ${config.site.title}`}>
+  <Header />
+
+  <Breadcrumb />
+
+  <Main pageTitle={t.pages.authorsTitle} pageDesc={t.pages.authorsDesc}>
+    <ul class="mt-4 flex flex-col gap-4">
+      {
+        authors.map(author => (
+          <li>
+            <AuthorLink
+              slug={author.slug}
+              name={author.name}
+              email={author.email}
+              size="md"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </Main>
+
+  <Footer />
+</Layout>

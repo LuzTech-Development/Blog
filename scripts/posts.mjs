@@ -98,17 +98,26 @@ function readDefaultAuthor() {
   return "LuzTech Development";
 }
 
-function getAuthor() {
+function getGitConfig(key) {
   try {
-    const name = execSync("git config user.name", {
+    const value = execSync(`git config ${key}`, {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
     }).trim();
-    if (name) return name;
+    return value || null;
   } catch {
-    // git missing or key unset — fall through
+    return null;
   }
+}
+
+function getAuthor() {
+  const name = getGitConfig("user.name");
+  if (name) return name;
   return readDefaultAuthor();
+}
+
+function getAuthorEmail() {
+  return getGitConfig("user.email");
 }
 
 function makePrompt(question, choices) {
@@ -130,7 +139,14 @@ function makePrompt(question, choices) {
   });
 }
 
-function frontmatter({ title, description, pubDatetime, author, tags = ["others"] }) {
+function frontmatter({
+  title,
+  description,
+  pubDatetime,
+  author,
+  authorEmail,
+  tags = ["others"],
+}) {
   const tagLines = tags.map(t => `  - ${t}`).join("\n");
   return [
     "---",
@@ -138,6 +154,7 @@ function frontmatter({ title, description, pubDatetime, author, tags = ["others"
     `description: ${description}`,
     `pubDatetime: ${pubDatetime}`,
     `author: ${author}`,
+    ...(authorEmail ? [`authorEmail: ${authorEmail}`] : []),
     "tags:",
     tagLines,
     "draft: true",
@@ -165,6 +182,7 @@ async function cmdNew(args) {
   const ext = mdx ? "mdx" : "md";
   const pubDatetime = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   const author = getAuthor();
+  const authorEmail = getAuthorEmail();
 
   const existing = await findPair(slug);
   if (existing.length) {
@@ -180,6 +198,7 @@ async function cmdNew(args) {
         description: "TODO: short summary shown in listings and OG cards.",
         pubDatetime,
         author,
+        authorEmail,
       }),
       `Write the English version of "${title}" here.`,
       "",
@@ -192,6 +211,7 @@ async function cmdNew(args) {
         description: "TODO: descrição curta mostrada nas listagens e OG cards.",
         pubDatetime,
         author,
+        authorEmail,
       }),
       `Escreva a versão em português de "${title}" aqui.`,
       "",

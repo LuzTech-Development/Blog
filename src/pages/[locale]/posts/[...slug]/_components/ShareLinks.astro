@@ -1,4 +1,6 @@
 ---
+import IconLink from "@/assets/icons/IconLink.svg";
+import IconCheck from "@/assets/icons/IconCheck.svg";
 import LinkButton from "@/components/LinkButton.astro";
 import { tplStr, useTranslations } from "@/i18n";
 import config from "@/config";
@@ -29,26 +31,103 @@ const items = await Promise.all(
 );
 ---
 
-{
-  items.some(({ Icon }) => Icon) && (
-    <div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start">
-      <span class="italic">{t.post.sharePostIntro}</span>
-      <div class="text-center">
-        {items.map(({ url, title, Icon }) =>
-          Icon ? (
-            <LinkButton
-              href={`${url}${pageUrl}`}
-              class="scale-90 p-2 hover:rotate-6 sm:p-1"
-              title={title}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Icon class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />
-              <span class="sr-only">{title}</span>
-            </LinkButton>
-          ) : null
-        )}
-      </div>
-    </div>
-  )
-}
+<div class="flex flex-none flex-col items-center justify-center gap-2 md:items-start">
+  <span class="italic">{t.post.sharePostIntro}</span>
+  <div class="flex flex-wrap items-center justify-center gap-2 md:justify-start">
+    <button
+      type="button"
+      class:list={[
+        "share-copy-link focus-outline inline-flex items-center gap-2 rounded-full",
+        "border border-accent/40 bg-accent/10 px-3 py-1.5 text-sm font-medium",
+        "text-accent hover:bg-accent/20 hover:border-accent",
+        "transition-colors",
+      ]}
+      data-page-url={pageUrl.toString()}
+      data-label-copy={t.post.copyLink}
+      data-label-success={t.post.copyLinkSuccess}
+      aria-label={t.post.copyLink}
+    >
+      <IconLink class="share-copy-icon size-4 shrink-0" />
+      <IconCheck class="share-copy-check size-4 shrink-0 hidden" />
+      <span class="share-copy-label">{t.post.copyLink}</span>
+    </button>
+    {
+      items.map(({ url, title, Icon }) =>
+        Icon ? (
+          <LinkButton
+            href={`${url}${pageUrl}`}
+            class="scale-90 p-2 hover:rotate-6 sm:p-1"
+            title={title}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />
+            <span class="sr-only">{title}</span>
+          </LinkButton>
+        ) : null
+      )
+    }
+  </div>
+</div>
+
+<script>
+  function wireCopyLink() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>(
+      "button.share-copy-link"
+    );
+    buttons.forEach(btn => {
+      if (btn.dataset.wired === "true") return;
+      btn.dataset.wired = "true";
+
+      const label = btn.querySelector<HTMLSpanElement>(".share-copy-label");
+      const icon = btn.querySelector<SVGElement>(".share-copy-icon");
+      const check = btn.querySelector<SVGElement>(".share-copy-check");
+      const copyText = btn.dataset.labelCopy ?? "Copy link";
+      const successText = btn.dataset.labelSuccess ?? "Link copied!";
+
+      let resetTimer: number | undefined;
+
+      btn.addEventListener("click", async () => {
+        const url = btn.dataset.pageUrl ?? window.location.href;
+        try {
+          await navigator.clipboard.writeText(url);
+        } catch {
+          // Clipboard API unavailable (insecure context, old browser). Fall
+          // back to a temporary textarea + execCommand("copy") — legacy but
+          // still supported everywhere the modern API isn't.
+          const ta = document.createElement("textarea");
+          ta.value = url;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "absolute";
+          ta.style.left = "-9999px";
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            // Deprecated but still the only sync fallback for insecure contexts.
+            (document as unknown as {
+              execCommand(cmd: string): boolean;
+            }).execCommand("copy");
+          } finally {
+            ta.remove();
+          }
+        }
+
+        if (label) label.textContent = successText;
+        icon?.classList.add("hidden");
+        check?.classList.remove("hidden");
+        btn.setAttribute("aria-label", successText);
+
+        window.clearTimeout(resetTimer);
+        resetTimer = window.setTimeout(() => {
+          if (label) label.textContent = copyText;
+          check?.classList.add("hidden");
+          icon?.classList.remove("hidden");
+          btn.setAttribute("aria-label", copyText);
+        }, 1800);
+      });
+    });
+  }
+
+  wireCopyLink();
+  document.addEventListener("astro:page-load", wireCopyLink);
+</script>
