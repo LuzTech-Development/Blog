@@ -1,7 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { DEFAULT_LOCALE, isLocale } from "@/utils/i18n";
-import { gravatarUrl } from "@/utils/gravatar";
+import { gravatarUrl, gravatarSrcSet } from "@/utils/gravatar";
 
 type Props = {
   slug: string;
@@ -24,10 +24,15 @@ const locale = isLocale(Astro.currentLocale)
   ? Astro.currentLocale
   : DEFAULT_LOCALE;
 
-// Serve Gravatar images at 2x the visible pixel size so they stay crisp on
-// hi-DPI displays. The `s=` parameter is the source width in pixels.
+// Avatars are tiny (24–40 px) and served by Gravatar's own CDN in the exact
+// requested size (`?s=`). Using Astro's <Image /> here would download every
+// avatar at build time, freeze it in the bundle, and break the "user updates
+// their Gravatar and it reflects immediately" behaviour — for a payload gain
+// measured in ~1–3 KB per avatar. Preconnect + srcset covers the real perf
+// wins without giving up live avatars.
 const avatarPx = size === "md" ? 40 : 24;
-const avatarSrc = gravatarUrl(email ?? undefined, avatarPx * 2);
+const avatarSrc = gravatarUrl(email ?? undefined, avatarPx);
+const avatarSrcSet = gravatarSrcSet(email ?? undefined, avatarPx);
 const avatarClass =
   size === "md" ? "size-10" : "size-6";
 const textClass = size === "md" ? "text-base" : "text-sm";
@@ -48,13 +53,25 @@ const href = getRelativeLocaleUrl(locale, `authors/${slug}/`);
     className,
   ]}
 >
+  {/*
+    Rationale: keep the native <img> here instead of Astro's <Image />.
+    Gravatar's CDN already returns the exact pixel size we request via `?s=`,
+    the avatars are 24–40 px (webp/avif savings are ~1–3 KB per image), and
+    <Image /> would download every avatar at build time — freezing them in
+    the bundle and breaking live avatar updates. Preconnect + srcset covers
+    the real perf wins without giving up that behaviour. The VS Code Astro
+    extension may still show a "use <Image />" hint on this element; it's a
+    stylistic suggestion, not a correctness issue.
+  */}
   <img
     src={avatarSrc}
+    srcset={avatarSrcSet}
     alt=""
     width={avatarPx}
     height={avatarPx}
     loading="lazy"
     decoding="async"
+    referrerpolicy="no-referrer"
     class:list={[
       "shrink-0 rounded-full border border-border bg-muted",
       avatarClass,

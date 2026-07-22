@@ -115,6 +115,9 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
       href={new URL(rssHref, Astro.site)}
     />
 
+    <link rel="preconnect" href="https://www.gravatar.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.gravatar.com" />
+
     <meta name="theme-color" content="" />
 
     <slot name="head" />
