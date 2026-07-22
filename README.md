@@ -1,0 +1,74 @@
+# LuzTech Blog
+
+[![Astro](https://img.shields.io/badge/Astro-7-ff5d01?logo=astro&logoColor=white)](https://astro.build/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: CC%20BY--NC--SA%204.0](https://img.shields.io/badge/Content-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE-content)
+
+Official LuzTech technical blog — engineering articles, tutorials and insights, built with Astro.
+
+## Features
+
+- AstroPaper v6-based blog foundation adapted for LuzTech
+- Markdown and MDX content support
+- Tag pages, archives, pagination, and static search with Pagefind
+- RSS feed, sitemap, SEO metadata, and automatic Open Graph images
+- Light and dark mode with LuzTech accent colors
+- Space Grotesk typography and LuzTech mesh-gradient hero styling
+- Accessible, responsive layout with syntax highlighting powered by Shiki
+
+## Tech stack
+
+- [Astro](https://astro.build/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [AstroPaper](https://github.com/satnaing/astro-paper)
+- [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk)
+
+## Getting started
+
+```bash
+pnpm install
+pnpm dev
+pnpm build
+pnpm preview
+```
+
+## Writing a post
+
+Add a new `.md` or `.mdx` file inside `src/content/blog/` with frontmatter like this:
+
+```md
+---
+title: Your post title
+description: A short summary of the article.
+pubDatetime: 2026-07-22T00:00:00Z
+tags:
+  - engineering
+  - tutorial
+author: LuzTech Team
+---
+```
+
+## Branding
+
+LuzTech typography, colors, and brand guidance live in the official repository:
+https://github.com/LuzTech-Development/Typography
+
+## 📖 License
+
+This repository uses a **dual license**:
+
+- **Source code** (Astro components, scripts, styles, configuration) —
+  [MIT License](LICENSE).
+- **Blog content** (articles, images, editorial materials under
+  `src/content/`) — [CC BY-NC-SA 4.0](LICENSE-content).
+- **LuzTech brand assets** (name, logo, icons, typography) — see the
+  [LuzTech trademark notice](https://github.com/LuzTech-Development/Typography/blob/master/TRADEMARKS.md).
+
+If you reference or quote an article, please credit **LuzTech Development**
+and link back to the original post.
+
+## Credits
+
+Thanks to [AstroPaper](https://github.com/satnaing/astro-paper) for the free template that powers this project.
