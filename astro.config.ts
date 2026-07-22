@@ -86,4 +86,7 @@ export default defineConfig({
   experimental: {
     svgOptimizer: svgoOptimizer(),
   },
+  server: {
+    port: 3000
+  }
 });
