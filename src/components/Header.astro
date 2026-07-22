@@ -7,14 +7,11 @@ import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconX from "@/assets/icons/IconX.svg";
+import LogoLuzTechName from "@/assets/icons/LogoLuzTechName.svg";
 import LinkButton from "./LinkButton.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { stripBase, stripLocale } from "@/utils/withBase";
-import {
-  DEFAULT_LOCALE,
-  isLocale,
-  localeToPath,
-} from "@/utils/i18n";
+import { DEFAULT_LOCALE, isLocale, localeToPath } from "@/utils/i18n";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
@@ -58,9 +55,29 @@ const isActive = (path: string) => {
   >
     <a
       href={getRelativeLocaleUrl(locale, "")}
-      class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
+      aria-label={site.title}
+      class="absolute inline-flex items-center gap-3 py-1 sm:static sm:my-auto"
     >
-      {site.title}
+      {
+        /*
+        Composite brandmark: the "name" mark from LuzTech-Development/Typography
+        (icon + wordmark) sits inside a filled accent tile, and "Blog" reads as
+        a modifier next to it — like how newsroom marks distinguish sub-brands
+        ("NYT Cooking", "FT Alphaville"). Using the full name.svg (instead of
+        icon-only) keeps the LuzTech identity legible without extra copy.
+      */
+      }
+      <span
+        class="bg-accent text-accent-foreground inline-flex size-10 items-center justify-center rounded-lg sm:size-12"
+        aria-hidden="true"
+      >
+        <LogoLuzTechName class="size-8 sm:size-10" />
+      </span>
+      <span
+        class="text-xl leading-none font-semibold whitespace-nowrap sm:text-2xl"
+      >
+        Blog
+      </span>
     </a>
     <nav
       id="nav-menu"
