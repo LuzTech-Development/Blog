@@ -17,6 +17,9 @@
     "sync": "astro sync",
     "astro": "astro",
     "check": "astro check",
+    "post:new": "node scripts/posts.mjs new",
+    "post:edit": "node scripts/posts.mjs edit",
+    "post:remove": "node scripts/posts.mjs remove",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "lint": "eslint ."

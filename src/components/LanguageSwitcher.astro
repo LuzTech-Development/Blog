@@ -1,0 +1,75 @@
+---
+import {
+  LOCALES,
+  LOCALE_SHORT_LABELS,
+  LOCALE_LABELS,
+  DEFAULT_LOCALE,
+  isLocale,
+  swapLocaleInPath,
+} from "@/utils/i18n";
+import { stripBase, getAssetPath } from "@/utils/withBase";
+
+const activeLocale = isLocale(Astro.currentLocale)
+  ? Astro.currentLocale
+  : DEFAULT_LOCALE;
+
+// Compute the same route under each locale so switching preserves the page.
+const pathWithoutBase = stripBase(Astro.url.pathname);
+const targets = LOCALES.map(locale => ({
+  locale,
+  href: getAssetPath(swapLocaleInPath(pathWithoutBase, locale).replace(/^\//, "")),
+  short: LOCALE_SHORT_LABELS[locale],
+  label: LOCALE_LABELS[locale],
+  isActive: locale === activeLocale,
+}));
+---
+
+<div
+  class="language-switcher flex items-center justify-center gap-1"
+  role="group"
+  aria-label="Language"
+>
+  {
+    targets.map(({ locale, href, short, label, isActive }) => (
+      <a
+        href={href}
+        hreflang={locale}
+        lang={locale}
+        aria-label={label}
+        aria-current={isActive ? "true" : undefined}
+        data-locale={locale}
+        class:list={[
+          "focus-outline rounded px-2 py-1 text-sm font-semibold uppercase tracking-wide",
+          isActive
+            ? "text-accent underline decoration-dashed underline-offset-4"
+            : "hover:text-accent opacity-75 hover:opacity-100",
+        ]}
+      >
+        {short}
+      </a>
+    ))
+  }
+</div>
+
+<script>
+  // Persist an explicit choice so the root detector honours it next visit.
+  function wireSwitcher() {
+    const links = document.querySelectorAll<HTMLAnchorElement>(
+      ".language-switcher a[data-locale]"
+    );
+    links.forEach(link => {
+      link.addEventListener("click", () => {
+        const locale = link.dataset.locale;
+        if (locale) {
+          try {
+            localStorage.setItem("preferred-locale", locale);
+          } catch (_) {
+            // localStorage might be disabled; navigation still works.
+          }
+        }
+      });
+    });
+  }
+  wireSwitcher();
+  document.addEventListener("astro:after-swap", wireSwitcher);
+</script>
