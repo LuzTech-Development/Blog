@@ -5,6 +5,7 @@ export default {
     home: "Home",
     posts: "Posts",
     tags: "Tags",
+    authors: "Authors",
     about: "About",
     archives: "Archives",
     search: "Search",
@@ -12,9 +13,12 @@ export default {
   post: {
     publishedAt: "Published at",
     updatedAt: "Updated",
+    byAuthor: "By",
     sharePostIntro: "Share this post:",
     sharePostOn: "Share this post on {{platform}}",
     sharePostViaEmail: "Share this post via email",
+    copyLink: "Copy link",
+    copyLinkSuccess: "Link copied!",
     tagLabel: "Tags",
     backToTop: "Back to top",
     goBack: "Go back",
@@ -47,6 +51,12 @@ export default {
 
     tagsTitle: "Tags",
     tagsDesc: "All the tags used in posts.",
+
+    authorTitle: "Author",
+    authorDesc: "All the articles written by",
+
+    authorsTitle: "Authors",
+    authorsDesc: "All the people who have contributed to the blog.",
 
     postsTitle: "Posts",
     postsDesc: "All the articles I've posted.",

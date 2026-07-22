@@ -2,7 +2,8 @@
 title: Bem-vindo ao LuzTech Blog
 description: Conheça o blog técnico oficial da LuzTech e as tecnologias por trás dele.
 pubDatetime: 2026-07-22T14:21:36Z
-author: LuzTech Team
+author: Giancarlo Luz
+authorEmail: giancarlo.luz@luztech.dev.br
 tags:
   - announcement
   - luztech

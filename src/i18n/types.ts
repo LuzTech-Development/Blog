@@ -3,6 +3,7 @@ export interface UIStrings {
     home: string;
     posts: string;
     tags: string;
+    authors: string;
     about: string;
     archives: string;
     search: string;
@@ -10,9 +11,12 @@ export interface UIStrings {
   post: {
     publishedAt: string;
     updatedAt: string;
+    byAuthor: string;
     sharePostIntro: string;
     sharePostOn: string;
     sharePostViaEmail: string;
+    copyLink: string;
+    copyLinkSuccess: string;
     tagLabel: string;
     backToTop: string;
     goBack: string;
@@ -43,6 +47,12 @@ export interface UIStrings {
 
     tagsTitle: string;
     tagsDesc: string;
+
+    authorTitle: string;
+    authorDesc: string;
+
+    authorsTitle: string;
+    authorsDesc: string;
 
     postsTitle: string;
     postsDesc: string;
