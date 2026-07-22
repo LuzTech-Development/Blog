@@ -13,7 +13,12 @@
  */
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getAssetPath } from "@/utils/withBase";
-import { LOCALES, LOCALE_LABELS, DEFAULT_LOCALE } from "@/utils/i18n";
+import {
+  LOCALES,
+  LOCALE_LABELS,
+  LOCALE_URL_PATH,
+  DEFAULT_LOCALE,
+} from "@/utils/i18n";
 import config from "@/config";
 
 const alternates = LOCALES.map(locale => ({
@@ -22,7 +27,9 @@ const alternates = LOCALES.map(locale => ({
   label: LOCALE_LABELS[locale],
 }));
 const defaultTarget = getRelativeLocaleUrl(DEFAULT_LOCALE, "");
-const supportedJson = JSON.stringify(LOCALES);
+// The detector needs to map canonical codes ("en-US") to their URL path
+// segment ("en-us") because Astro's routes are lowercase.
+const supportedJson = JSON.stringify(LOCALE_URL_PATH);
 ---
 
 <!doctype html>
@@ -51,11 +58,12 @@ const supportedJson = JSON.stringify(LOCALES);
       // @ts-nocheck
       (function () {
         try {
-          const supported = JSON.parse(supportedJson);
+          // Map of canonical BCP-47 code -> URL path segment (lowercase).
+          const localeToPath = JSON.parse(supportedJson);
           const stored = localStorage.getItem("preferred-locale");
           const pick = tag => {
             if (!tag) return null;
-            if (supported.includes(tag)) return tag;
+            if (localeToPath[tag]) return tag;
             const lower = tag.toLowerCase();
             if (lower.startsWith("pt")) return "pt-BR";
             if (lower.startsWith("en")) return "en-US";
@@ -73,8 +81,9 @@ const supportedJson = JSON.stringify(LOCALES);
             }
           }
           if (!target) target = "en-US";
+          const path = localeToPath[target] || target.toLowerCase();
           const base = document.baseURI.replace(/\/?$/, "/");
-          location.replace(base + target + "/");
+          location.replace(base + path + "/");
         } catch (_) {
           location.replace(defaultTarget);
         }
