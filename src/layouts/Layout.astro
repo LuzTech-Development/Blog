@@ -61,6 +61,13 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
     <link rel="icon" href={getAssetPath("favicon.ico")} />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href={getAssetPath("apple-touch-icon.png")}
+    />
+    <meta name="apple-mobile-web-app-title" content={site.title} />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="canonical" href={canonicalURL} />
     <link
       rel="preload"
@@ -152,9 +159,88 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
   <body
     class="bg-background text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
+    <div
+      id="route-loading-indicator"
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-x-0 top-0 z-50 opacity-0 transition-opacity duration-200"
+    >
+      <div class="bg-muted/50 h-1 w-full">
+        <div
+          id="route-loading-bar"
+          class="bg-accent h-full origin-left scale-x-0 transition-transform duration-200 ease-out"
+        >
+        </div>
+      </div>
+      <div class="fixed end-4 bottom-4">
+        <div
+          id="route-loading-spinner"
+          class="border-accent border-t-background size-8 animate-spin rounded-full border-2 opacity-0 transition-opacity duration-200"
+        >
+        </div>
+      </div>
+    </div>
     <slot />
     <script>
       import "@/scripts/theme";
+    </script>
+    <script is:inline data-astro-rerun>
+      function setupRouteLoadingIndicator() {
+        if (window.__routeLoadingBound) return;
+        window.__routeLoadingBound = true;
+
+        const indicator = document.getElementById("route-loading-indicator");
+        const bar = document.getElementById("route-loading-bar");
+        const spinner = document.getElementById("route-loading-spinner");
+
+        if (!indicator || !bar || !spinner) return;
+
+        let progress = 0;
+        let rafId = 0;
+        let isLoading = false;
+        let resetTimer = 0;
+
+        const setProgress = value => {
+          bar.style.transform = `scaleX(${Math.max(0, Math.min(1, value / 100))})`;
+        };
+
+        const tick = () => {
+          if (!isLoading) return;
+          progress = Math.min(90, progress + Math.max(0.4, (90 - progress) * 0.08));
+          setProgress(progress);
+          rafId = window.requestAnimationFrame(tick);
+        };
+
+        const start = () => {
+          window.clearTimeout(resetTimer);
+          window.cancelAnimationFrame(rafId);
+          isLoading = true;
+          progress = 12;
+          setProgress(progress);
+          indicator.classList.remove("opacity-0");
+          spinner.classList.remove("opacity-0");
+          rafId = window.requestAnimationFrame(tick);
+        };
+
+        const finish = () => {
+          if (!isLoading) return;
+          isLoading = false;
+          window.cancelAnimationFrame(rafId);
+          progress = 100;
+          setProgress(progress);
+          spinner.classList.add("opacity-0");
+          resetTimer = window.setTimeout(() => {
+            indicator.classList.add("opacity-0");
+            progress = 0;
+            setProgress(progress);
+          }, 240);
+        };
+
+        document.addEventListener("astro:before-preparation", start);
+        document.addEventListener("astro:after-swap", finish);
+        document.addEventListener("astro:page-load", finish);
+      }
+
+      setupRouteLoadingIndicator();
     </script>
   </body>
 </html>

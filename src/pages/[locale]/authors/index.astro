@@ -20,7 +20,10 @@ const posts = await getLocalizedPosts(locale);
 const authors = getUniqueAuthors(posts);
 ---
 
-<Layout title={`${t.pages.authorsTitle} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.authorsTitle} | ${config.site.title}`}
+  description={t.pages.authorsDesc}
+>
   <Header />
 
   <Breadcrumb />

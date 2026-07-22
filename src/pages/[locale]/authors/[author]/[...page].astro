@@ -54,7 +54,10 @@ const locale = assertLocaleParam(Astro.params.locale);
 const t = useTranslations(locale);
 ---
 
-<Layout title={`${t.pages.authorTitle}: ${author.name} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.authorTitle}: ${author.name} | ${config.site.title}`}
+  description={`${t.pages.authorDesc} ${author.name}.`}
+>
   <Header />
 
   <Breadcrumb />
