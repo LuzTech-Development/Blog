@@ -3,6 +3,9 @@ import satori from "satori";
 import sharp from "sharp";
 import config from "@/config";
 import { loadOgFonts } from "@/utils/ogFonts";
+import { getStaticLocalePaths } from "@/utils/i18n";
+
+export const getStaticPaths = getStaticLocalePaths;
 
 export const GET: APIRoute = async () => {
   const fonts = await loadOgFonts();
