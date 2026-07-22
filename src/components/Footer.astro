@@ -20,7 +20,7 @@ const locale = isLocale(Astro.currentLocale)
 const t = useTranslations(locale);
 const currentYear = new Date().getFullYear();
 
-const rssHref = getRelativeLocaleUrl(locale, "rss.xml");
+const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/$/, "");
 const rssTitle = `${config.site.title} — RSS (${locale})`;
 ---
 
