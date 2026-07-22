@@ -1,0 +1,74 @@
+---
+import type { GetStaticPathsOptions } from "astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Card from "@/components/Card.astro";
+import Footer from "@/components/Footer.astro";
+import Pagination from "@/components/Pagination.astro";
+import { getUniqueAuthors } from "@/utils/getUniqueAuthors";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
+import {
+  LOCALES,
+  assertLocaleParam,
+  localeToPath,
+  type Locale,
+} from "@/utils/i18n";
+import { slugifyStr } from "@/utils/slugify";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const groups = await Promise.all(
+    LOCALES.map(async locale => {
+      const posts = (await getLocalizedPosts(locale as Locale)).filter(
+        ({ data }) => !data.draft
+      );
+      const authors = getUniqueAuthors(posts);
+
+      return authors.flatMap(author => {
+        const authorPosts = getSortedPosts(
+          posts.filter(({ data }) => slugifyStr(data.author) === author.slug)
+        );
+
+        return paginate(authorPosts, {
+          params: {
+            locale: localeToPath(locale as Locale),
+            author: author.slug,
+          },
+          props: { author },
+          pageSize: config.posts.perPage,
+        });
+      });
+    })
+  );
+
+  return groups.flat();
+}
+
+const { page, author } = Astro.props;
+
+const locale = assertLocaleParam(Astro.params.locale);
+const t = useTranslations(locale);
+---
+
+<Layout title={`${t.pages.authorTitle}: ${author.name} | ${config.site.title}`}>
+  <Header />
+
+  <Breadcrumb />
+
+  <Main
+    pageTitle={`${t.pages.authorTitle}: ${author.name}`}
+    pageDesc={`${t.pages.authorDesc} ${author.name}.`}
+  >
+    <ul>
+      {page.data.map(data => <Card {...data} />)}
+    </ul>
+  </Main>
+
+  <Pagination {page} />
+
+  <Footer noMarginTop={page.lastPage > 1} />
+</Layout>
