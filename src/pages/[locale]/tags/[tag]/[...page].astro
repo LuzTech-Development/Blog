@@ -1,5 +1,4 @@
 ---
-import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
@@ -10,30 +9,45 @@ import Footer from "@/components/Footer.astro";
 import Pagination from "@/components/Pagination.astro";
 import { getUniqueTags } from "@/utils/getUniqueTags";
 import { getSortedPosts } from "@/utils/getSortedPosts";
+import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
+import {
+  LOCALES,
+  assertLocaleParam,
+  localeToPath,
+  type Locale,
+} from "@/utils/i18n";
 import { slugifyAll } from "@/utils/slugify";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const posts = await getCollection("posts", ({ data }) => !data.draft);
-  const tags = getUniqueTags(posts);
+  const groups = await Promise.all(
+    LOCALES.map(async locale => {
+      const posts = (await getLocalizedPosts(locale as Locale)).filter(
+        ({ data }) => !data.draft
+      );
+      const tags = getUniqueTags(posts);
 
-  return tags.flatMap(({ tag, tagName }) => {
-    const tagPosts = getSortedPosts(
-      posts.filter(({ data }) => slugifyAll(data.tags).includes(tag))
-    );
+      return tags.flatMap(({ tag, tagName }) => {
+        const tagPosts = getSortedPosts(
+          posts.filter(({ data }) => slugifyAll(data.tags).includes(tag))
+        );
 
-    return paginate(tagPosts, {
-      params: { tag },
-      props: { tagName },
-      pageSize: config.posts.perPage,
-    });
-  });
+        return paginate(tagPosts, {
+          params: { locale: localeToPath(locale as Locale), tag },
+          props: { tagName },
+          pageSize: config.posts.perPage,
+        });
+      });
+    })
+  );
+
+  return groups.flat();
 }
 
 const { page, tagName } = Astro.props;
 
-const locale = Astro.currentLocale ?? config.site.lang;
+const locale = assertLocaleParam(Astro.params.locale);
 const t = useTranslations(locale);
 ---
 

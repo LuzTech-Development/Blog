@@ -9,7 +9,7 @@ export default defineAstroPaperConfig({
     author: "LuzTech Development",
     profile: "https://github.com/LuzTech-Development",
     ogImage: "luztech-og.png",
-    lang: "en",
+    lang: "en-US",
     timezone: "UTC",
     dir: "ltr",
   },
