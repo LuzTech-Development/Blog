@@ -9,7 +9,12 @@ import Footer from "@/components/Footer.astro";
 import Pagination from "@/components/Pagination.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
-import { LOCALES, assertLocaleParam, localeToPath, type Locale } from "@/utils/i18n";
+import {
+  LOCALES,
+  assertLocaleParam,
+  localeToPath,
+  type Locale,
+} from "@/utils/i18n";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
@@ -17,13 +22,10 @@ export const getStaticPaths = (async ({ paginate }) => {
   const groups = await Promise.all(
     LOCALES.map(async locale => {
       const posts = await getLocalizedPosts(locale as Locale);
-      return paginate(
-        getSortedPosts(posts.filter(({ data }) => !data.draft)),
-        {
-          pageSize: config.posts.perPage,
-          params: { locale: localeToPath(locale as Locale) },
-        }
-      );
+      return paginate(getSortedPosts(posts.filter(({ data }) => !data.draft)), {
+        pageSize: config.posts.perPage,
+        params: { locale: localeToPath(locale as Locale) },
+      });
     })
   );
   return groups.flat();

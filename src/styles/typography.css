@@ -9,7 +9,7 @@
     h3,
     h4,
     th {
-      @apply mb-3 text-foreground;
+      @apply text-foreground mb-3;
     }
 
     h1,
@@ -30,7 +30,7 @@
     }
 
     a {
-      @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
+      @apply text-foreground hover:text-accent wrap-break-word decoration-dashed underline-offset-4 focus-visible:no-underline;
     }
 
     ul {
@@ -46,7 +46,7 @@
     }
 
     img {
-      @apply mx-auto border border-border;
+      @apply border-border mx-auto border;
     }
 
     figcaption {
@@ -56,7 +56,7 @@
     table {
       th,
       td {
-        @apply border border-border p-2;
+        @apply border-border border p-2;
       }
 
       th {
@@ -69,7 +69,7 @@
     }
 
     code {
-      @apply rounded bg-muted/20 p-1 wrap-break-word text-foreground before:content-none after:content-none;
+      @apply bg-muted/20 text-foreground rounded p-1 wrap-break-word before:content-none after:content-none;
     }
 
     .astro-code code {
@@ -81,20 +81,20 @@
     }
 
     details {
-      @apply inline-block cursor-pointer text-foreground select-none [&_p]:hidden [&_ul]:my-0!;
+      @apply text-foreground inline-block cursor-pointer select-none [&_p]:hidden [&_ul]:my-0!;
     }
 
     summary {
-      @apply focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed;
+      @apply focus-visible:outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-dashed;
     }
 
     pre {
-      @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
+      @apply focus-visible:outline-accent focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-dashed;
     }
   }
 
   .astro-code {
-    @apply flex border bg-(--shiki-light-bg) text-(--shiki-light) outline-border [&_span]:text-(--shiki-light);
+    @apply outline-border flex border bg-(--shiki-light-bg) text-(--shiki-light) [&_span]:text-(--shiki-light);
   }
 
   html[data-theme="dark"] .astro-code {
@@ -115,7 +115,7 @@
     }
 
     .highlighted-word {
-      @apply rounded-sm border border-border px-0.5 py-px;
+      @apply border-border rounded-sm border px-0.5 py-px;
     }
   }
 }

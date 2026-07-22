@@ -12,13 +12,7 @@ type Props = {
   class?: string;
 };
 
-const {
-  slug,
-  name,
-  email,
-  size = "sm",
-  class: className = "",
-} = Astro.props;
+const { slug, name, email, size = "sm", class: className = "" } = Astro.props;
 
 const locale = isLocale(Astro.currentLocale)
   ? Astro.currentLocale
@@ -33,8 +27,7 @@ const locale = isLocale(Astro.currentLocale)
 const avatarPx = size === "md" ? 40 : 24;
 const avatarSrc = gravatarUrl(email ?? undefined, avatarPx);
 const avatarSrcSet = gravatarSrcSet(email ?? undefined, avatarPx);
-const avatarClass =
-  size === "md" ? "size-10" : "size-6";
+const avatarClass = size === "md" ? "size-10" : "size-6";
 const textClass = size === "md" ? "text-base" : "text-sm";
 
 const href = getRelativeLocaleUrl(locale, `authors/${slug}/`);
@@ -53,7 +46,8 @@ const href = getRelativeLocaleUrl(locale, `authors/${slug}/`);
     className,
   ]}
 >
-  {/*
+  {
+    /*
     Rationale: keep the native <img> here instead of Astro's <Image />.
     Gravatar's CDN already returns the exact pixel size we request via `?s=`,
     the avatars are 24–40 px (webp/avif savings are ~1–3 KB per image), and
@@ -62,7 +56,8 @@ const href = getRelativeLocaleUrl(locale, `authors/${slug}/`);
     the real perf wins without giving up that behaviour. The VS Code Astro
     extension may still show a "use <Image />" hint on this element; it's a
     stylistic suggestion, not a correctness issue.
-  */}
+  */
+  }
   <img
     src={avatarSrc}
     srcset={avatarSrcSet}
@@ -73,7 +68,7 @@ const href = getRelativeLocaleUrl(locale, `authors/${slug}/`);
     decoding="async"
     referrerpolicy="no-referrer"
     class:list={[
-      "shrink-0 rounded-full border border-border bg-muted",
+      "border-border bg-muted shrink-0 rounded-full border",
       avatarClass,
     ]}
   />
