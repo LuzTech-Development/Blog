@@ -19,7 +19,8 @@
  */
 
 import { readdir, mkdir, writeFile, readFile, unlink } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 import { join, relative, extname, basename } from "node:path";
 import { createInterface } from "node:readline";
 import slugify from "slugify";
@@ -86,6 +87,30 @@ async function findPair(slug) {
   return hits;
 }
 
+function readDefaultAuthor() {
+  try {
+    const src = readFileSync(join(ROOT, "astro-paper.config.ts"), "utf8");
+    const m = src.match(/author:\s*["'`]([^"'`]+)["'`]/);
+    if (m) return m[1];
+  } catch {
+    // fall through
+  }
+  return "LuzTech Development";
+}
+
+function getAuthor() {
+  try {
+    const name = execSync("git config user.name", {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+    if (name) return name;
+  } catch {
+    // git missing or key unset — fall through
+  }
+  return readDefaultAuthor();
+}
+
 function makePrompt(question, choices) {
   return new Promise(resolve => {
     const rl = createInterface({
@@ -105,13 +130,14 @@ function makePrompt(question, choices) {
   });
 }
 
-function frontmatter({ title, description, pubDatetime, tags = ["others"] }) {
+function frontmatter({ title, description, pubDatetime, author, tags = ["others"] }) {
   const tagLines = tags.map(t => `  - ${t}`).join("\n");
   return [
     "---",
     `title: ${title}`,
     `description: ${description}`,
     `pubDatetime: ${pubDatetime}`,
+    `author: ${author}`,
     "tags:",
     tagLines,
     "draft: true",
@@ -138,6 +164,7 @@ async function cmdNew(args) {
   const title = toTitle(raw);
   const ext = mdx ? "mdx" : "md";
   const pubDatetime = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+  const author = getAuthor();
 
   const existing = await findPair(slug);
   if (existing.length) {
@@ -152,6 +179,7 @@ async function cmdNew(args) {
         title,
         description: "TODO: short summary shown in listings and OG cards.",
         pubDatetime,
+        author,
       }),
       `Write the English version of "${title}" here.`,
       "",
@@ -163,6 +191,7 @@ async function cmdNew(args) {
         title,
         description: "TODO: descrição curta mostrada nas listagens e OG cards.",
         pubDatetime,
+        author,
       }),
       `Escreva a versão em português de "${title}" aqui.`,
       "",
