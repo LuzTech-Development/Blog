@@ -1,5 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { Image } from "astro:assets";
 import IconUnderline from "@/assets/icons/IconUnderline.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
@@ -7,7 +8,7 @@ import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconX from "@/assets/icons/IconX.svg";
-import LogoLuzTechName from "@/assets/icons/LogoLuzTechName.svg";
+import luztechMark from "@/assets/luztech-mark.png";
 import LinkButton from "./LinkButton.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { stripBase, stripLocale } from "@/utils/withBase";
@@ -56,27 +57,30 @@ const isActive = (path: string) => {
     <a
       href={getRelativeLocaleUrl(locale, "")}
       aria-label={site.title}
-      class="absolute inline-flex items-center gap-3 py-1 sm:static sm:my-auto"
+      class="absolute inline-flex items-center gap-2 py-1 sm:static sm:my-auto sm:gap-3"
     >
       {
         /*
-        Composite brandmark: the "name" mark from LuzTech-Development/Typography
-        (icon + wordmark) sits inside a filled accent tile, and "Blog" reads as
-        a modifier next to it — like how newsroom marks distinguish sub-brands
-        ("NYT Cooking", "FT Alphaville"). Using the full name.svg (instead of
-        icon-only) keeps the LuzTech identity legible without extra copy.
+        Brandmark = the shared LuzTech "clean" icon (inverted color variant
+        — the mark already ships with the gradient tile built in, per
+        LuzTech-Development/Typography) followed by the "LuzTech Blog"
+        wordmark. Astro's <Image> handles hashing, WebP/AVIF conversion,
+        and hi-DPI srcset from the single 512x source.
       */
       }
-      <span
-        class="bg-accent text-accent-foreground inline-flex size-10 items-center justify-center rounded-lg sm:size-12"
-        aria-hidden="true"
-      >
-        <LogoLuzTechName class="size-8 sm:size-10" />
-      </span>
+      <Image
+        src={luztechMark}
+        alt=""
+        width={40}
+        height={40}
+        densities={[1, 2, 3]}
+        loading="eager"
+        class="size-10 rounded-lg sm:size-12"
+      />
       <span
         class="text-xl leading-none font-semibold whitespace-nowrap sm:text-2xl"
       >
-        Blog
+        LuzTech Blog
       </span>
     </a>
     <nav
