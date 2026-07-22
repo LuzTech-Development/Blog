@@ -1,0 +1,61 @@
+@import "@fontsource-variable/space-grotesk";
+@import "tailwindcss";
+@import "./theme.css";
+@import "./typography.css";
+@import "rehype-callouts/theme/obsidian";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@layer base {
+  * {
+    @apply border-border outline-accent/75;
+    scrollbar-width: auto;
+    scrollbar-color: var(--color-muted) transparent;
+  }
+
+  a,
+  button {
+    @apply outline-accent outline-offset-1 focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  body {
+    font-family: "Space Grotesk Variable", var(--font-space-grotesk), sans-serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility max-w-app {
+  @apply max-w-3xl;
+}
+
+@utility app-layout {
+  @apply max-w-app mx-auto w-full px-4;
+}
+
+@utility active-nav {
+  @apply underline decoration-wavy decoration-2 underline-offset-8;
+}
+
+.hero-mesh {
+  background:
+    radial-gradient(at 0% 0%, #00ff9d 0%, transparent 50%),
+    radial-gradient(at 100% 0%, #69dd96 0%, transparent 50%),
+    radial-gradient(at 0% 100%, #4665c3 0%, transparent 50%),
+    radial-gradient(at 100% 100%, #1f6fef 0%, transparent 50%),
+    #1f6fef;
+}
+
+:target {
+  scroll-margin-block: 1rem;
+}
