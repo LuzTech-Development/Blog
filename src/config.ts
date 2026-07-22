@@ -1,0 +1,23 @@
+export const SITE = {
+  website: "https://blog.luztech.dev",
+  author: "LuzTech Development",
+  profile: "https://github.com/LuzTech-Development",
+  desc: "Official LuzTech technical blog — engineering articles, tutorials and insights.",
+  title: "LuzTech Blog",
+  ogImage: "luztech-og.png",
+  lightAndDarkMode: true,
+  postPerIndex: 4,
+  postPerPage: 4,
+  scheduledPostMargin: 15 * 60 * 1000,
+  showArchives: true,
+  showBackButton: true,
+  editPost: {
+    enabled: false,
+    text: "Edit page",
+    url: "https://github.com/LuzTech-Development/Blog/edit/main/",
+  },
+  dynamicOgImage: true,
+  dir: "ltr",
+  lang: "en",
+  timezone: "UTC",
+} as const;

@@ -1,0 +1,39 @@
+# Content License — Creative Commons BY-NC-SA 4.0
+
+All editorial content in this repository (blog posts, articles, images
+authored for posts, and other written materials under `src/content/` and
+`public/posts/`) is licensed under the **Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International License**.
+
+You are free to:
+
+- **Share** — copy and redistribute the material in any medium or format.
+- **Adapt** — remix, transform, and build upon the material.
+
+Under the following terms:
+
+- **Attribution (BY)** — You must give appropriate credit to **LuzTech
+  Development**, provide a link to the original article, and indicate if
+  changes were made. You may do so in any reasonable manner, but not in any
+  way that suggests LuzTech endorses you or your use.
+- **NonCommercial (NC)** — You may not use the material for commercial
+  purposes.
+- **ShareAlike (SA)** — If you remix, transform, or build upon the material,
+  you must distribute your contributions under the same license as the
+  original.
+
+**No additional restrictions** — You may not apply legal terms or
+technological measures that legally restrict others from doing anything the
+license permits.
+
+Full license text: https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+---
+
+This content license does **not** cover:
+
+- The source code of the blog (components, scripts, styles, configuration),
+  which is licensed under the MIT License (see `LICENSE`).
+- LuzTech trademarks (name, logo, icons, typography, brand identity), which
+  are governed by
+  https://github.com/LuzTech-Development/Typography/blob/master/TRADEMARKS.md.

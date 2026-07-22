@@ -1,0 +1,89 @@
+@import "@fontsource-variable/space-grotesk";
+@import "tailwindcss";
+@import "./typography.css";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+:root,
+html[data-theme="light"] {
+  --background: #f8fbff;
+  --foreground: #0f172a;
+  --accent: #1f6fef;
+  --muted: #69dd96;
+  --border: #bfd0f5;
+}
+
+html[data-theme="dark"] {
+  --background: #0b1020;
+  --foreground: #e7efff;
+  --accent: #00ff9d;
+  --muted: #4665c3;
+  --border: #2c4285;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-accent/75;
+    scrollbar-width: auto;
+    scrollbar-color: var(--color-muted) transparent;
+  }
+
+  html {
+    @apply overflow-y-scroll scroll-smooth;
+  }
+
+  body {
+    @apply flex min-h-svh flex-col bg-background text-foreground selection:bg-accent/75 selection:text-background;
+    font-family: "Space Grotesk Variable", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  a,
+  button {
+    @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility max-w-app {
+  @apply max-w-3xl;
+}
+
+@utility app-layout {
+  @apply mx-auto w-full max-w-app px-4;
+}
+
+.active-nav {
+  @apply underline decoration-wavy decoration-2 underline-offset-4;
+}
+
+.hero-mesh {
+  background:
+    radial-gradient(at 0% 0%, #00ff9d 0%, transparent 50%),
+    radial-gradient(at 100% 0%, #69dd96 0%, transparent 50%),
+    radial-gradient(at 0% 100%, #4665c3 0%, transparent 50%),
+    radial-gradient(at 100% 100%, #1f6fef 0%, transparent 50%),
+    #1f6fef;
+}
+
+:target {
+  scroll-margin-block: 1rem;
+}
