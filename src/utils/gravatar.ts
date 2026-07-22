@@ -8,18 +8,24 @@ import { createHash } from "node:crypto";
  * deterministic and stable so the same email always resolves to the same avatar.
  *
  * @param email  raw email address (case is irrelevant)
- * @param size   requested pixel size (Gravatar returns square PNGs)
+ * @param size   requested pixel size — pass `undefined` (or leave off) to omit
+ *               the `?s=` parameter entirely and let the consumer (e.g. a feed
+ *               reader) pick its own display size. Gravatar's default without
+ *               `s=` is 80 px.
  * @param fallback  keyword passed as `?d=` — controls the fallback avatar shown
  *                  when the user has never registered on gravatar.com
  */
 export function gravatarUrl(
   email: string | undefined | null,
-  size = 80,
+  size?: number,
   fallback: "identicon" | "retro" | "robohash" | "mp" | "wavatar" = "identicon"
 ): string {
   const normalized = (email ?? "").trim().toLowerCase();
   const hash = createHash("sha256").update(normalized).digest("hex");
-  return `https://www.gravatar.com/avatar/${hash}?s=${size}&d=${fallback}`;
+  const params = new URLSearchParams();
+  if (typeof size === "number") params.set("s", String(size));
+  params.set("d", fallback);
+  return `https://www.gravatar.com/avatar/${hash}?${params.toString()}`;
 }
 
 /**
