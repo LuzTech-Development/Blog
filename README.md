@@ -34,6 +34,24 @@ pnpm build
 pnpm preview
 ```
 
+## Deployment
+
+The blog deploys to **Azure Static Web Apps** via
+`.github/workflows/azure-static-web-apps.yml`. Every push to `main` publishes
+production; every PR against `main` gets its own staging preview URL and is
+torn down when the PR closes.
+
+Runtime headers, cache policy, MIME types for Pagefind's binary index files,
+and the locale-aware 404 fallback live in [`staticwebapp.config.json`](./staticwebapp.config.json).
+The root `/404.html`, `/rss.xml`, and `/` are all locale-detecting redirects
+(see `src/pages/{404.astro,index.astro,rss.xml.ts}`) so users always land on
+the `pt-BR` or `en-US` variant of the page they were looking for.
+
+The workflow expects one repository secret:
+
+- `AZURE_STATIC_WEB_APPS_API_TOKEN` — the deployment token from the
+  Static Web App resource in the Azure Portal.
+
 ## Writing a post
 
 Add a new `.md` or `.mdx` file inside `src/content/blog/` with frontmatter like this:
@@ -62,14 +80,14 @@ Whenever you include or reference a third-party asset, always give explicit
 attribution inline in the post — credit the original author/owner and link
 to the source when available. Mentioning the specific license or legal
 basis (fair use, CC BY, etc.) is encouraged when it's relevant, but not
-required for every reference (e.g., a passing mention like *"inspired by
-this AWS architecture diagram"* is fine as long as the source is credited).
+required for every reference (e.g., a passing mention like _"inspired by
+this AWS architecture diagram"_ is fine as long as the source is credited).
 
 Example:
 
 ```markdown
 ![Kubernetes architecture](/posts/my-post/k8s-architecture.svg)
-*Image: [Kubernetes Authors](https://kubernetes.io/docs/concepts/overview/components/).*
+_Image: [Kubernetes Authors](https://kubernetes.io/docs/concepts/overview/components/)._
 ```
 
 When in doubt about whether an asset can be reused, prefer creating your own
