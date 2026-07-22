@@ -1,0 +1,95 @@
+---
+/**
+ * Root 404 page.
+ *
+ * Astro also emits localized 404 pages at `/{locale}/404/index.html`. This
+ * root-level `404.html` is what Azure Static Web Apps' `navigationFallback`
+ * serves for any unmatched route (see `staticwebapp.config.json`), so it
+ * needs to redirect users to the 404 page in their preferred locale —
+ * mirroring the language-detection strategy used by `src/pages/index.astro`
+ * and `src/pages/rss.xml.ts`.
+ *
+ * Kept intentionally minimal:
+ *   • No layout, no styles, no fonts to download — this page should get out
+ *     of the way as fast as possible.
+ *   • The `<meta http-equiv="refresh">` provides the same redirect for users
+ *     with JavaScript disabled (rare, but keeps the UX consistent).
+ */
+import {
+  LOCALES,
+  LOCALE_URL_PATH,
+  DEFAULT_LOCALE,
+  LOCALE_LABELS,
+} from "@/utils/i18n";
+import config from "@/config";
+
+const defaultTarget = `/${LOCALE_URL_PATH[DEFAULT_LOCALE]}/404/`;
+const supportedJson = JSON.stringify(LOCALE_URL_PATH);
+const title = `404 — ${config.site.title}`;
+
+const alternates = LOCALES.map(locale => ({
+  href: `/${LOCALE_URL_PATH[locale]}/404/`,
+  label: LOCALE_LABELS[locale],
+}));
+---
+
+<!doctype html>
+<html lang={DEFAULT_LOCALE}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{title}</title>
+    <meta http-equiv="refresh" content={`0; url=${defaultTarget}`} />
+    <script is:inline define:vars={{ supportedJson, defaultTarget }}>
+      (function () {
+        try {
+          var localeToPath = JSON.parse(supportedJson);
+          var stored = null;
+          try {
+            stored = localStorage.getItem("preferred-locale");
+          } catch (_) {}
+          function pick(tag) {
+            if (!tag) return null;
+            if (localeToPath[tag]) return tag;
+            var lower = tag.toLowerCase();
+            if (lower.indexOf("pt") === 0) return "pt-BR";
+            if (lower.indexOf("en") === 0) return "en-US";
+            return null;
+          }
+          var target = pick(stored);
+          if (!target) {
+            var candidates =
+              (navigator.languages && navigator.languages.length
+                ? navigator.languages
+                : [navigator.language]) || [];
+            for (var i = 0; i < candidates.length; i++) {
+              target = pick(candidates[i]);
+              if (target) break;
+            }
+          }
+          if (!target) target = "en-US";
+          var path = localeToPath[target] || target.toLowerCase();
+          location.replace("/" + path + "/404/");
+        } catch (_) {
+          location.replace(defaultTarget);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <h1>404</h1>
+      <p>Page not found / Página não encontrada.</p>
+      <ul>
+        {
+          alternates.map(alt => (
+            <li>
+              <a href={alt.href}>{alt.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </noscript>
+  </body>
+</html>
