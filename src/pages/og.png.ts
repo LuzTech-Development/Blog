@@ -1,22 +1,11 @@
 import type { APIRoute } from "astro";
-import { readFile } from "node:fs/promises";
 import satori from "satori";
 import sharp from "sharp";
 import config from "@/config";
+import { loadOgFonts } from "@/utils/ogFonts";
 
 export const GET: APIRoute = async () => {
-  const [regularBuffer, boldBuffer] = await Promise.all([
-    readFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
-    readFile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
-  ]);
-  const regularData = regularBuffer.buffer.slice(
-    regularBuffer.byteOffset,
-    regularBuffer.byteOffset + regularBuffer.byteLength
-  );
-  const boldData = boldBuffer.buffer.slice(
-    boldBuffer.byteOffset,
-    boldBuffer.byteOffset + boldBuffer.byteLength
-  );
+  const fonts = await loadOgFonts();
 
   const svg = await satori(
     {
@@ -32,7 +21,7 @@ export const GET: APIRoute = async () => {
           justifyContent: "center",
           padding: "48px",
           color: "#ffffff",
-          fontFamily: "DejaVu Sans",
+          fontFamily: "Space Grotesk",
         },
         children: {
           type: "div",
@@ -61,7 +50,7 @@ export const GET: APIRoute = async () => {
                     {
                       type: "p",
                       props: {
-                        style: { fontSize: 72, fontWeight: 800, margin: 0 },
+                        style: { fontSize: 72, fontWeight: 700, margin: 0 },
                         children: config.site.title,
                       },
                     },
@@ -100,20 +89,7 @@ export const GET: APIRoute = async () => {
       width: 1200,
       height: 630,
       embedFont: true,
-      fonts: [
-        {
-          name: "DejaVu Sans",
-          data: regularData,
-          weight: 400,
-          style: "normal",
-        },
-        {
-          name: "DejaVu Sans",
-          data: boldData,
-          weight: 800,
-          style: "normal",
-        },
-      ],
+      fonts,
     }
   );
 
