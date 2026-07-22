@@ -37,3 +37,26 @@ This content license does **not** cover:
 - LuzTech trademarks (name, logo, icons, typography, brand identity), which
   are governed by
   https://github.com/LuzTech-Development/Typography/blob/master/TRADEMARKS.md.
+
+## Third-party content
+
+Some articles may embed or reference content owned by third parties
+(screenshots of documentation, diagrams, logos, code snippets, etc.). Such
+materials are **not** licensed under CC BY-NC-SA 4.0 by LuzTech Development.
+They remain the property of their respective owners and are used either:
+
+- under **fair use / fair dealing** (short excerpts for commentary, review,
+  criticism, tutorial, or news reporting), or
+- under the **original license** granted by the owner (e.g., CC BY, MIT,
+  Apache 2.0, or explicit permission).
+
+Every post that includes or references third-party assets must always
+attribute the original source (author/owner and a link when available).
+Additional details such as the specific license or legal basis for the
+usage should be mentioned when relevant, but are not strictly required for
+every reference.
+
+If you are a rights holder and believe your material has been used
+improperly, please open an issue at
+https://github.com/LuzTech-Development/Blog/issues and we will address it
+promptly.
