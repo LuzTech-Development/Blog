@@ -21,7 +21,10 @@ const tags = getUniqueTags(publishedPosts);
 const t = useTranslations(locale);
 ---
 
-<Layout title={`${t.pages.tagsTitle} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.tagsTitle} | ${config.site.title}`}
+  description={t.pages.tagsDesc}
+>
   <Header />
 
   <Breadcrumb />
