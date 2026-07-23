@@ -20,7 +20,7 @@ enquanto construímos produtos e ferramental interno.
 
 ## Construído com
 
-Este blog é feito com [Astro](https://astro.build/), TypeScript, Tailwind CSS,
+Este blog é feito com [Astro](https://astro.build/), [Astro Paper](https://github.com/satnaing/astro-paper), TypeScript, Tailwind CSS,
 conteúdo em Markdown/MDX, busca com Pagefind, RSS, geração de sitemap e imagens
 Open Graph automáticas.
 

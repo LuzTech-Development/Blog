@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import type { HTMLAttributes } from 'astro/types';
+import type { ImageMetadata } from 'astro';
+
+type Props = {
+  /** Imported image (from `src/`) or a public URL string. */
+  src: ImageMetadata | string;
+  /** Accessible description of the image. */
+  alt: string;
+  /**
+   * Optional visible caption. When omitted (and no `caption` slot is
+   * provided) the `<figcaption>` is not rendered.
+   */
+  caption?: string;
+  /** Explicit width — required when `src` is a public URL string. */
+  width?: number;
+  /** Explicit height — required when `src` is a public URL string. */
+  height?: number;
+} & Omit<HTMLAttributes<'figure'>, 'children'>;
+
+const {
+  src,
+  alt,
+  caption,
+  width,
+  height,
+  class: className,
+  ...figureAttrs
+} = Astro.props;
+
+const hasCaptionSlot = Astro.slots.has('caption');
+const showCaption = hasCaptionSlot || Boolean(caption);
+---
+
+<figure {...figureAttrs} class:list={['app-figure', className]}>
+  {
+    typeof src === 'string' ? (
+      <img src={src} alt={alt} width={width} height={height} loading="lazy" />
+    ) : (
+      <Image src={src} alt={alt} width={width} height={height} />
+    )
+  }
+  {
+    showCaption && (
+      <figcaption class="text-center">
+        {hasCaptionSlot ? <slot name="caption" /> : caption}
+      </figcaption>
+    )
+  }
+</figure>

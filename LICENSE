@@ -25,8 +25,8 @@ SOFTWARE.
 ## Content License
 
 The blog content (all Markdown/MDX articles, images, and other editorial
-materials located under `src/content/` and `public/posts/`) is **not** covered
-by the MIT license above. It is licensed under the
+materials located under `src/content/`, `src/assets/`, and `public/posts/`)
+is **not** covered by the MIT license above. It is licensed under the
 **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
 License (CC BY-NC-SA 4.0)**.
 

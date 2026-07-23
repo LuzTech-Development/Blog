@@ -24,7 +24,8 @@ export default {
     goBack: 'Voltar',
     editPage: 'Editar página',
     previousPost: 'Artigo anterior',
-    nextPost: 'Próximo artigo'
+    nextPost: 'Próximo artigo',
+    minutesReadUnit: 'min'
   },
   pagination: {
     prev: 'Anterior',
