@@ -2,7 +2,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://blog.luztech.dev",
+    url: "https://blog.luztech.dev.br",
     title: "LuzTech Blog",
     description:
       "Official LuzTech technical blog — engineering articles, tutorials and insights.",
