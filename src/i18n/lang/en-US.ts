@@ -37,9 +37,9 @@ export default {
     recentPosts: "Recent Posts",
     allPosts: "All Posts",
     tagline:
-      "Official LuzTech technical blog for engineering articles, tutorials and insights.",
+      "Notes on Azure and DevOps engineering, architecture, and consulting from LuzTech Development.",
     intro:
-      "We share what the LuzTech engineering team is learning and building with Astro, TypeScript, Tailwind CSS, Markdown/MDX, static search, RSS, sitemap support, automatic Open Graph images, and accessible defaults.",
+      "LuzTech Development is a Brazilian consultancy for cloud-native development, architecture, and DevOps on Azure. Here we share the technical side — implementation notes, architecture decisions, and practical write-ups.",
   },
   footer: {
     copyright: "Copyright",
