@@ -61,6 +61,6 @@ export function localizedCallouts(): CalloutsTransformer {
       processor = unified().use(rehypeCallouts, buildOptions(locale)).freeze();
       cache.set(locale, processor);
     }
-    return await processor.run(tree, file);
+    return processor.run(tree, file);
   };
 }
