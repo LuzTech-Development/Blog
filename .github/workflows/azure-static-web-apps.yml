@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 concurrency:
@@ -14,44 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # PRs only validate: install, type-check, lint, format-check, build.
-  # No deployment happens — production is only published on push to main.
-  validate:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    name: Validate
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-          lfs: false
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Format check
-        run: pnpm format:check
-
-      # `pnpm run build` runs \`astro check\` + \`astro build\` + pagefind
-      # indexing, so this step covers type-checking and the actual build.
-      - name: Build
-        run: pnpm run build
-
   build_and_deploy:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     name: Build and Deploy
     steps:

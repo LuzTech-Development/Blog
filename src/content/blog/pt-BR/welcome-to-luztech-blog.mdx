@@ -1,17 +1,20 @@
 ---
 title: Bem-vindo ao Blog da LuzTech
 description: Conheça o blog técnico oficial da LuzTech e as tecnologias por trás dele.
-pubDatetime: 2026-07-23T02:59:56.218Z
+pubDatetime: 2026-07-23T19:15:07.859Z
 author: Giancarlo Luz
 authorEmail: giancarlo.luz@luztech.dev.br
 tags:
   - announcement
   - luztech
-draft: true
 ---
 
 import RainbowText from "@/components/RainbowText.astro";
-import ReactCounter from "@/components/ReactCounter.astro";
+import Counter from "@/components/Counter.astro";
+import Figure from "@/components/Figure.astro";
+
+import VectorTheme from "@/assets/posts/welcome-to-luztech-blog/vector-theme.webp";
+import AstroPaperTheme from "@/assets/posts/welcome-to-luztech-blog/astro-paper-theme.png";
 
 Seja muito bem-vindo ao blog técnico oficial da **LuzTech**!
 
@@ -23,7 +26,9 @@ Também pretendo compartilhar curiosidades e projetos interessantes que encontro
 
 E como primeira publicação, quero apresentar como construí este blog.
 
-## O blog
+## Sumário
+
+## Os requisitos
 
 Meu primeiro requisito, que definiu o direcionamento do blog, foi que ele deveria ser **estático**, ou seja, sem backend.
 
@@ -47,7 +52,60 @@ E, falando com os meus amigos imaginários (ChatGPT e Gemini), concluí que o [A
 
 Bom, porque, além do SSG, o Astro me permite usar MDX, o que me deixa fazer coisas como colocar o famoso contador do React na próxima linha:
 
-<ReactCounter remember='sessionStorage' />
+<Counter remember='sessionStorage' />
 
-E, honestamente, eu não queria passar muito trabalho estudando um framework novo, então usar o Astro caiu como uma luva.
+<figcaption class="text-center">Ele até se lembra do valor mesmo se recarregar a página, incrível, não? 😎</figcaption>
 
+E a integração entre texto e componentes é muito boa, então ele acabou ganhando.
+
+## Tema
+
+Depois disso, foi minha busca por um tema que me agradasse. Eu fui na [página de temas do Astro para blogs](https://astro.build/themes/1/?search=&categories%5B%5D=blog) e, vou ser sincero, o tema atual não foi o primeiro a me chamar a atenção, foi o [Vector](https://astro.build/themes/details/vector/). 
+
+
+<Figure src={VectorTheme} alt="Screenshot da home do tema Vector para Astro">
+  <Fragment slot="caption">
+
+    Screenshot do tema [Vector](https://astro.build/themes/details/vector/) (comercial), por [Andrei Alba](https://astro.build/themes/author/3154). Reproduzida aqui para fins editoriais.
+
+  </Fragment>
+</Figure>
+
+Mas, como nem tudo na vida é perfeito, o Vector é um tema pago. E, como a ideia inicial deste blog é ser barato, adotei o tema [Astro Paper](https://astro.build/themes/details/astropaper/) que é gratuito e atende bem às minhas necessidades.
+
+> [!important]
+> Não tenho nada contra temas pagos, na verdade eu até cogitei em comprar este tema, pois gostei muito dele. Mas, como o blog tem como requisito ser barato, optei por um tema gratuito.
+
+O Astro Paper não fica pra trás, ele tem uma ideia mais minimalista, que acho que se encaixa bem com a proposta do blog:
+
+<Figure src={AstroPaperTheme} alt="Screenshot da home do tema Astro Paper para Astro">
+  <Fragment slot="caption">
+
+    Screenshot do tema [Astro Paper](https://astro.build/themes/details/astropaper/) (MIT), por [Sat Naing](https://astro.build/themes/author/26). Reproduzida aqui para fins editoriais.
+
+  </Fragment>
+</Figure>
+
+Com a escolha do tema, chegou o momento de <RainbowText>✨personalizar✨</RainbowText>.
+
+## Personalização
+
+Um ponto chave que me ajudou bastante nesta etapa foi a existência do [repositório de Tipografia da LuzTech](https://github.com/LuzTech-Development/Typography). Ele me permitiu ter uma identidade visual consistente com o restante da empresa, sem precisar reinventar a roda.
+
+E, claro, não fui eu que fiz boa parte da personalização, foi o [GitHub Copilot](https://github.com/features/copilot).
+
+> Como assim? Você usou Inteligência Artificial para escrever código? Não ficou cheio de slop?
+
+Boa pergunta meu querido, e a resposta é: **Sim**, usei o GitHub Copilot para gerar boa parte do frontend deste blog, inclusive os componentes usados pelo post (o texto não, este eu escrevo da forma antiga).
+
+Agora, sobre o _slop_... Sim, ele gerou _slop_, mas surpreendentemente, não tanto assim. Veja, eu usei um dos modelos mais poderosos do momento: o `Claude Opus 4.7`, que em geral consegue escrever código de forma bem razoável. E, claro, eu fui testando e revisando durante o processo, além de pedir coisas pouco a pouco.
+
+A Inteligência Artificial não substitui uma pessoa, ela substitui uma ferramenta, ou melhor, ela **é** uma ferramenta, mais uma, como os compiladores, linters, IDEs, etc. E, como toda ferramenta, ela precisa ser usada com cuidado e atenção.
+
+Dito isto, eu referenciei o [projeto de tipografia](https://github.com/LuzTech-Development/Typography) nos meus prompts e fui bem claro no que desejava que fosse implementado. Muitas vezes o Copilot me entregava algo que não era exatamente o que eu queria, mas com alguns ajustes e prompts mais claros, ele foi me entregando o que eu precisava, pouco a pouco.
+
+## Conclusão
+
+Foi um experimento divertido, sendo sincero. Não é o blog mais engenheirado do mundo, mas às vezes, o pouco é mais que o suficiente.
+
+Espero que tenha gostado!
