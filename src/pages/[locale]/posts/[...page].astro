@@ -1,22 +1,22 @@
 ---
-import type { GetStaticPaths } from "astro";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Main from "@/components/Main.astro";
-import Card from "@/components/Card.astro";
-import Footer from "@/components/Footer.astro";
-import Pagination from "@/components/Pagination.astro";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
+import type { GetStaticPaths } from 'astro';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Main from '@/components/Main.astro';
+import Card from '@/components/Card.astro';
+import Footer from '@/components/Footer.astro';
+import Pagination from '@/components/Pagination.astro';
+import { getSortedPosts } from '@/utils/getSortedPosts';
+import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
 import {
   LOCALES,
   assertLocaleParam,
   localeToPath,
-  type Locale,
-} from "@/utils/i18n";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+  type Locale
+} from '@/utils/i18n';
+import { useTranslations } from '@/i18n';
+import config from '@/config';
 
 export const getStaticPaths = (async ({ paginate }) => {
   const groups = await Promise.all(
@@ -24,7 +24,7 @@ export const getStaticPaths = (async ({ paginate }) => {
       const posts = await getLocalizedPosts(locale as Locale);
       return paginate(getSortedPosts(posts.filter(({ data }) => !data.draft)), {
         pageSize: config.posts.perPage,
-        params: { locale: localeToPath(locale as Locale) },
+        params: { locale: localeToPath(locale as Locale) }
       });
     })
   );
@@ -36,7 +36,10 @@ const locale = assertLocaleParam(Astro.params.locale);
 const t = useTranslations(locale);
 ---
 
-<Layout title={`${t.pages.postsTitle} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.postsTitle} | ${config.site.title}`}
+  description={t.pages.postsDesc}
+>
   <Header />
 
   <Breadcrumb />

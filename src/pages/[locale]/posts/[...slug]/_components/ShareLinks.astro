@@ -1,18 +1,19 @@
 ---
-import IconLink from "@/assets/icons/IconLink.svg";
-import IconCheck from "@/assets/icons/IconCheck.svg";
-import LinkButton from "@/components/LinkButton.astro";
-import { tplStr, useTranslations } from "@/i18n";
-import config from "@/config";
+import IconLink from '@/assets/icons/IconLink.svg';
+import IconCheck from '@/assets/icons/IconCheck.svg';
+import LinkButton from '@/components/LinkButton.astro';
+import { tplStr, useTranslations } from '@/i18n';
+import config from '@/config';
 
 const { shareLinks } = config;
 const t = useTranslations(Astro.currentLocale);
 
 const icons = import.meta.glob<{
   default: (_props: Record<string, unknown>) => unknown;
-}>("/src/assets/icons/socials/*.svg");
+}>('/src/assets/icons/socials/*.svg');
 
 const pageUrl = Astro.url;
+const encodedPageUrl = encodeURIComponent(pageUrl.toString());
 
 const platformLabel = (name: string) =>
   name.charAt(0).toUpperCase() + name.slice(1);
@@ -23,7 +24,7 @@ const items = await Promise.all(
     const Icon = mod?.default;
     const title =
       linkTitle ??
-      (name === "mail"
+      (name === 'mail'
         ? t.post.sharePostViaEmail
         : tplStr(t.post.sharePostOn, { platform: platformLabel(name) }));
     return { url, title, Icon };
@@ -41,10 +42,10 @@ const items = await Promise.all(
     <button
       type="button"
       class:list={[
-        "share-copy-link focus-outline inline-flex items-center gap-2 rounded-full",
-        "border-accent/40 bg-accent/10 border px-3 py-1.5 text-sm font-medium",
-        "text-accent hover:bg-accent/20 hover:border-accent",
-        "transition-colors",
+        'share-copy-link focus-outline inline-flex items-center gap-2 rounded-full',
+        'border-accent/40 bg-accent/10 border px-3 py-1.5 text-sm font-medium',
+        'text-accent hover:bg-accent/20 hover:border-accent',
+        'transition-colors'
       ]}
       data-page-url={pageUrl.toString()}
       data-label-copy={t.post.copyLink}
@@ -59,7 +60,7 @@ const items = await Promise.all(
       items.map(({ url, title, Icon }) =>
         Icon ? (
           <LinkButton
-            href={`${url}${pageUrl}`}
+            href={`${url}${encodedPageUrl}`}
             class="scale-90 p-2 hover:rotate-6 sm:p-1"
             title={title}
             target="_blank"
@@ -77,21 +78,21 @@ const items = await Promise.all(
 <script>
   function wireCopyLink() {
     const buttons = document.querySelectorAll<HTMLButtonElement>(
-      "button.share-copy-link"
+      'button.share-copy-link'
     );
     buttons.forEach(btn => {
-      if (btn.dataset.wired === "true") return;
-      btn.dataset.wired = "true";
+      if (btn.dataset.wired === 'true') return;
+      btn.dataset.wired = 'true';
 
-      const label = btn.querySelector<HTMLSpanElement>(".share-copy-label");
-      const icon = btn.querySelector<SVGElement>(".share-copy-icon");
-      const check = btn.querySelector<SVGElement>(".share-copy-check");
-      const copyText = btn.dataset.labelCopy ?? "Copy link";
-      const successText = btn.dataset.labelSuccess ?? "Link copied!";
+      const label = btn.querySelector<HTMLSpanElement>('.share-copy-label');
+      const icon = btn.querySelector<SVGElement>('.share-copy-icon');
+      const check = btn.querySelector<SVGElement>('.share-copy-check');
+      const copyText = btn.dataset.labelCopy ?? 'Copy link';
+      const successText = btn.dataset.labelSuccess ?? 'Link copied!';
 
       let resetTimer: number | undefined;
 
-      btn.addEventListener("click", async () => {
+      btn.addEventListener('click', async () => {
         const url = btn.dataset.pageUrl ?? window.location.href;
         try {
           await navigator.clipboard.writeText(url);
@@ -99,11 +100,11 @@ const items = await Promise.all(
           // Clipboard API unavailable (insecure context, old browser). Fall
           // back to a temporary textarea + execCommand("copy") — legacy but
           // still supported everywhere the modern API isn't.
-          const ta = document.createElement("textarea");
+          const ta = document.createElement('textarea');
           ta.value = url;
-          ta.setAttribute("readonly", "");
-          ta.style.position = "absolute";
-          ta.style.left = "-9999px";
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'absolute';
+          ta.style.left = '-9999px';
           document.body.appendChild(ta);
           ta.select();
           try {
@@ -112,28 +113,28 @@ const items = await Promise.all(
               document as unknown as {
                 execCommand(cmd: string): boolean;
               }
-            ).execCommand("copy");
+            ).execCommand('copy');
           } finally {
             ta.remove();
           }
         }
 
         if (label) label.textContent = successText;
-        icon?.classList.add("hidden");
-        check?.classList.remove("hidden");
-        btn.setAttribute("aria-label", successText);
+        icon?.classList.add('hidden');
+        check?.classList.remove('hidden');
+        btn.setAttribute('aria-label', successText);
 
         window.clearTimeout(resetTimer);
         resetTimer = window.setTimeout(() => {
           if (label) label.textContent = copyText;
-          check?.classList.add("hidden");
-          icon?.classList.remove("hidden");
-          btn.setAttribute("aria-label", copyText);
+          check?.classList.add('hidden');
+          icon?.classList.remove('hidden');
+          btn.setAttribute('aria-label', copyText);
         }, 1800);
       });
     });
   }
 
   wireCopyLink();
-  document.addEventListener("astro:page-load", wireCopyLink);
+  document.addEventListener('astro:page-load', wireCopyLink);
 </script>

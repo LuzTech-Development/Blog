@@ -1,6 +1,6 @@
 ---
-title: "Sobre"
-description: "Sobre o blog técnico oficial da LuzTech."
+title: 'Sobre'
+description: 'Sobre o blog técnico oficial da LuzTech.'
 ---
 
 O LuzTech Blog é a publicação técnica oficial da **LuzTech Development**.
@@ -11,10 +11,12 @@ enquanto construímos produtos e ferramental interno.
 
 ## O que você encontra por aqui
 
-- Tutoriais de frontend, backend e plataforma
-- Notas de arquitetura e engenharia
-- Melhorias de ferramental e experiência de desenvolvimento
-- Relatos práticos do time de engenharia da LuzTech
+- **Microsoft Azure** — desenvolvimento cloud-native, arquitetura estável e design com foco em custo
+- **DevOps** com GitHub e Azure DevOps — pipelines de CI/CD, packaging, fluxos de revisão e boas práticas de repositório
+- Engenharia backend com **TypeScript**, **Node.js** e **.NET**
+- Serviços de vida longa, bibliotecas reutilizáveis e experiência de desenvolvedor bem cuidada
+- Decisões de arquitetura, migrações e trade-offs
+- Confiabilidade, observabilidade e operação de workloads em nuvem em produção
 
 ## Construído com
 

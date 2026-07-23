@@ -8,6 +8,6 @@ export function tplStr(
 ): string {
   return template.replace(/\{\{(\w+)\}\}/g, (_, key: string) => {
     const value = vars[key];
-    return value !== undefined && value !== null ? String(value) : "";
+    return value !== undefined && value !== null ? String(value) : '';
   });
 }

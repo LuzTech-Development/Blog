@@ -1,27 +1,27 @@
-import eslintPluginAstro from "eslint-plugin-astro";
-import tsParser from "@typescript-eslint/parser";
+import eslintPluginAstro from 'eslint-plugin-astro';
+import tsParser from '@typescript-eslint/parser';
 
 export default [
   ...eslintPluginAstro.configs.recommended,
   {
-    files: ["**/*.astro"],
+    files: ['**/*.astro'],
     languageOptions: {
       parserOptions: {
-        parser: tsParser,
-      },
-    },
+        parser: tsParser
+      }
+    }
   },
   {
-    files: ["**/*.ts", "**/*.tsx"],
+    files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
-      parser: tsParser,
-    },
+      parser: tsParser
+    }
   },
-  { rules: { "no-console": "error" } },
+  { rules: { 'no-console': 'error' } },
   {
     // CLI helper scripts print to the terminal by design.
-    files: ["scripts/**/*.{js,mjs,cjs,ts}"],
-    rules: { "no-console": "off" },
+    files: ['scripts/**/*.{js,mjs,cjs,ts}'],
+    rules: { 'no-console': 'off' }
   },
-  { ignores: ["dist/**", ".astro/**", "public/pagefind/**"] },
+  { ignores: ['dist/**', '.astro/**', 'public/pagefind/**'] }
 ];

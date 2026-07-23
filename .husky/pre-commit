@@ -1,0 +1,6 @@
+pnpm lint
+pnpm check
+pnpm build
+pnpm format
+pnpm format:check
+git add .

@@ -1,6 +1,6 @@
-import type { CollectionEntry } from "astro:content";
-import { postFilter } from "./postFilter";
-import { slugifyStr } from "./slugify";
+import type { CollectionEntry } from 'astro:content';
+import { postFilter } from './postFilter';
+import { slugifyStr } from './slugify';
 
 export type Author = {
   /** Slug used in URLs (lowercased, kebab-case). */
@@ -21,7 +21,7 @@ export type Author = {
  *   collapse). Kept intentionally simple: two authors with the same slug are
  *   assumed to be the same person, and their first-seen `name` + `email` wins.
  */
-export function getUniqueAuthors(posts: CollectionEntry<"posts">[]): Author[] {
+export function getUniqueAuthors(posts: CollectionEntry<'posts'>[]): Author[] {
   const seen = new Map<string, Author>();
   for (const post of posts.filter(postFilter)) {
     const name = post.data.author;
@@ -39,7 +39,7 @@ export function getUniqueAuthors(posts: CollectionEntry<"posts">[]): Author[] {
         slug,
         name,
         email: post.data.authorEmail ?? null,
-        count: 1,
+        count: 1
       });
     }
   }
@@ -51,8 +51,8 @@ export function getUniqueAuthors(posts: CollectionEntry<"posts">[]): Author[] {
  * the collection at large. Used by the post byline.
  */
 export function getPostAuthor(
-  post: CollectionEntry<"posts">
-): Pick<Author, "slug" | "name" | "email"> | null {
+  post: CollectionEntry<'posts'>
+): Pick<Author, 'slug' | 'name' | 'email'> | null {
   const name = post.data.author;
   if (!name) return null;
   const slug = slugifyStr(name);

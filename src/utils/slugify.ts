@@ -1,5 +1,5 @@
-import kebabcase from "lodash.kebabcase";
-import slugify from "slugify";
+import kebabcase from 'lodash.kebabcase';
+import slugify from 'slugify';
 
 const hasNonLatin = (str: string): boolean => /[^\x00-\x7F]/.test(str);
 

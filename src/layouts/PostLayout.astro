@@ -1,39 +1,52 @@
 ---
-import Layout from "./Layout.astro";
-import config from "@/config";
+import Layout from './Layout.astro';
+import config from '@/config';
 
 type Props = {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogImageAlt?: string;
   canonicalURL?: string;
   pubDatetime?: Date;
   modDatetime?: Date | null;
+  author?: string;
+  tags?: string[];
 };
 
 const { site } = config;
 
-const { title, description, ogImage, canonicalURL, pubDatetime, modDatetime } =
-  Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  ogImageAlt,
+  canonicalURL,
+  pubDatetime,
+  modDatetime,
+  author,
+  tags
+} = Astro.props;
 
 const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
   headline: title ?? site.title,
   image: ogImage,
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
   author: [
     {
-      "@type": "Person",
-      name: site.author,
-      ...(site.profile && { url: site.profile }),
-    },
+      '@type': 'Person',
+      name: author ?? site.author,
+      ...(site.profile && { url: site.profile })
+    }
   ],
+  ...(tags && tags.length > 0 && { keywords: tags.join(', ') })
 };
 ---
 
-<Layout {title} {description} {ogImage} {canonicalURL}>
+<Layout {title} {description} {ogImage} {ogImageAlt} {canonicalURL}>
   <Fragment slot="head">
     <!-- Override og:type for article pages -->
     <meta property="og:type" content="article" />
@@ -54,6 +67,8 @@ const structuredData = {
         />
       )
     }
+    <meta property="article:author" content={author ?? site.author} />
+    {tags?.map(tag => <meta property="article:tag" content={tag} />)}
 
     <script
       type="application/ld+json"

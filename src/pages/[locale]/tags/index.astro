@@ -1,15 +1,15 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Main from "@/components/Main.astro";
-import Footer from "@/components/Footer.astro";
-import Tag from "@/components/Tag.astro";
-import { getUniqueTags } from "@/utils/getUniqueTags";
-import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
-import { assertLocaleParam, getStaticLocalePaths } from "@/utils/i18n";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Main from '@/components/Main.astro';
+import Footer from '@/components/Footer.astro';
+import Tag from '@/components/Tag.astro';
+import { getUniqueTags } from '@/utils/getUniqueTags';
+import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
+import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
+import { useTranslations } from '@/i18n';
+import config from '@/config';
 
 export const getStaticPaths = getStaticLocalePaths;
 
@@ -21,7 +21,10 @@ const tags = getUniqueTags(publishedPosts);
 const t = useTranslations(locale);
 ---
 
-<Layout title={`${t.pages.tagsTitle} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.tagsTitle} | ${config.site.title}`}
+  description={t.pages.tagsDesc}
+>
   <Header />
 
   <Breadcrumb />
