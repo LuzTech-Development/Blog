@@ -6,6 +6,7 @@ import Footer from '@/components/Footer.astro';
 import Datetime from '@/components/Datetime.astro';
 import Tag from '@/components/Tag.astro';
 import AuthorLink from '@/components/AuthorLink.astro';
+import IconClock from '@/assets/icons/IconClock.svg';
 import { getPostSlug, getPostUrl } from '@/utils/getPostPaths';
 import { getPostAuthor } from '@/utils/getUniqueAuthors';
 import { getSortedPosts } from '@/utils/getSortedPosts';
@@ -91,7 +92,11 @@ const {
 
 const author = getPostAuthor(post);
 
-const { Content } = await render(post);
+const { Content, remarkPluginFrontmatter } = await render(post);
+const minutesRead =
+  typeof remarkPluginFrontmatter.minutesRead === 'number'
+    ? remarkPluginFrontmatter.minutesRead
+    : undefined;
 
 let ogImageUrl: string | undefined;
 
@@ -143,6 +148,22 @@ const ogImage = ogImageUrl
 
     <div class="my-2 flex flex-wrap items-center gap-x-3 gap-y-1">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      {
+        minutesRead !== undefined && (
+          <>
+            <span aria-hidden="true" class="text-muted-foreground">
+              |
+            </span>
+            <span class="text-muted-foreground flex items-center gap-x-2 text-sm sm:text-base">
+              <IconClock
+                class="inline-block size-6 min-w-5.5"
+                aria-hidden="true"
+              />
+              {minutesRead} {t.post.minutesReadUnit}
+            </span>
+          </>
+        )
+      }
       {
         author && (
           <>

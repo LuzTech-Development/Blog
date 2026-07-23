@@ -20,7 +20,7 @@ building products and internal tooling.
 
 ## Built with
 
-This blog is powered by [Astro](https://astro.build/), TypeScript, Tailwind CSS,
+This blog is powered by [Astro](https://astro.build/), [Astro Paper](https://github.com/satnaing/astro-paper), TypeScript, Tailwind CSS,
 Markdown/MDX content, Pagefind search, RSS, sitemap generation, and automatic
 Open Graph images.
 
