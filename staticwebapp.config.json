@@ -21,12 +21,6 @@
       }
     },
     {
-      "route": "/favicon.ico",
-      "headers": {
-        "cache-control": "public, max-age=86400"
-      }
-    },
-    {
       "route": "/robots.txt",
       "headers": {
         "cache-control": "public, max-age=3600"

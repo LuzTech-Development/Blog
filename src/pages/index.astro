@@ -40,7 +40,6 @@ const supportedJson = JSON.stringify(LOCALE_URL_PATH);
     <meta name="robots" content="noindex" />
     <title>{config.site.title}</title>
     <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
-    <link rel="icon" href={getAssetPath("favicon.ico")} />
     <link rel="canonical" href={new URL("/", Astro.site ?? Astro.url).href} />
     {
       alternates.map(alt => (
