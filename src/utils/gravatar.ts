@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash } from 'node:crypto';
 
 /**
  * Build a Gravatar image URL for the given email address.
@@ -18,13 +18,13 @@ import { createHash } from "node:crypto";
 export function gravatarUrl(
   email: string | undefined | null,
   size?: number,
-  fallback: "identicon" | "retro" | "robohash" | "mp" | "wavatar" = "identicon"
+  fallback: 'identicon' | 'retro' | 'robohash' | 'mp' | 'wavatar' = 'identicon'
 ): string {
-  const normalized = (email ?? "").trim().toLowerCase();
-  const hash = createHash("sha256").update(normalized).digest("hex");
+  const normalized = (email ?? '').trim().toLowerCase();
+  const hash = createHash('sha256').update(normalized).digest('hex');
   const params = new URLSearchParams();
-  if (typeof size === "number") params.set("s", String(size));
-  params.set("d", fallback);
+  if (typeof size === 'number') params.set('s', String(size));
+  params.set('d', fallback);
   return `https://www.gravatar.com/avatar/${hash}?${params.toString()}`;
 }
 
@@ -42,9 +42,9 @@ export function gravatarSrcSet(
   email: string | undefined | null,
   basePx: number,
   densities: readonly number[] = [1, 2, 3],
-  fallback: "identicon" | "retro" | "robohash" | "mp" | "wavatar" = "identicon"
+  fallback: 'identicon' | 'retro' | 'robohash' | 'mp' | 'wavatar' = 'identicon'
 ): string {
   return densities
     .map(d => `${gravatarUrl(email, basePx * d, fallback)} ${d}x`)
-    .join(", ");
+    .join(', ');
 }

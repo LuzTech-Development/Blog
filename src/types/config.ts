@@ -16,7 +16,7 @@ interface SiteConfig {
   /** IANA timezone for post dates, e.g. "Asia/Bangkok" */
   timezone?: string;
   /** Text direction */
-  dir?: "ltr" | "rtl" | "auto";
+  dir?: 'ltr' | 'rtl' | 'auto';
   /** Google Search Console verification meta tag value */
   googleVerification?: string;
 }
@@ -58,7 +58,7 @@ interface FeaturesConfig {
    * Search provider. "pagefind" ships in the base template.
    * Set to false to disable search entirely.
    */
-  search?: "pagefind" | false;
+  search?: 'pagefind' | false;
 }
 
 interface SocialLink {
@@ -105,17 +105,17 @@ interface AstroPaperConfig {
 type ResolvedSiteConfig = Required<
   Pick<
     SiteConfig,
-    | "url"
-    | "title"
-    | "description"
-    | "author"
-    | "lang"
-    | "timezone"
-    | "dir"
-    | "ogImage"
+    | 'url'
+    | 'title'
+    | 'description'
+    | 'author'
+    | 'lang'
+    | 'timezone'
+    | 'dir'
+    | 'ogImage'
   >
 > &
-  Pick<SiteConfig, "profile" | "googleVerification">;
+  Pick<SiteConfig, 'profile' | 'googleVerification'>;
 
 export interface ResolvedAstroPaperConfig {
   site: ResolvedSiteConfig;

@@ -1,24 +1,24 @@
 ---
-import type { GetStaticPathsOptions } from "astro";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Main from "@/components/Main.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Card from "@/components/Card.astro";
-import Footer from "@/components/Footer.astro";
-import Pagination from "@/components/Pagination.astro";
-import { getUniqueTags } from "@/utils/getUniqueTags";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
+import type { GetStaticPathsOptions } from 'astro';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Main from '@/components/Main.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Card from '@/components/Card.astro';
+import Footer from '@/components/Footer.astro';
+import Pagination from '@/components/Pagination.astro';
+import { getUniqueTags } from '@/utils/getUniqueTags';
+import { getSortedPosts } from '@/utils/getSortedPosts';
+import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
 import {
   LOCALES,
   assertLocaleParam,
   localeToPath,
-  type Locale,
-} from "@/utils/i18n";
-import { slugifyAll } from "@/utils/slugify";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+  type Locale
+} from '@/utils/i18n';
+import { slugifyAll } from '@/utils/slugify';
+import { useTranslations } from '@/i18n';
+import config from '@/config';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const groups = await Promise.all(
@@ -36,7 +36,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
         return paginate(tagPosts, {
           params: { locale: localeToPath(locale as Locale), tag },
           props: { tagName },
-          pageSize: config.posts.perPage,
+          pageSize: config.posts.perPage
         });
       });
     })
@@ -51,7 +51,10 @@ const locale = assertLocaleParam(Astro.params.locale);
 const t = useTranslations(locale);
 ---
 
-<Layout title={`${t.pages.tagTitle}: ${tagName} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.tagTitle}: ${tagName} | ${config.site.title}`}
+  description={`${t.pages.tagDesc} "${tagName}".`}
+>
   <Header />
 
   <Breadcrumb />

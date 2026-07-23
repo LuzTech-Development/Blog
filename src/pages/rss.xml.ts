@@ -14,14 +14,14 @@
  * memory (or click a stale bookmark) still end up on the right feed.
  */
 
-import type { APIRoute } from "astro";
+import type { APIRoute } from 'astro';
 import {
   LOCALES,
   LOCALE_URL_PATH,
   DEFAULT_LOCALE,
-  LOCALE_LABELS,
-} from "@/utils/i18n";
-import config from "@/config";
+  LOCALE_LABELS
+} from '@/utils/i18n';
+import config from '@/config';
 
 const defaultTarget = `/${LOCALE_URL_PATH[DEFAULT_LOCALE]}/rss.xml`;
 const supportedJson = JSON.stringify(LOCALE_URL_PATH);
@@ -30,7 +30,7 @@ const title = `${config.site.title} — RSS`;
 const alternates = LOCALES.map(locale => ({
   hreflang: locale,
   href: `/${LOCALE_URL_PATH[locale]}/rss.xml`,
-  label: LOCALE_LABELS[locale],
+  label: LOCALE_LABELS[locale]
 }));
 
 const html = /* html */ `<!doctype html>
@@ -45,7 +45,7 @@ ${alternates
     alt =>
       `    <link rel="alternate" type="application/rss+xml" hreflang="${alt.hreflang}" href="${alt.href}" title="${title} (${alt.label})" />`
   )
-  .join("\n")}
+  .join('\n')}
     <link rel="alternate" type="application/rss+xml" hreflang="x-default" href="${defaultTarget}" title="${title}" />
     <meta http-equiv="refresh" content="0; url=${defaultTarget}" />
     <script>
@@ -89,7 +89,7 @@ ${alternates
       <ul>
 ${alternates
   .map(alt => `        <li><a href="${alt.href}">${alt.label}</a></li>`)
-  .join("\n")}
+  .join('\n')}
       </ul>
     </noscript>
   </body>
@@ -99,6 +99,6 @@ ${alternates
 export const GET: APIRoute = () =>
   new Response(html, {
     headers: {
-      "Content-Type": "text/html; charset=utf-8",
-    },
+      'Content-Type': 'text/html; charset=utf-8'
+    }
   });

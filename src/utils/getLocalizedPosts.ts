@@ -1,8 +1,8 @@
-import { getCollection, type CollectionEntry } from "astro:content";
-import { getPostLocale, getPostSlugId } from "./getPostPaths";
-import { LOCALES, type Locale } from "./i18n";
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getPostLocale, getPostSlugId } from './getPostPaths';
+import { LOCALES, type Locale } from './i18n';
 
-type Post = CollectionEntry<"posts">;
+type Post = CollectionEntry<'posts'>;
 
 /**
  * Ensures every published post has a translation in every configured locale.
@@ -37,16 +37,16 @@ export function assertTranslationCoverage(posts: Post[]): void {
     const missing = LOCALES.filter(l => !publishedLocales.has(l));
     if (missing.length > 0) {
       errors.push(
-        `  • "${slugId}" is published in [${[...publishedLocales].join(", ")}] but missing translations in [${missing.join(", ")}].`
+        `  • "${slugId}" is published in [${[...publishedLocales].join(', ')}] but missing translations in [${missing.join(', ')}].`
       );
     }
   }
 
   if (errors.length > 0) {
     throw new Error(
-      `\nMissing localized translations detected:\n${errors.join("\n")}\n\n` +
+      `\nMissing localized translations detected:\n${errors.join('\n')}\n\n` +
         `Every published post must exist in all configured locales ` +
-        `(${LOCALES.join(", ")}), or be marked \`draft: true\` in the ` +
+        `(${LOCALES.join(', ')}), or be marked \`draft: true\` in the ` +
         `locale(s) where it is not ready yet.\n`
     );
   }
@@ -57,7 +57,7 @@ export function assertTranslationCoverage(posts: Post[]): void {
  * translation coverage is complete across the whole collection.
  */
 export async function getLocalizedPosts(locale: Locale): Promise<Post[]> {
-  const allPosts = await getCollection("posts");
+  const allPosts = await getCollection('posts');
   assertTranslationCoverage(allPosts);
   return allPosts.filter(post => getPostLocale(post.id) === locale);
 }

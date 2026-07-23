@@ -1,36 +1,39 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
-import "@pagefind/default-ui/css/ui.css";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Main from "@/components/Main.astro";
-import Footer from "@/components/Footer.astro";
-import { getAssetPath } from "@/utils/withBase";
-import { assertLocaleParam, getStaticLocalePaths } from "@/utils/i18n";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import '@pagefind/default-ui/css/ui.css';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Main from '@/components/Main.astro';
+import Footer from '@/components/Footer.astro';
+import { getAssetPath } from '@/utils/withBase';
+import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
+import { useTranslations } from '@/i18n';
+import config from '@/config';
 
 export const getStaticPaths = getStaticLocalePaths;
 
 const locale = assertLocaleParam(Astro.params.locale);
 
 // Redirect to 404 page if `search` feature is not enabled
-const notFoundUrl = getRelativeLocaleUrl(locale, "404");
-if (config.features.search !== "pagefind" && notFoundUrl) {
+const notFoundUrl = getRelativeLocaleUrl(locale, '404');
+if (config.features.search !== 'pagefind' && notFoundUrl) {
   return Astro.rewrite(notFoundUrl);
 }
 
 const backUrl = config.features.showBackButton
   ? `${Astro.url.pathname}`
-  : getRelativeLocaleUrl(locale, "");
+  : getRelativeLocaleUrl(locale, '');
 
-const pagefindBundlePath = getAssetPath("pagefind/");
+const pagefindBundlePath = getAssetPath('pagefind/');
 
 const t = useTranslations(locale);
 ---
 
-<Layout title={`${t.pages.searchTitle} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.searchTitle} | ${config.site.title}`}
+  description={t.pages.searchDesc}
+>
   <Header />
 
   <Breadcrumb />
@@ -51,7 +54,7 @@ const t = useTranslations(locale);
 <script>
   function initSearch() {
     const pageFindSearch: HTMLElement | null =
-      document.querySelector("#pagefind-search");
+      document.querySelector('#pagefind-search');
 
     if (!pageFindSearch) return;
 
@@ -64,7 +67,7 @@ const t = useTranslations(locale);
 
     onIdle(async () => {
       // @ts-expect-error — Missing types for @pagefind/default-ui package.
-      const { PagefindUI } = await import("@pagefind/default-ui");
+      const { PagefindUI } = await import('@pagefind/default-ui');
 
       // Display warning inn dev mode
       if (import.meta.env.DEV) {
@@ -78,47 +81,47 @@ const t = useTranslations(locale);
 
       // Init pagefind ui
       const search = new PagefindUI({
-        element: "#pagefind-search",
+        element: '#pagefind-search',
         bundlePath,
         showImages: false,
         showSubResults: true,
         processTerm: function (term: string) {
-          params.set("q", term); // Update the `q` parameter in the URL
-          history.replaceState(history.state, "", "?" + params.toString()); // Push the new URL without reloading
+          params.set('q', term); // Update the `q` parameter in the URL
+          history.replaceState(history.state, '', '?' + params.toString()); // Push the new URL without reloading
 
           const backUrl =
             pageFindSearch?.dataset?.backurl ?? window.location.pathname;
-          sessionStorage.setItem("backUrl", `${backUrl}?${params.toString()}`);
+          sessionStorage.setItem('backUrl', `${backUrl}?${params.toString()}`);
 
           return term;
-        },
+        }
       });
 
       // If search param exists (eg: search?q=astro), trigger search
-      const query = params.get("q");
+      const query = params.get('q');
       if (query) {
         search.triggerSearch(query);
       }
 
       // Reset search param if search input is cleared
-      const searchInput = document.querySelector(".pagefind-ui__search-input");
-      const clearButton = document.querySelector(".pagefind-ui__search-clear");
-      searchInput?.addEventListener("input", resetSearchParam);
-      clearButton?.addEventListener("click", resetSearchParam);
+      const searchInput = document.querySelector('.pagefind-ui__search-input');
+      const clearButton = document.querySelector('.pagefind-ui__search-clear');
+      searchInput?.addEventListener('input', resetSearchParam);
+      clearButton?.addEventListener('click', resetSearchParam);
 
       function resetSearchParam(e: Event) {
-        if ((e.target as HTMLInputElement)?.value.trim() === "") {
-          history.replaceState(history.state, "", window.location.pathname);
+        if ((e.target as HTMLInputElement)?.value.trim() === '') {
+          history.replaceState(history.state, '', window.location.pathname);
         }
       }
     });
   }
 
-  document.addEventListener("astro:after-swap", () => {
-    const pagefindSearch = document.querySelector("#pagefind-search");
+  document.addEventListener('astro:after-swap', () => {
+    const pagefindSearch = document.querySelector('#pagefind-search');
 
     // if pagefind search form already exists, don't initialize search component
-    if (pagefindSearch && pagefindSearch.querySelector("form")) return;
+    if (pagefindSearch && pagefindSearch.querySelector('form')) return;
 
     initSearch();
   });

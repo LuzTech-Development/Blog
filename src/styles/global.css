@@ -1,8 +1,8 @@
-@import "@fontsource/space-grotesk/latin.css";
-@import "tailwindcss";
-@import "./theme.css";
-@import "./typography.css";
-@import "rehype-callouts/theme/obsidian";
+@import '@fontsource/space-grotesk/latin.css';
+@import 'tailwindcss';
+@import './theme.css';
+@import './typography.css';
+@import 'rehype-callouts/theme/obsidian';
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -19,12 +19,12 @@
   }
 
   button:not(:disabled),
-  [role="button"]:not(:disabled) {
+  [role='button']:not(:disabled) {
     cursor: pointer;
   }
 
   body {
-    font-family: "Space Grotesk", var(--font-space-grotesk), sans-serif;
+    font-family: 'Space Grotesk', var(--font-space-grotesk), sans-serif;
   }
 
   h1,

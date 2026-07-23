@@ -1,20 +1,20 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
-import { Image } from "astro:assets";
-import IconUnderline from "@/assets/icons/IconUnderline.svg";
-import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
-import IconArchive from "@/assets/icons/IconArchive.svg";
-import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
-import IconSearch from "@/assets/icons/IconSearch.svg";
-import IconMoon from "@/assets/icons/IconMoon.svg";
-import IconX from "@/assets/icons/IconX.svg";
-import luztechMark from "@/assets/luztech-mark.png";
-import LinkButton from "./LinkButton.astro";
-import LanguageSwitcher from "./LanguageSwitcher.astro";
-import { stripBase, stripLocale } from "@/utils/withBase";
-import { DEFAULT_LOCALE, isLocale, localeToPath } from "@/utils/i18n";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { Image } from 'astro:assets';
+import IconUnderline from '@/assets/icons/IconUnderline.svg';
+import IconMenuDeep from '@/assets/icons/IconMenuDeep.svg';
+import IconArchive from '@/assets/icons/IconArchive.svg';
+import IconSunHigh from '@/assets/icons/IconSunHigh.svg';
+import IconSearch from '@/assets/icons/IconSearch.svg';
+import IconMoon from '@/assets/icons/IconMoon.svg';
+import IconX from '@/assets/icons/IconX.svg';
+import luztechMark from '@/assets/luztech-mark.png';
+import LinkButton from './LinkButton.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { stripBase, stripLocale } from '@/utils/withBase';
+import { DEFAULT_LOCALE, isLocale, localeToPath } from '@/utils/i18n';
+import { useTranslations } from '@/i18n';
+import config from '@/config';
 
 const { site, features } = config;
 
@@ -27,15 +27,15 @@ const t = useTranslations(locale);
 // e.g. with base "/blog": "/blog/posts/slug" → "/posts/slug"
 const relativePath = stripBase(Astro.url.pathname);
 const pathWithoutTrailingSlash =
-  relativePath.endsWith("/") && relativePath !== "/"
+  relativePath.endsWith('/') && relativePath !== '/'
     ? relativePath.slice(0, -1)
     : relativePath;
 
 const currentPath = stripLocale(pathWithoutTrailingSlash, localeToPath(locale));
 
 const isActive = (path: string) => {
-  const currentPathArray = currentPath.split("/").filter(p => p.trim());
-  const pathArray = path.split("/").filter(p => p.trim());
+  const currentPathArray = currentPath.split('/').filter(p => p.trim());
+  const pathArray = path.split('/').filter(p => p.trim());
   return currentPath === path || currentPathArray[0] === pathArray[0];
 };
 ---
@@ -55,7 +55,7 @@ const isActive = (path: string) => {
     class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 lg:items-center lg:py-6"
   >
     <a
-      href={getRelativeLocaleUrl(locale, "")}
+      href={getRelativeLocaleUrl(locale, '')}
       aria-label={site.title}
       class="absolute inline-flex items-center gap-2 py-1 lg:static lg:my-auto lg:gap-3"
     >
@@ -105,32 +105,32 @@ const isActive = (path: string) => {
       >
         <li class="col-span-2">
           <a
-            href={getRelativeLocaleUrl(locale, "posts")}
-            class:list={{ "active-nav": isActive("/posts") }}
+            href={getRelativeLocaleUrl(locale, 'posts')}
+            class:list={{ 'active-nav': isActive('/posts') }}
           >
             {t.nav.posts}
           </a>
         </li>
         <li class="col-span-2">
           <a
-            href={getRelativeLocaleUrl(locale, "tags")}
-            class:list={{ "active-nav": isActive("/tags") }}
+            href={getRelativeLocaleUrl(locale, 'tags')}
+            class:list={{ 'active-nav': isActive('/tags') }}
           >
             {t.nav.tags}
           </a>
         </li>
         <li class="col-span-2">
           <a
-            href={getRelativeLocaleUrl(locale, "authors")}
-            class:list={{ "active-nav": isActive("/authors") }}
+            href={getRelativeLocaleUrl(locale, 'authors')}
+            class:list={{ 'active-nav': isActive('/authors') }}
           >
             {t.nav.authors}
           </a>
         </li>
         <li class="col-span-2">
           <a
-            href={getRelativeLocaleUrl(locale, "about")}
-            class:list={{ "active-nav": isActive("/about") }}
+            href={getRelativeLocaleUrl(locale, 'about')}
+            class:list={{ 'active-nav': isActive('/about') }}
           >
             {t.nav.about}
           </a>
@@ -139,17 +139,17 @@ const isActive = (path: string) => {
           features.showArchives && (
             <li class="col-span-2">
               <LinkButton
-                href={getRelativeLocaleUrl(locale, "archives")}
+                href={getRelativeLocaleUrl(locale, 'archives')}
                 class:list={[
-                  "focus-outline flex size-full justify-center p-3 lg:relative lg:size-8 lg:p-0",
-                  { "active-nav": isActive("/archives") },
+                  'focus-outline flex size-full justify-center p-3 lg:relative lg:size-8 lg:p-0',
+                  { 'active-nav': isActive('/archives') }
                 ]}
                 title={t.nav.archives}
                 aria-label={t.nav.archives}
               >
                 <IconArchive class="hidden lg:absolute lg:top-1/2 lg:left-1/2 lg:block lg:size-6 lg:-translate-x-1/2 lg:-translate-y-1/2" />
                 <span class="lg:sr-only">{t.nav.archives}</span>
-                {isActive("/archives") && (
+                {isActive('/archives') && (
                   <IconUnderline
                     aria-hidden="true"
                     class="scale-125 max-lg:hidden lg:absolute lg:bottom-0 lg:w-6"
@@ -163,14 +163,14 @@ const isActive = (path: string) => {
           features.search !== false && (
             <li class="col-span-1 flex items-center justify-center">
               <LinkButton
-                href={getRelativeLocaleUrl(locale, "search")}
-                class:list={["focus-outline relative size-8"]}
+                href={getRelativeLocaleUrl(locale, 'search')}
+                class:list={['focus-outline relative size-8']}
                 title={t.nav.search}
                 aria-label={t.nav.search}
               >
                 <IconSearch class="absolute top-1/2 left-1/2 size-6 -translate-x-1/2 -translate-y-1/2" />
                 <span class="sr-only">{t.nav.search}</span>
-                {isActive("/search") && (
+                {isActive('/search') && (
                   <IconUnderline
                     aria-hidden="true"
                     class="absolute bottom-0 w-6 scale-125 max-lg:inset-s-2"
@@ -206,30 +206,30 @@ const isActive = (path: string) => {
 
 <script>
   function toggleNav() {
-    const menuBtn = document.querySelector<HTMLButtonElement>("#menu-btn");
-    const menuItems = document.querySelector("#menu-items");
-    const menuIcon = document.querySelector("#menu-icon");
-    const closeIcon = document.querySelector("#close-icon");
+    const menuBtn = document.querySelector<HTMLButtonElement>('#menu-btn');
+    const menuItems = document.querySelector('#menu-items');
+    const menuIcon = document.querySelector('#menu-icon');
+    const closeIcon = document.querySelector('#close-icon');
 
     if (!menuBtn || !menuItems || !menuIcon || !closeIcon) return;
 
-    const openLabel = menuBtn.dataset.labelOpen ?? "Open menu";
-    const closeLabel = menuBtn.dataset.labelClose ?? "Close menu";
+    const openLabel = menuBtn.dataset.labelOpen ?? 'Open menu';
+    const closeLabel = menuBtn.dataset.labelClose ?? 'Close menu';
 
-    menuBtn.addEventListener("click", () => {
-      const openMenu = menuBtn.getAttribute("aria-expanded") === "true";
+    menuBtn.addEventListener('click', () => {
+      const openMenu = menuBtn.getAttribute('aria-expanded') === 'true';
 
-      menuBtn.setAttribute("aria-expanded", openMenu ? "false" : "true");
-      menuBtn.setAttribute("aria-label", openMenu ? openLabel : closeLabel);
+      menuBtn.setAttribute('aria-expanded', openMenu ? 'false' : 'true');
+      menuBtn.setAttribute('aria-label', openMenu ? openLabel : closeLabel);
 
-      menuItems.classList.toggle("hidden");
-      menuItems.classList.toggle("grid");
-      menuIcon.classList.toggle("hidden");
-      closeIcon.classList.toggle("hidden");
+      menuItems.classList.toggle('hidden');
+      menuItems.classList.toggle('grid');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
     });
   }
 
   toggleNav();
 
-  document.addEventListener("astro:after-swap", toggleNav);
+  document.addEventListener('astro:after-swap', toggleNav);
 </script>

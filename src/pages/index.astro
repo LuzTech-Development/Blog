@@ -11,22 +11,22 @@
  * Every localized page has hreflang alternates so search engines can pick the
  * right variant without depending on this JS-based redirect.
  */
-import { getRelativeLocaleUrl } from "astro:i18n";
-import { getAssetPath } from "@/utils/withBase";
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getAssetPath } from '@/utils/withBase';
 import {
   LOCALES,
   LOCALE_LABELS,
   LOCALE_URL_PATH,
-  DEFAULT_LOCALE,
-} from "@/utils/i18n";
-import config from "@/config";
+  DEFAULT_LOCALE
+} from '@/utils/i18n';
+import config from '@/config';
 
 const alternates = LOCALES.map(locale => ({
   hreflang: locale,
-  href: new URL(getRelativeLocaleUrl(locale, ""), Astro.site ?? Astro.url).href,
-  label: LOCALE_LABELS[locale],
+  href: new URL(getRelativeLocaleUrl(locale, ''), Astro.site ?? Astro.url).href,
+  label: LOCALE_LABELS[locale]
 }));
-const defaultTarget = getRelativeLocaleUrl(DEFAULT_LOCALE, "");
+const defaultTarget = getRelativeLocaleUrl(DEFAULT_LOCALE, '');
 // The detector needs to map canonical codes ("en-US") to their URL path
 // segment ("en-us") because Astro's routes are lowercase.
 const supportedJson = JSON.stringify(LOCALE_URL_PATH);
@@ -39,9 +39,8 @@ const supportedJson = JSON.stringify(LOCALE_URL_PATH);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>{config.site.title}</title>
-    <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
-    <link rel="icon" href={getAssetPath("favicon.ico")} />
-    <link rel="canonical" href={new URL("/", Astro.site ?? Astro.url).href} />
+    <link rel="icon" type="image/svg+xml" href={getAssetPath('favicon.svg')} />
+    <link rel="canonical" href={new URL('/', Astro.site ?? Astro.url).href} />
     {
       alternates.map(alt => (
         <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
@@ -59,13 +58,13 @@ const supportedJson = JSON.stringify(LOCALE_URL_PATH);
         try {
           // Map of canonical BCP-47 code -> URL path segment (lowercase).
           const localeToPath = JSON.parse(supportedJson);
-          const stored = localStorage.getItem("preferred-locale");
+          const stored = localStorage.getItem('preferred-locale');
           const pick = tag => {
             if (!tag) return null;
             if (localeToPath[tag]) return tag;
             const lower = tag.toLowerCase();
-            if (lower.startsWith("pt")) return "pt-BR";
-            if (lower.startsWith("en")) return "en-US";
+            if (lower.startsWith('pt')) return 'pt-BR';
+            if (lower.startsWith('en')) return 'en-US';
             return null;
           };
           let target = pick(stored);
@@ -79,10 +78,10 @@ const supportedJson = JSON.stringify(LOCALE_URL_PATH);
               if (target) break;
             }
           }
-          if (!target) target = "en-US";
+          if (!target) target = 'en-US';
           const path = localeToPath[target] || target.toLowerCase();
-          const base = document.baseURI.replace(/\/?$/, "/");
-          location.replace(base + path + "/");
+          const base = document.baseURI.replace(/\/?$/, '/');
+          location.replace(base + path + '/');
         } catch (_) {
           location.replace(defaultTarget);
         }
