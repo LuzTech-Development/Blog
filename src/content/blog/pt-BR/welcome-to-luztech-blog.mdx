@@ -1,0 +1,53 @@
+---
+title: Bem-vindo ao Blog da LuzTech
+description: Conheça o blog técnico oficial da LuzTech e as tecnologias por trás dele.
+pubDatetime: 2026-07-23T02:59:56.218Z
+author: Giancarlo Luz
+authorEmail: giancarlo.luz@luztech.dev.br
+tags:
+  - announcement
+  - luztech
+draft: true
+---
+
+import RainbowText from "@/components/RainbowText.astro";
+import ReactCounter from "@/components/ReactCounter.astro";
+
+Seja muito bem-vindo ao blog técnico oficial da **LuzTech**!
+
+Construí este espaço para compartilhar um pouco do conhecimento prático que o time de engenharia da LuzTech possui.
+
+A ideia é apresentar ideias, curiosidades e aprendizados que surgem no dia a dia do time, incluindo projetos, evoluções de arquiteturas e decisões de engenharia.
+
+Também pretendo compartilhar curiosidades e projetos interessantes que encontro na comunidade.
+
+E como primeira publicação, quero apresentar como construí este blog.
+
+## O blog
+
+Meu primeiro requisito, que definiu o direcionamento do blog, foi que ele deveria ser **estático**, ou seja, sem backend.
+
+> Mas como assim, um desenvolvedor backend fazer um projeto sem backend?
+
+Pois é. Uma lição importante que aprendi ao longo da minha carreira é saber escolher a ferramenta certa para o objetivo certo.
+
+Pensando no meu cenário hoje, sendo o único desenvolvedor da empresa e único autor do blog, ter um backend só me daria mais trabalho e custo.
+
+_E a ideia não era essa!_ A ideia era ter um blog simples e barato, fácil de escrever conteúdo ([`pnpm post:new`](https://github.com/LuzTech-Development/Blog/blob/main/package.json)) e fácil de publicar ([CI/CD no GitHub](https://github.com/LuzTech-Development/Blog/blob/main/.github/workflows/azure-static-web-apps.yml)). Um backend ia exigir uma decisão entre custo e praticidade:
+
+1. **Azure Webapp**: Bom e relativamente rápido, mas com um custo maior do que estou disposto a pagar agora
+
+2. **Azure Functions**: Custo baixíssimo (desde que o blog não explodisse, o que não imagino acontecer inicialmente), mas com uma performance ruim, já que o cold start é inevitável (e brutal para este tipo de aplicação)
+
+Então achei melhor ir para a rota de SSG, ou Static Site Generation, que me daria um blog simples, rápido e fácil de manter. O contra neste caso é caso eu queira ter funcionalidades mais complexas, como comentários, muitos autores, RBAC, etc. Mas como não é o caso, o SSG já me resolve.
+
+E, falando com os meus amigos imaginários (ChatGPT e Gemini), concluí que o [Astro](https://astro.build/) seria a melhor ferramenta para o trabalho.
+
+> Mas por que o Astro e não <RainbowText>&lt;insira seu framework favorito aqui&gt;</RainbowText>?
+
+Bom, porque, além do SSG, o Astro me permite usar MDX, o que me deixa fazer coisas como colocar o famoso contador do React na próxima linha:
+
+<ReactCounter remember='sessionStorage' />
+
+E, honestamente, eu não queria passar muito trabalho estudando um framework novo, então usar o Astro caiu como uma luva.
+

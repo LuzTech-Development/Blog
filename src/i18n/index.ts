@@ -1,15 +1,15 @@
-import type { UIStrings } from "./types";
-import { DEFAULT_LOCALE } from "@/utils/i18n";
+import type { UIStrings } from './types';
+import { DEFAULT_LOCALE } from '@/utils/i18n';
 
-export { tplStr } from "./format";
+export { tplStr } from './format';
 
-const modules = import.meta.glob<{ default: UIStrings }>("./lang/*.ts", {
-  eager: true,
+const modules = import.meta.glob<{ default: UIStrings }>('./lang/*.ts', {
+  eager: true
 });
 
 const translations: Record<string, UIStrings> = {};
 for (const [path, mod] of Object.entries(modules)) {
-  const locale = path.slice("./lang/".length, -".ts".length);
+  const locale = path.slice('./lang/'.length, -'.ts'.length);
   translations[locale] = mod.default;
 }
 

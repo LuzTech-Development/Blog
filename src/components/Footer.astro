@@ -1,16 +1,16 @@
 ---
-import type { HTMLAttributes } from "astro/types";
-import { getRelativeLocaleUrl } from "astro:i18n";
-import IconRss from "@/assets/icons/IconRss.svg";
-import Socials from "./Socials.astro";
-import LinkButton from "./LinkButton.astro";
-import { DEFAULT_LOCALE, isLocale } from "@/utils/i18n";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+import type { HTMLAttributes } from 'astro/types';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import IconRss from '@/assets/icons/IconRss.svg';
+import Socials from './Socials.astro';
+import LinkButton from './LinkButton.astro';
+import { DEFAULT_LOCALE, isLocale } from '@/utils/i18n';
+import { useTranslations } from '@/i18n';
+import config from '@/config';
 
 type Props = {
   noMarginTop?: boolean;
-} & HTMLAttributes<"footer">;
+} & HTMLAttributes<'footer'>;
 
 const { noMarginTop = false, class: className, ...attrs } = Astro.props;
 
@@ -20,12 +20,12 @@ const locale = isLocale(Astro.currentLocale)
 const t = useTranslations(locale);
 const currentYear = new Date().getFullYear();
 
-const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/$/, "");
+const rssHref = getRelativeLocaleUrl(locale, 'rss.xml').replace(/\/$/, '');
 const rssTitle = `${config.site.title} — RSS (${locale})`;
 ---
 
 <footer
-  class:list={["app-layout", { "mt-auto": !noMarginTop }, className]}
+  class:list={['app-layout', { 'mt-auto': !noMarginTop }, className]}
   {...attrs}
 >
   <div

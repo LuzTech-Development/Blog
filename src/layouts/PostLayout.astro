@@ -1,6 +1,6 @@
 ---
-import Layout from "./Layout.astro";
-import config from "@/config";
+import Layout from './Layout.astro';
+import config from '@/config';
 
 type Props = {
   title?: string;
@@ -25,24 +25,24 @@ const {
   pubDatetime,
   modDatetime,
   author,
-  tags,
+  tags
 } = Astro.props;
 
 const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
   headline: title ?? site.title,
   image: ogImage,
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
   author: [
     {
-      "@type": "Person",
+      '@type': 'Person',
       name: author ?? site.author,
-      ...(site.profile && { url: site.profile }),
-    },
+      ...(site.profile && { url: site.profile })
+    }
   ],
-  ...(tags && tags.length > 0 && { keywords: tags.join(", ") }),
+  ...(tags && tags.length > 0 && { keywords: tags.join(', ') })
 };
 ---
 

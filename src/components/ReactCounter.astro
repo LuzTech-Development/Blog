@@ -1,0 +1,116 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { defineLocalizedStrings, pickLocalized } from '@/utils/i18n';
+
+type Props = {
+  /**
+   * Where to persist the count between page loads.
+   * - `'none'` (default): resets on every visit
+   * - `'localStorage'`: survives across sessions and tabs
+   * - `'sessionStorage'`: survives across navigations in the same tab only
+   */
+  remember?: 'none' | 'localStorage' | 'sessionStorage';
+  /**
+   * Storage key used when `remember` is not `'none'`. Multiple instances on
+   * the same page should use distinct keys to avoid sharing state.
+   */
+  storageKey?: string;
+} & HTMLAttributes<'div'>;
+
+const {
+  remember = 'none',
+  storageKey = 'react-counter',
+  ...attrs
+} = Astro.props;
+
+const strings = defineLocalizedStrings({
+  'en-US': {
+    counter: 'Counter: '
+  },
+  'pt-BR': {
+    counter: 'Contador: '
+  }
+});
+
+const t = pickLocalized(strings, Astro.currentLocale);
+---
+
+<div class="not-prose my-8 flex justify-center" {...attrs}>
+  <button
+    type="button"
+    data-counter-btn
+    data-counter-remember={remember}
+    data-counter-key={storageKey}
+    class:list={[
+      'group inline-flex items-center gap-3 rounded-full',
+      'border-accent/40 bg-accent/10 border px-6 py-3',
+      'text-accent text-lg font-semibold',
+      'shadow-sm transition-all duration-200',
+      'hover:bg-accent/20 hover:border-accent hover:shadow-md',
+      'active:scale-95'
+    ]}
+  >
+    <span>{t.counter}</span>
+    <b
+      class:list={[
+        'bg-accent text-accent-foreground',
+        'inline-flex min-w-10 items-center justify-center',
+        'rounded-full px-2 py-0.5',
+        'font-mono text-xl font-bold tabular-nums',
+        'transition-transform duration-200 group-active:scale-110'
+      ]}>0</b
+    >
+  </button>
+</div>
+
+<script>
+  type StorageMode = 'none' | 'localStorage' | 'sessionStorage';
+
+  function getStorage(mode: StorageMode | undefined): Storage | null {
+    if (mode === 'localStorage') return window.localStorage;
+    if (mode === 'sessionStorage') return window.sessionStorage;
+    return null;
+  }
+
+  function bind() {
+    document
+      .querySelectorAll<HTMLButtonElement>('[data-counter-btn]')
+      .forEach(bindButton);
+  }
+
+  function bindButton($button: HTMLButtonElement) {
+    if ($button.dataset.counterBtnBound) return;
+
+    const $value = $button.querySelector<HTMLElement>('b')!;
+    const mode = $button.dataset.counterRemember as StorageMode | undefined;
+    const key = $button.dataset.counterKey ?? 'react-counter';
+    const storage = getStorage(mode);
+
+    // Hydrate from storage before the user sees `0`.
+    if (storage) {
+      try {
+        const stored = storage.getItem(key);
+        if (stored) $value.textContent = String(Number(stored) || 0);
+      } catch (_) {
+        // Storage might be disabled or blocked; ignore.
+      }
+    }
+
+    $button.addEventListener('click', () => {
+      const count = Number($value.textContent) || 0;
+      const newCount = count + 1;
+      $value.textContent = String(newCount);
+      if (storage) {
+        try {
+          storage.setItem(key, String(newCount));
+        } catch (_) {
+          // Storage full or blocked; keep the in-memory count anyway.
+        }
+      }
+    });
+
+    $button.dataset.counterBtnBound = 'true';
+  }
+
+  document.addEventListener('astro:page-load', bind);
+</script>
