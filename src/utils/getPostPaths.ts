@@ -1,8 +1,8 @@
-import { getRelativeLocaleUrl } from "astro:i18n";
-import { BLOG_PATH, splitLocaleFromId } from "@/content.config";
-import { slugifyStr } from "./slugify";
-import { LOCALES, type Locale, resolveLocale } from "./i18n";
-import config from "@/config";
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { BLOG_PATH, splitLocaleFromId } from '@/content.config';
+import { slugifyStr } from './slugify';
+import { LOCALES, type Locale, resolveLocale } from './i18n';
+import config from '@/config';
 
 function getPostPathSegments(
   filePath: string | undefined,
@@ -10,13 +10,13 @@ function getPostPathSegments(
 ): string[] {
   return (
     filePath
-      ?.replace(BLOG_PATH, "")
+      ?.replace(BLOG_PATH, '')
       // Drop the leading locale folder (e.g. /en-US) so it doesn't leak
       // into the public URL — Astro adds it via i18n routing.
-      .replace(new RegExp(`^/?${locale}/`, "i"), "/")
-      .split("/")
-      .filter(path => path !== "")
-      .filter(path => !path.startsWith("_"))
+      .replace(new RegExp(`^/?${locale}/`, 'i'), '/')
+      .split('/')
+      .filter(path => path !== '')
+      .filter(path => !path.startsWith('_'))
       .slice(0, -1)
       .map(segment => slugifyStr(segment)) ?? []
   );
@@ -25,7 +25,7 @@ function getPostPathSegments(
 function getIdSlug(id: string): string {
   // Strip the leading locale segment, then take the last path segment
   // as the slug (mirrors AstroPaper's original behaviour).
-  const parts = id.split("/");
+  const parts = id.split('/');
   const [maybeLocale, ...rest] = parts;
   const isLocalePrefix = LOCALES.some(
     l => l.toLowerCase() === maybeLocale?.toLowerCase()
@@ -43,7 +43,7 @@ function getPostSlugPath(
   const pathSegments = getPostPathSegments(filePath, locale);
   const slug = getIdSlug(id);
   return pathSegments.length > 0
-    ? [...pathSegments, slug].join("/")
+    ? [...pathSegments, slug].join('/')
     : String(slug);
 }
 

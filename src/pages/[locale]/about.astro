@@ -1,18 +1,18 @@
 ---
-import { getEntry, render } from "astro:content";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Main from "@/components/Main.astro";
-import Footer from "@/components/Footer.astro";
-import { assertLocaleParam, getStaticLocalePaths } from "@/utils/i18n";
-import config from "@/config";
+import { getEntry, render } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Main from '@/components/Main.astro';
+import Footer from '@/components/Footer.astro';
+import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
+import config from '@/config';
 
 export const getStaticPaths = getStaticLocalePaths;
 
 const locale = assertLocaleParam(Astro.params.locale);
 
-const about = await getEntry("pages", `${locale.toLowerCase()}/about`);
+const about = await getEntry('pages', `${locale.toLowerCase()}/about`);
 
 if (!about) {
   throw new Error(

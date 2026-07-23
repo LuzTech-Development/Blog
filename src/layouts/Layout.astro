@@ -1,13 +1,13 @@
 ---
-import { ClientRouter } from "astro:transitions";
-import { getRelativeLocaleUrl } from "astro:i18n";
-import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
-import { getAssetPath, stripBase, stripLocale } from "@/utils/withBase";
-import { LOCALES, isLocale, DEFAULT_LOCALE, localeToPath } from "@/utils/i18n";
-import config from "@/config";
-import "@/styles/global.css";
-import fontRegularHref from "@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff2?url";
-import fontBoldHref from "@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url";
+import { ClientRouter } from 'astro:transitions';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { resolveDefaultOgImagePath } from '@/utils/resolveDefaultOgImagePath';
+import { getAssetPath, stripBase, stripLocale } from '@/utils/withBase';
+import { LOCALES, isLocale, DEFAULT_LOCALE, localeToPath } from '@/utils/i18n';
+import config from '@/config';
+import '@/styles/global.css';
+import fontRegularHref from '@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff2?url';
+import fontBoldHref from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url';
 
 type Props = {
   title?: string;
@@ -32,8 +32,8 @@ const {
   // different dimensions/format should override these props.
   ogImageWidth = 1200,
   ogImageHeight = 630,
-  ogImageType = "image/png",
-  canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  ogImageType = 'image/png',
+  canonicalURL = new URL(Astro.url.pathname, Astro.site).href
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url).href;
@@ -47,35 +47,35 @@ const activeLocale = isLocale(Astro.currentLocale)
 // route under every configured locale for the hreflang alternates.
 const relativePath = stripBase(Astro.url.pathname);
 const logicalPath = stripLocale(relativePath, localeToPath(activeLocale));
-const rssHref = getRelativeLocaleUrl(activeLocale, "rss.xml").replace(
+const rssHref = getRelativeLocaleUrl(activeLocale, 'rss.xml').replace(
   /\/$/,
-  ""
+  ''
 );
 
 const alternates = LOCALES.map(locale => ({
   hreflang: locale,
   href: new URL(
-    getRelativeLocaleUrl(locale, logicalPath.replace(/^\//, "")),
+    getRelativeLocaleUrl(locale, logicalPath.replace(/^\//, '')),
     Astro.site ?? Astro.url
-  ).href,
+  ).href
 }));
-const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
+const xDefaultHref = new URL('/', Astro.site ?? Astro.url).href;
 ---
 
 <!doctype html>
 <html
-  dir={site.dir ?? "ltr"}
+  dir={site.dir ?? 'ltr'}
   lang={activeLocale}
   class="overflow-y-scroll scroll-smooth"
 >
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
+    <link rel="icon" type="image/svg+xml" href={getAssetPath('favicon.svg')} />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href={getAssetPath("blog.png")}
+      href={getAssetPath('blog.png')}
     />
     <meta name="apple-mobile-web-app-title" content={site.title} />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -100,7 +100,7 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={site.author} />
-    <link rel="sitemap" href={getAssetPath("sitemap-index.xml")} />
+    <link rel="sitemap" href={getAssetPath('sitemap-index.xml')} />
 
     {
       alternates.map(alt => (
@@ -120,10 +120,10 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
     <meta property="og:image:width" content={String(ogImageWidth)} />
     <meta property="og:image:height" content={String(ogImageHeight)} />
     <meta property="og:image:alt" content={resolvedOgImageAlt} />
-    <meta property="og:locale" content={activeLocale.replace("-", "_")} />
+    <meta property="og:locale" content={activeLocale.replace('-', '_')} />
     {
       LOCALES.filter(l => l !== activeLocale).map(l => (
-        <meta property="og:locale:alternate" content={l.replace("-", "_")} />
+        <meta property="og:locale:alternate" content={l.replace('-', '_')} />
       ))
     }
 
@@ -159,14 +159,14 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
 
     <script is:inline>
       (function () {
-        const stored = localStorage.getItem("theme");
+        const stored = localStorage.getItem('theme');
         const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
+          '(prefers-color-scheme: dark)'
         ).matches;
-        const theme = stored ?? (prefersDark ? "dark" : "light");
+        const theme = stored ?? (prefersDark ? 'dark' : 'light');
         const root = document.firstElementChild;
-        root?.setAttribute("data-theme", theme);
-        root?.classList.toggle("dark", theme === "dark");
+        root?.setAttribute('data-theme', theme);
+        root?.classList.toggle('dark', theme === 'dark');
         window.__theme = { value: theme };
       })();
     </script>
@@ -198,17 +198,17 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
     </div>
     <slot />
     <script>
-      import "@/scripts/theme";
+      import '@/scripts/theme';
     </script>
     <script is:inline data-astro-rerun>
       function setupRouteLoadingIndicator() {
-        const routeLoadingKey = "__luztechBlogRouteLoadingBound";
+        const routeLoadingKey = '__luztechBlogRouteLoadingBound';
         if (window[routeLoadingKey]) return;
         window[routeLoadingKey] = true;
 
-        const indicator = document.getElementById("route-loading-indicator");
-        const bar = document.getElementById("route-loading-bar");
-        const spinner = document.getElementById("route-loading-spinner");
+        const indicator = document.getElementById('route-loading-indicator');
+        const bar = document.getElementById('route-loading-bar');
+        const spinner = document.getElementById('route-loading-spinner');
 
         if (!indicator || !bar || !spinner) return;
 
@@ -223,7 +223,10 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
 
         const tick = () => {
           if (!isLoading) return;
-          progress = Math.min(90, progress + Math.max(0.4, (90 - progress) * 0.08));
+          progress = Math.min(
+            90,
+            progress + Math.max(0.4, (90 - progress) * 0.08)
+          );
           setProgress(progress);
           rafId = window.requestAnimationFrame(tick);
         };
@@ -237,8 +240,8 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
           isLoading = true;
           progress = 12;
           setProgress(progress);
-          indicator.classList.remove("opacity-0");
-          spinner.classList.remove("opacity-0");
+          indicator.classList.remove('opacity-0');
+          spinner.classList.remove('opacity-0');
           rafId = window.requestAnimationFrame(tick);
         };
 
@@ -248,18 +251,18 @@ const xDefaultHref = new URL("/", Astro.site ?? Astro.url).href;
           window.cancelAnimationFrame(rafId);
           progress = 100;
           setProgress(progress);
-          spinner.classList.add("opacity-0");
+          spinner.classList.add('opacity-0');
           resetTimer = window.setTimeout(() => {
-            indicator.classList.add("opacity-0");
+            indicator.classList.add('opacity-0');
             progress = 0;
             setProgress(progress);
             resetTimer = null;
           }, 240);
         };
 
-        document.addEventListener("astro:before-preparation", start);
-        document.addEventListener("astro:after-swap", finish);
-        document.addEventListener("astro:page-load", finish);
+        document.addEventListener('astro:before-preparation', start);
+        document.addEventListener('astro:after-swap', finish);
+        document.addEventListener('astro:page-load', finish);
       }
 
       setupRouteLoadingIndicator();

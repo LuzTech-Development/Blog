@@ -1,24 +1,24 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Main from "@/components/Main.astro";
-import Footer from "@/components/Footer.astro";
-import Card from "@/components/Card.astro";
-import { postFilter } from "@/utils/postFilter";
-import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
-import { assertLocaleParam, getStaticLocalePaths } from "@/utils/i18n";
-import { getPostsByGroupCondition } from "./_utils/getPostsByGroupCondition";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Main from '@/components/Main.astro';
+import Footer from '@/components/Footer.astro';
+import Card from '@/components/Card.astro';
+import { postFilter } from '@/utils/postFilter';
+import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
+import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
+import { getPostsByGroupCondition } from './_utils/getPostsByGroupCondition';
+import { useTranslations } from '@/i18n';
+import config from '@/config';
 
 export const getStaticPaths = getStaticLocalePaths;
 
 const locale = assertLocaleParam(Astro.params.locale);
 
 // Redirect to 404 page if `showArchives` config is false
-const notFoundUrl = getRelativeLocaleUrl(locale, "404");
+const notFoundUrl = getRelativeLocaleUrl(locale, '404');
 if (!config.features.showArchives && notFoundUrl) {
   return Astro.rewrite(notFoundUrl);
 }
@@ -27,7 +27,7 @@ const t = useTranslations(locale);
 
 const posts = await getLocalizedPosts(locale);
 const filteredPosts = posts.filter(postFilter);
-const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
+const monthFormatter = new Intl.DateTimeFormat(locale, { month: 'long' });
 ---
 
 <Layout

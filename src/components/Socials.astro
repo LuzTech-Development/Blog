@@ -1,12 +1,12 @@
 ---
-import config from "@/config";
-import LinkButton from "./LinkButton.astro";
+import config from '@/config';
+import LinkButton from './LinkButton.astro';
 
 const { site, socials } = config;
 
 const icons = import.meta.glob<{
   default: (_props: Record<string, unknown>) => unknown;
-}>("/src/assets/icons/socials/*.svg");
+}>('/src/assets/icons/socials/*.svg');
 
 const items = await Promise.all(
   socials.map(async ({ name, url, linkTitle }) => {
@@ -14,7 +14,7 @@ const items = await Promise.all(
     const Icon = mod?.default;
     const title =
       linkTitle ??
-      (url.startsWith("mailto:") || name === "mail"
+      (url.startsWith('mailto:') || name === 'mail'
         ? `Send an email to ${site.title}`
         : `${site.title} on ${name.charAt(0).toUpperCase() + name.slice(1)}`);
     return { url, title, Icon };

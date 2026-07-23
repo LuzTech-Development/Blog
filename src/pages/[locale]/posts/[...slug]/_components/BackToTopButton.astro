@@ -1,7 +1,7 @@
 ---
-import IconArrowLeft from "@/assets/icons/IconArrowLeft.svg";
-import IconArrowNarrowUp from "@/assets/icons/IconArrowNarrowUp.svg";
-import { useTranslations } from "@/i18n";
+import IconArrowLeft from '@/assets/icons/IconArrowLeft.svg';
+import IconArrowNarrowUp from '@/assets/icons/IconArrowNarrowUp.svg';
+import { useTranslations } from '@/i18n';
 
 const t = useTranslations(Astro.currentLocale);
 ---
@@ -9,18 +9,18 @@ const t = useTranslations(Astro.currentLocale);
 <div
   id="btt-btn-container"
   class:list={[
-    "fixed inset-e-4 bottom-8 z-50",
-    "md:sticky md:inset-e-auto md:float-end md:me-1",
-    "translate-y-14 opacity-0 transition duration-500",
+    'fixed inset-e-4 bottom-8 z-50',
+    'md:sticky md:inset-e-auto md:float-end md:me-1',
+    'translate-y-14 opacity-0 transition duration-500'
   ]}
 >
   <button
     data-button="back-to-top"
     class:list={[
-      "group bg-background relative px-2 py-1",
-      "size-14 rounded-full shadow-xl",
-      "md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none",
-      "md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg",
+      'group bg-background relative px-2 py-1',
+      'size-14 rounded-full shadow-xl',
+      'md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none',
+      'md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg'
     ]}
   >
     <span
@@ -38,14 +38,14 @@ const t = useTranslations(Astro.currentLocale);
 <script is:inline data-astro-rerun>
   function backToTop() {
     const rootElement = document.documentElement;
-    const btnContainer = document.querySelector("#btt-btn-container");
+    const btnContainer = document.querySelector('#btt-btn-container');
     const backToTopBtn = document.querySelector("[data-button='back-to-top']");
-    const progressIndicator = document.querySelector("#progress-indicator");
+    const progressIndicator = document.querySelector('#progress-indicator');
 
     if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
       return;
 
-    backToTopBtn.addEventListener("click", () => {
+    backToTopBtn.addEventListener('click', () => {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     });
@@ -57,23 +57,23 @@ const t = useTranslations(Astro.currentLocale);
       const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
 
       progressIndicator.style.setProperty(
-        "background-image",
+        'background-image',
         `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
       );
 
       const isVisible = scrollTop / scrollTotal > 0.3;
 
       if (isVisible !== lastVisible) {
-        btnContainer.classList.toggle("opacity-100", isVisible);
-        btnContainer.classList.toggle("translate-y-0", isVisible);
-        btnContainer.classList.toggle("opacity-0", !isVisible);
-        btnContainer.classList.toggle("translate-y-14", !isVisible);
+        btnContainer.classList.toggle('opacity-100', isVisible);
+        btnContainer.classList.toggle('translate-y-0', isVisible);
+        btnContainer.classList.toggle('opacity-0', !isVisible);
+        btnContainer.classList.toggle('translate-y-14', !isVisible);
         lastVisible = isVisible;
       }
     }
 
     let ticking = false;
-    document.addEventListener("scroll", () => {
+    document.addEventListener('scroll', () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           handleScroll();

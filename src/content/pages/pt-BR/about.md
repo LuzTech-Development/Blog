@@ -1,6 +1,6 @@
 ---
-title: "Sobre"
-description: "Sobre o blog técnico oficial da LuzTech."
+title: 'Sobre'
+description: 'Sobre o blog técnico oficial da LuzTech.'
 ---
 
 O LuzTech Blog é a publicação técnica oficial da **LuzTech Development**.

@@ -1,17 +1,17 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { getPostUrl } from "@/utils/getPostPaths";
-import { getPostAuthor } from "@/utils/getUniqueAuthors";
-import { toTransitionName } from "@/utils/toTransitionName";
-import AuthorLink from "./AuthorLink.astro";
-import Datetime from "./Datetime.astro";
+import type { CollectionEntry } from 'astro:content';
+import { getPostUrl } from '@/utils/getPostPaths';
+import { getPostAuthor } from '@/utils/getUniqueAuthors';
+import { toTransitionName } from '@/utils/toTransitionName';
+import AuthorLink from './AuthorLink.astro';
+import Datetime from './Datetime.astro';
 
 type Props = {
-  variant?: "h2" | "h3";
-} & CollectionEntry<"posts">;
+  variant?: 'h2' | 'h3';
+} & CollectionEntry<'posts'>;
 
 const post = Astro.props;
-const { variant: Heading = "h2", id, data, filePath } = post;
+const { variant: Heading = 'h2', id, data, filePath } = post;
 
 const { title, description, ...props } = data;
 const author = getPostAuthor(post);
@@ -21,9 +21,9 @@ const author = getPostAuthor(post);
   <a
     href={getPostUrl(id, filePath, Astro.currentLocale)}
     class:list={[
-      "text-accent inline-block text-lg font-medium",
-      "decoration-dashed underline-offset-4 hover:underline",
-      "focus-visible:no-underline focus-visible:underline-offset-0",
+      'text-accent inline-block text-lg font-medium',
+      'decoration-dashed underline-offset-4 hover:underline',
+      'focus-visible:no-underline focus-visible:underline-offset-0'
     ]}
   >
     <Heading transition:name={toTransitionName(title)}>

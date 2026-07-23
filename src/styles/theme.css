@@ -10,7 +10,7 @@
 }
 
 :root,
-[data-theme="light"] {
+[data-theme='light'] {
   --background: #f8fbff;
   --foreground: #0f172a;
   --accent: #1f6fef;
@@ -20,7 +20,7 @@
   --border: #bfd0f5;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --background: #0b1020;
   --foreground: #e7efff;
   --accent: #00ff9d;

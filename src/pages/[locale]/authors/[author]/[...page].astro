@@ -1,24 +1,24 @@
 ---
-import type { GetStaticPathsOptions } from "astro";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Main from "@/components/Main.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Card from "@/components/Card.astro";
-import Footer from "@/components/Footer.astro";
-import Pagination from "@/components/Pagination.astro";
-import { getUniqueAuthors } from "@/utils/getUniqueAuthors";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
+import type { GetStaticPathsOptions } from 'astro';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Main from '@/components/Main.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import Card from '@/components/Card.astro';
+import Footer from '@/components/Footer.astro';
+import Pagination from '@/components/Pagination.astro';
+import { getUniqueAuthors } from '@/utils/getUniqueAuthors';
+import { getSortedPosts } from '@/utils/getSortedPosts';
+import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
 import {
   LOCALES,
   assertLocaleParam,
   localeToPath,
-  type Locale,
-} from "@/utils/i18n";
-import { slugifyStr } from "@/utils/slugify";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+  type Locale
+} from '@/utils/i18n';
+import { slugifyStr } from '@/utils/slugify';
+import { useTranslations } from '@/i18n';
+import config from '@/config';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const groups = await Promise.all(
@@ -36,10 +36,10 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
         return paginate(authorPosts, {
           params: {
             locale: localeToPath(locale as Locale),
-            author: author.slug,
+            author: author.slug
           },
           props: { author },
-          pageSize: config.posts.perPage,
+          pageSize: config.posts.perPage
         });
       });
     })

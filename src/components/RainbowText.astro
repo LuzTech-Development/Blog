@@ -1,0 +1,86 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = {
+  /** Full cycle duration in seconds. Defaults to 8s. */
+  duration?: number;
+} & HTMLAttributes<'span'>;
+
+const { duration = 8, class: className, style, ...attrs } = Astro.props;
+
+const rainbowStyle = `--rainbow-duration:${duration}s`;
+const mergedStyle =
+  typeof style === 'string' && style.length > 0
+    ? `${rainbowStyle};${style}`
+    : rainbowStyle;
+---
+
+<span {...attrs} class:list={['rainbow-text', className]} style={mergedStyle}>
+  <slot />
+</span>
+
+<style>
+  /*
+   * Rainbow text — a gradient of the LuzTech typography palette painted
+   * across the text with `background-clip: text`. The gradient scrolls from
+   * left to right in a seamless loop. Only the paint moves; font, size,
+   * weight, and layout are untouched.
+   */
+  .rainbow-text {
+    /* Light theme palette — darkened greens for contrast on #f8fbff. */
+    --rainbow-c1: #1f6fef;
+    --rainbow-c2: #4665c3;
+    --rainbow-c3: #0f766e;
+    --rainbow-c4: #059669;
+
+    background-image: linear-gradient(
+      90deg,
+      var(--rainbow-c1) 0%,
+      var(--rainbow-c2) 25%,
+      var(--rainbow-c3) 50%,
+      var(--rainbow-c4) 75%,
+      var(--rainbow-c1) 100%
+    );
+    background-size: 200% 100%;
+    background-repeat: repeat;
+    background-position: 0% center;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    animation: rainbow-shift var(--rainbow-duration, 8s) linear infinite;
+    will-change: background-position;
+  }
+
+  :global([data-theme='dark']) .rainbow-text {
+    /* Dark theme palette — original typography gradient stops. */
+    --rainbow-c1: #00ff9d;
+    --rainbow-c2: #69dd96;
+    --rainbow-c3: #4665c3;
+    --rainbow-c4: #1f6fef;
+  }
+
+  @keyframes rainbow-shift {
+    from {
+      background-position: 0% center;
+    }
+    to {
+      /* +200% == exactly one full tile of the 200%-wide gradient, so the
+         loop is seamless and the paint appears to flow left → right. */
+      background-position: 200% center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rainbow-text {
+      /* Solid, on-brand fallback: accent color of the active theme. */
+      background: none;
+      background-clip: initial;
+      -webkit-background-clip: initial;
+      color: var(--rainbow-c1);
+      -webkit-text-fill-color: currentColor;
+      animation: none;
+    }
+  }
+</style>

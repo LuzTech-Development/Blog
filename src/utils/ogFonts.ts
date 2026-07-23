@@ -1,5 +1,5 @@
-import { readFile } from "node:fs/promises";
-import { createRequire } from "node:module";
+import { readFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 
@@ -10,34 +10,34 @@ const toArrayBuffer = (buffer: Buffer): ArrayBuffer =>
   ) as ArrayBuffer;
 
 export type OgFont = {
-  name: "Space Grotesk";
+  name: 'Space Grotesk';
   data: ArrayBuffer;
   weight: 400 | 700;
-  style: "normal";
+  style: 'normal';
 };
 
 export async function loadOgFonts(): Promise<OgFont[]> {
   const [regular, bold] = await Promise.all([
     readFile(
-      require.resolve("@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff")
+      require.resolve('@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff')
     ),
     readFile(
-      require.resolve("@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff")
-    ),
+      require.resolve('@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff')
+    )
   ]);
 
   return [
     {
-      name: "Space Grotesk",
+      name: 'Space Grotesk',
       data: toArrayBuffer(regular),
       weight: 400,
-      style: "normal",
+      style: 'normal'
     },
     {
-      name: "Space Grotesk",
+      name: 'Space Grotesk',
       data: toArrayBuffer(bold),
       weight: 700,
-      style: "normal",
-    },
+      style: 'normal'
+    }
   ];
 }

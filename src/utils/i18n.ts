@@ -10,15 +10,15 @@
  *   • URL path:    "en-us", "pt-br" (Astro lowercases URL segments — see astro.config.ts)
  */
 
-export const LOCALES = ["en-US", "pt-BR"] as const;
+export const LOCALES = ['en-US', 'pt-BR'] as const;
 export type Locale = (typeof LOCALES)[number];
 
-export const DEFAULT_LOCALE: Locale = "en-US";
+export const DEFAULT_LOCALE: Locale = 'en-US';
 
 /** Lowercased URL segment used in generated links. */
 export const LOCALE_URL_PATH: Record<Locale, string> = {
-  "en-US": "en-us",
-  "pt-BR": "pt-br",
+  'en-US': 'en-us',
+  'pt-BR': 'pt-br'
 };
 
 /** Reverse lookup from URL segment back to canonical code. */
@@ -28,18 +28,18 @@ const URL_PATH_TO_LOCALE = Object.fromEntries(
 
 /** Human-readable label shown in the language switcher. */
 export const LOCALE_LABELS: Record<Locale, string> = {
-  "en-US": "English",
-  "pt-BR": "Português",
+  'en-US': 'English',
+  'pt-BR': 'Português'
 };
 
 /** Short label (used on compact UI). */
 export const LOCALE_SHORT_LABELS: Record<Locale, string> = {
-  "en-US": "EN",
-  "pt-BR": "PT",
+  'en-US': 'EN',
+  'pt-BR': 'PT'
 };
 
 /** localStorage key used to persist an explicit user choice. */
-export const LOCALE_STORAGE_KEY = "preferred-locale";
+export const LOCALE_STORAGE_KEY = 'preferred-locale';
 
 export function isLocale(value: string | undefined | null): value is Locale {
   return !!value && (LOCALES as readonly string[]).includes(value);
@@ -55,8 +55,8 @@ export function resolveLocale(value: string | undefined | null): Locale {
   if (value && URL_PATH_TO_LOCALE[value.toLowerCase()]) {
     return URL_PATH_TO_LOCALE[value.toLowerCase()];
   }
-  if (value && value.toLowerCase().startsWith("pt")) return "pt-BR";
-  if (value && value.toLowerCase().startsWith("en")) return "en-US";
+  if (value && value.toLowerCase().startsWith('pt')) return 'pt-BR';
+  if (value && value.toLowerCase().startsWith('en')) return 'en-US';
   return DEFAULT_LOCALE;
 }
 
@@ -74,10 +74,10 @@ export function swapLocaleInPath(pathname: string, target: Locale): string {
   const targetPath = localeToPath(target);
   const match = pathname.match(/^\/([^/]+)(\/.*)?$/);
   if (!match) return `/${targetPath}/`;
-  const [, first, rest = "/"] = match;
-  const knownFirst = URL_PATH_TO_LOCALE[first?.toLowerCase() ?? ""];
-  if (knownFirst) return `/${targetPath}${rest || "/"}`;
-  return `/${targetPath}${pathname.startsWith("/") ? pathname : `/${pathname}`}`;
+  const [, first, rest = '/'] = match;
+  const knownFirst = URL_PATH_TO_LOCALE[first?.toLowerCase() ?? ''];
+  if (knownFirst) return `/${targetPath}${rest || '/'}`;
+  return `/${targetPath}${pathname.startsWith('/') ? pathname : `/${pathname}`}`;
 }
 
 /**
@@ -101,6 +101,64 @@ export function assertLocaleParam(value: string | undefined): Locale {
   throw new Error(
     `Unsupported locale route param: "${value}". Expected one of: ${LOCALES.map(
       l => `${l} / ${localeToPath(l)}`
-    ).join(", ")}.`
+    ).join(', ')}.`
   );
+}
+
+/**
+ * Define a component-local translations map with strong `Locale` coverage.
+ *
+ * Compile-time guarantees:
+ *  1. **Every locale from `LOCALES` must be present.** Adding a new locale
+ *     to `LOCALES` fails compilation on every existing call site.
+ *  2. **All locales must share the exact same set of keys.** A missing or
+ *     extra key in any locale is reported as a type error.
+ *
+ * @example
+ * const strings = defineLocalizedStrings({
+ *   "en-US": { countIs: "Count is", reset: "Reset" },
+ *   "pt-BR": { countIs: "Contagem",  reset: "Reiniciar" },
+ * });
+ *
+ * const t = strings[locale]; // fully typed access, no `any`
+ */
+export function defineLocalizedStrings<
+  const T extends { [L in Locale]: Readonly<Record<string, unknown>> }
+>(
+  strings: T & {
+    // Force each locale to contain every key present in ANY locale.
+    // `KeysOfUnion<T[Locale]>` distributes `keyof` over the union of all
+    // locale shapes, producing the union of all keys. Intersecting each
+    // locale with a record of those keys makes TypeScript reject any
+    // locale that is missing (or has extra) keys.
+    [L in Locale]: { [K in KeysOfUnion<T[Locale]>]: unknown };
+  }
+): T {
+  return strings;
+}
+
+/**
+ * Distributive `keyof` — yields the **union** of keys across a union of
+ * object types (`keyof (A | B)` on its own gives the intersection).
+ */
+type KeysOfUnion<T> = T extends unknown ? keyof T : never;
+
+/**
+ * Convenience accessor: resolves an arbitrary locale-ish input to a valid
+ * `Locale` (falling back to `DEFAULT_LOCALE`) and returns the matching
+ * translation object.
+ *
+ * The generic accepts per-locale value types (each locale may hold literal
+ * types after `const` inference in {@link defineLocalizedStrings}); the
+ * return type is the union of all locales' value shapes, so accessing any
+ * shared key yields a union of the possible literal translations.
+ *
+ * @example
+ * const t = pickLocalized(strings, Astro.currentLocale);
+ */
+export function pickLocalized<T extends { [L in Locale]: unknown }>(
+  strings: T,
+  locale: string | Locale | undefined | null
+): T[Locale] {
+  return strings[isLocale(locale) ? locale : DEFAULT_LOCALE];
 }

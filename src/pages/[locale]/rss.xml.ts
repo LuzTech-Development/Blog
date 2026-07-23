@@ -1,21 +1,21 @@
-import rss from "@astrojs/rss";
-import type { APIRoute } from "astro";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
-import { getPostUrl } from "@/utils/getPostPaths";
-import { assertLocaleParam, getStaticLocalePaths } from "@/utils/i18n";
-import config from "@/config";
+import rss from '@astrojs/rss';
+import type { APIRoute } from 'astro';
+import { getSortedPosts } from '@/utils/getSortedPosts';
+import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
+import { getPostUrl } from '@/utils/getPostPaths';
+import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
+import config from '@/config';
 
 export const getStaticPaths = getStaticLocalePaths;
 
 /** Escape a string so it's safe to embed as XML text or an attribute value. */
 function escapeXml(value: string): string {
   return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
 export const GET: APIRoute = async ({ params }) => {
@@ -34,8 +34,8 @@ export const GET: APIRoute = async ({ params }) => {
     // readers pick up as the *item's* preview image (Feedly/Inoreader render
     // it as the card artwork).
     xmlns: {
-      dc: "http://purl.org/dc/elements/1.1/",
-      media: "http://search.yahoo.com/mrss/",
+      dc: 'http://purl.org/dc/elements/1.1/',
+      media: 'http://search.yahoo.com/mrss/'
     },
     items: sortedPosts.map(({ data, id, filePath }) => {
       const authorName = data.author ?? config.site.author;
@@ -52,20 +52,20 @@ export const GET: APIRoute = async ({ params }) => {
       //      logic in `src/pages/[locale]/posts/[...slug]/index.astro`.
       let itemImage: string | undefined;
       const rawOg = data.ogImage;
-      if (typeof rawOg === "string") {
+      if (typeof rawOg === 'string') {
         itemImage = rawOg;
-      } else if (rawOg && typeof rawOg === "object" && "src" in rawOg) {
+      } else if (rawOg && typeof rawOg === 'object' && 'src' in rawOg) {
         itemImage = (rawOg as { src: string }).src;
       }
       if (!itemImage && config.features.dynamicOgImage) {
-        itemImage = `${postUrl.replace(/\/+$/, "")}/index.png`;
+        itemImage = `${postUrl.replace(/\/+$/, '')}/index.png`;
       }
       const itemImageAbs = itemImage
         ? new URL(itemImage, siteBase).href
         : undefined;
 
       const customDataParts = [
-        `<dc:creator>${escapeXml(authorName)}</dc:creator>`,
+        `<dc:creator>${escapeXml(authorName)}</dc:creator>`
       ];
       if (itemImageAbs) {
         customDataParts.push(
@@ -84,8 +84,8 @@ export const GET: APIRoute = async ({ params }) => {
         // for surfacing the author's photo in RSS. Skipped when we have no
         // email so we don't emit a bare "(Name)" that some validators reject.
         author: authorEmail ? `${authorEmail} (${authorName})` : undefined,
-        customData: customDataParts.join(""),
+        customData: customDataParts.join('')
       };
-    }),
+    })
   });
 };

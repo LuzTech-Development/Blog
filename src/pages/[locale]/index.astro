@@ -1,16 +1,16 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
-import Card from "@/components/Card.astro";
-import LinkButton from "@/components/LinkButton.astro";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { getLocalizedPosts } from "@/utils/getLocalizedPosts";
-import { assertLocaleParam, getStaticLocalePaths } from "@/utils/i18n";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import IconArrowRight from '@/assets/icons/IconArrowRight.svg';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import Card from '@/components/Card.astro';
+import LinkButton from '@/components/LinkButton.astro';
+import { getSortedPosts } from '@/utils/getSortedPosts';
+import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
+import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
+import { useTranslations } from '@/i18n';
+import config from '@/config';
 
 export const getStaticPaths = getStaticLocalePaths;
 
@@ -23,7 +23,7 @@ const posts = await getLocalizedPosts(locale);
 const sortedPosts = getSortedPosts(posts);
 const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-const homePath = getRelativeLocaleUrl(locale, "");
+const homePath = getRelativeLocaleUrl(locale, '');
 ---
 
 <Layout title={config.site.title} description={t.home.tagline}>
@@ -50,7 +50,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
 
           <div class="mt-6 flex flex-wrap gap-4">
             <LinkButton
-              href={getRelativeLocaleUrl(locale, "posts")}
+              href={getRelativeLocaleUrl(locale, 'posts')}
               class="rounded-full border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20 hover:text-white"
             >
               {t.home.allPosts}
@@ -78,8 +78,8 @@ const homePath = getRelativeLocaleUrl(locale, "");
         <section
           id="featured"
           class:list={[
-            "pt-4 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
+            'pt-4 pb-6',
+            { 'border-border border-b': recentPosts.length > 0 }
           ]}
         >
           <h2 class="text-2xl tracking-wide">{t.home.featured}</h2>
@@ -106,7 +106,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
     }
 
     <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
+      <LinkButton href={getRelativeLocaleUrl(locale, 'posts')}>
         {t.home.allPosts}
         <IconArrowRight class="inline-block rtl:-rotate-180" />
       </LinkButton>
@@ -116,12 +116,12 @@ const homePath = getRelativeLocaleUrl(locale, "");
 </Layout>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
+  document.addEventListener('astro:page-load', () => {
+    const indexLayout = (document.querySelector('#main-content') as HTMLElement)
       ?.dataset;
-    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     if (indexLayout?.layout) {
-      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
+      sessionStorage.setItem('backUrl', indexLayout.homePath ?? baseRoot);
     }
   });
 </script>
