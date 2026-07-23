@@ -23,6 +23,8 @@ export interface UIStrings {
     editPage: string;
     previousPost: string;
     nextPost: string;
+    /** Short unit for reading-time display (e.g. "min"). */
+    minutesReadUnit: string;
   };
   pagination: {
     prev: string;

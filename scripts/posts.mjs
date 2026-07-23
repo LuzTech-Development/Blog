@@ -27,6 +27,8 @@ import slugify from "slugify";
 
 const ROOT = process.cwd();
 const BLOG = join(ROOT, "src/content/blog");
+const PUBLIC_ASSETS = join(ROOT, "public/posts");
+const SRC_ASSETS = join(ROOT, "src/assets/posts");
 const LOCALES = ["en-US", "pt-BR"];
 const EXTS = [".md", ".mdx"];
 
@@ -227,6 +229,12 @@ async function cmdNew(args) {
     const path = join(dir, `${slug}.${ext}`);
     await writeFile(path, bodies[loc], "utf8");
     created.push(path);
+  }
+
+  const assetDirs = [join(PUBLIC_ASSETS, slug), join(SRC_ASSETS, slug)];
+  for (const dir of assetDirs) {
+    await mkdir(dir, { recursive: true });
+    created.push(dir);
   }
 
   console.log(`Created ${ext.toUpperCase()} pair for slug "${slug}" (draft):`);

@@ -1,0 +1,111 @@
+---
+title: Welcome to the LuzTech Blog
+description: Get to know LuzTech's official tech blog and the technologies behind it.
+pubDatetime: 2026-07-23T19:15:07.859Z
+author: Giancarlo Luz
+authorEmail: giancarlo.luz@luztech.dev.br
+tags:
+  - announcement
+  - luztech
+---
+
+import RainbowText from "@/components/RainbowText.astro";
+import Counter from "@/components/Counter.astro";
+import Figure from "@/components/Figure.astro";
+
+import VectorTheme from "@/assets/posts/welcome-to-luztech-blog/vector-theme.webp";
+import AstroPaperTheme from "@/assets/posts/welcome-to-luztech-blog/astro-paper-theme.png";
+
+Welcome to **LuzTech**'s official tech blog!
+
+I built this space to share a bit of the practical knowledge that LuzTech's engineering team has picked up along the way.
+
+The idea is to share ideas, curiosities, and lessons learned from the team's day-to-day work, including projects, architectural evolutions, and engineering decisions.
+
+I also plan to share interesting curiosities and projects I come across in the community.
+
+And for the very first post, I'd like to walk you through how I built this blog.
+
+## Table of contents
+
+## The requirements
+
+My first requirement, which set the direction of the entire blog, was that it had to be **static** — that is, no backend.
+
+> Wait, a backend developer building a project without a backend?
+
+Yep. One important lesson I've learned throughout my career is to pick the right tool for the right job.
+
+Thinking about my current scenario — being the company's sole developer and the blog's only author — having a backend would only bring me more work and cost.
+
+_And that wasn't the goal!_ The goal was a simple, cheap blog, easy to write content for ([`pnpm post:new`](https://github.com/LuzTech-Development/Blog/blob/main/package.json)) and easy to publish ([CI/CD on GitHub](https://github.com/LuzTech-Development/Blog/blob/main/.github/workflows/azure-static-web-apps.yml)). A backend would force me into a trade-off between cost and convenience:
+
+1. **Azure Webapp**: Good and reasonably fast, but with a cost higher than I'm willing to pay right now
+
+2. **Azure Functions**: Very low cost (as long as the blog didn't blow up, which I don't see happening initially), but with poor performance, since cold starts are inevitable (and brutal for this kind of application)
+
+So I figured it was better to go with SSG, or Static Site Generation, which would give me a simple, fast, and easy-to-maintain blog. The downside here is if I ever want more complex features, like comments, many authors, RBAC, etc I will need to migrate. But since that's not the case (at least now), SSG works just fine for me.
+
+After chatting with my imaginary friends (ChatGPT and Gemini), I concluded that [Astro](https://astro.build/) would be the best tool for the job.
+
+> But why Astro and not <RainbowText>&lt;insert your favorite framework here&gt;</RainbowText>?
+
+Well, because on top of SSG, Astro lets me use MDX, which allows me to do things like drop React's famous counter on the very next line:
+
+<Counter remember='sessionStorage' />
+
+<figcaption class="text-center">It even remembers the value if you reload the page, pretty cool, right? 😎</figcaption>
+
+And the integration between text and components is really good, so it ended up winning.
+
+## Theme
+
+After that came my search for a theme I actually liked. I went to the [Astro themes page for blogs](https://astro.build/themes/1/?search=&categories%5B%5D=blog) and, to be honest, the current theme wasn't the first one to catch my eye — that was [Vector](https://astro.build/themes/details/vector/).
+
+
+<Figure src={VectorTheme} alt="Screenshot of the Vector theme homepage for Astro">
+  <Fragment slot="caption">
+
+    Screenshot of the [Vector](https://astro.build/themes/details/vector/) theme (commercial), by [Andrei Alba](https://astro.build/themes/author/3154). Reproduced here for editorial purposes.
+
+  </Fragment>
+</Figure>
+
+But, since nothing in life is perfect, Vector is a paid theme. And since the blog's initial requirement was to be cheap, I went with [Astro Paper](https://astro.build/themes/details/astropaper/), which is free and fits my needs well.
+
+> [!important]
+> I've got nothing against paid themes — in fact, I even considered buying this one, since I really liked it. But since the blog's requirement is to be cheap, I opted for a free theme.
+
+Astro Paper is no slouch either. It has a more minimalist vibe, which I think fits the blog's proposal nicely:
+
+<Figure src={AstroPaperTheme} alt="Screenshot of the Astro Paper theme homepage for Astro">
+  <Fragment slot="caption">
+
+    Screenshot of the [Astro Paper](https://astro.build/themes/details/astropaper/) theme (MIT), by [Sat Naing](https://astro.build/themes/author/26). Reproduced here for editorial purposes.
+
+  </Fragment>
+</Figure>
+
+With the theme picked, it was time to <RainbowText>✨customize✨</RainbowText>.
+
+## Customization
+
+A key thing that helped me a lot at this stage was the existence of the [LuzTech Typography repository](https://github.com/LuzTech-Development/Typography). It allowed me to keep a visual identity consistent with the rest of the company, without having to reinvent the wheel.
+
+And, of course, I wasn't the one who did most of the customization — that was [GitHub Copilot](https://github.com/features/copilot).
+
+> What do you mean? You used Artificial Intelligence to write code? Didn't it end up full of slop?
+
+Good question, my friend, and the answer is: **yes**, I used GitHub Copilot to generate a good chunk of this blog's frontend, including the components used by the post (not the text though — that I still write the old-fashioned way).
+
+Now, about the _slop_… Yes, it produced some _slop_, but surprisingly, not that much. See, I used one of the most powerful models available right now: `Claude Opus 4.7`, which generally writes code pretty reasonably. And, of course, I was testing and reviewing throughout the process, and asking for things little by little.
+
+Artificial Intelligence doesn't replace a person, it replaces a tool — or better yet, it **is** a tool, just another one, like compilers, linters, IDEs, etc. And, like any tool, it needs to be used with care and attention.
+
+That said, I referenced the [typography project](https://github.com/LuzTech-Development/Typography) in my prompts and was very clear about what I wanted implemented. Copilot often delivered something that wasn't exactly what I wanted, but with a few tweaks and clearer prompts, it kept delivering what I needed, bit by bit.
+
+## Conclusion
+
+It was a fun experiment, to be honest. It's not the most over-engineered blog in the world, but sometimes, less is more than enough.
+
+Hope you enjoyed it!

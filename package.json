@@ -52,11 +52,14 @@
     "eslint": "^10.6.0",
     "eslint-plugin-astro": "^2.1.1",
     "husky": "^9.1.7",
+    "mdast-util-to-string": "^4.0.0",
     "pagefind": "^1.5.2",
     "prettier": "3.9.3",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "typescript": "^6.0.3"
+    "reading-time": "^1.5.0",
+    "typescript": "^6.0.3",
+    "unified": "^11.0.5"
   },
   "packageManager": "pnpm@11.15.1"
 }
