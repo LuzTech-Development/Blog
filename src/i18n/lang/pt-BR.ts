@@ -37,9 +37,9 @@ export default {
     recentPosts: "Artigos recentes",
     allPosts: "Todos os artigos",
     tagline:
-      "Blog técnico oficial da LuzTech com artigos, tutoriais e insights de engenharia.",
+      "Notas de engenharia, arquitetura e consultoria em Azure e DevOps, pela LuzTech Development.",
     intro:
-      "Compartilhamos o que o time de engenharia da LuzTech está aprendendo e construindo com Astro, TypeScript, Tailwind CSS, Markdown/MDX, busca estática, RSS, sitemap, geração automática de imagens Open Graph e padrões acessíveis.",
+      "A LuzTech Development é uma consultoria brasileira de desenvolvimento, arquitetura e DevOps cloud-native em Azure. Aqui compartilhamos o lado técnico — notas de implementação, decisões de arquitetura e relatos práticos.",
   },
   footer: {
     copyright: "Copyright",

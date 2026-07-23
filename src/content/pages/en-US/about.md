@@ -11,10 +11,12 @@ building products and internal tooling.
 
 ## What you will find here
 
-- Frontend, backend, and platform tutorials
-- Architecture and engineering notes
-- Tooling and developer experience improvements
-- Practical write-ups from the LuzTech engineering team
+- **Microsoft Azure** — cloud-native development, stable architecture and cost-aware design
+- **DevOps** on GitHub and Azure DevOps — CI/CD pipelines, packaging, review workflows, and repository practices
+- Backend engineering with **TypeScript**, **Node.js**, and **.NET**
+- Long-lived services, reusable libraries, and a well-cared-for developer experience
+- Architecture decisions, migrations, and trade-offs
+- Reliability, observability, and operating cloud workloads in production
 
 ## Built with
 
