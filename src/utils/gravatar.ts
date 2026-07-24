@@ -18,13 +18,14 @@ import { createHash } from 'node:crypto';
 export function gravatarUrl(
   email: string | undefined | null,
   size?: number,
-  fallback: 'identicon' | 'retro' | 'robohash' | 'mp' | 'wavatar' = 'identicon'
+  fallback: 'identicon' | 'retro' | 'robohash' | 'mp' | 'wavatar' = 'mp'
 ): string {
   const normalized = (email ?? '').trim().toLowerCase();
   const hash = createHash('sha256').update(normalized).digest('hex');
   const params = new URLSearchParams();
   if (typeof size === 'number') params.set('s', String(size));
   params.set('d', fallback);
+  params.set('r', 'g');
   return `https://www.gravatar.com/avatar/${hash}?${params.toString()}`;
 }
 
