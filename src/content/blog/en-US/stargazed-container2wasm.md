@@ -1,0 +1,14 @@
+---
+title: 'Stargazed: container2wasm'
+description: A repository that allows running containers in the browser.
+pubDatetime: 2026-08-03T03:26:44Z
+author: Giancarlo Luz
+authorEmail: giancarlo.luz@luztech.dev.br
+tags:
+  - stargazed
+draft: false
+---
+
+Write the English version of "Stargazed: container2wasm" here.
+
+Remove `draft: true` from the frontmatter once both translations are ready to publish.

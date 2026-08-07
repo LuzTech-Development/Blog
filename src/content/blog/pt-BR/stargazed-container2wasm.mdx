@@ -1,0 +1,167 @@
+---
+title: 'Stargazed: container2wasm'
+description: Um repositório que permite rodar contêineres no navegador.
+pubDatetime: 2026-08-03T03:26:44Z
+author: Giancarlo Luz
+authorEmail: giancarlo.luz@luztech.dev.br
+tags:
+  - stargazed
+draft: false
+---
+
+import RainbowText from "@/components/RainbowText.astro";
+
+Olá! Hoje quero compartilhar com você uma nova série de artigos no Blog da LuzTech, que vai se chamar <RainbowText>Stargazed</RainbowText>.
+
+E do quê se trata esta série? Excelente pergunta! A ideia é compartilhar repositórios interessantes, criativos e/ou úteis que encontrei nas minhas andanças pelo GitHub, e que podem ser úteis para você também.
+
+O nome é uma alusão à dar uma Estrela (Star) em um repositório no GitHub, e também à ideia de olhar para o céu estrelado (Stargazing) e se inspirar com o que encontramos por lá.
+
+A ideia da série não é mostrar repositórios ultra-mega produtivos, mas sim trazer algo interessante e que, se for possível, te dê uma pontinha a mais de conhecimento.
+
+Bom, introduções de lado, vamos para o que interessa!
+
+## Sumário
+
+## Contêineres
+
+Vamos começar com os contêineres. Essa tecnologia revolucionou a forma de desenvolver e implantar aplicações, e hoje é um requisito fundamental para um desenvolvedor moderno.
+
+Contêineres permitem empacotar uma solução e tudo o que ela precisa em uma imagem imutável, portátil e (se bem feita) leve.
+
+> Como assim?
+
+Bom, suponha que você tenha uma API em Node.js que recebe um vídeo por um endpoint e precisa convertê-lo para um formato compacto para uma análise de IA posterior (afinal ninguém merece gastar um monte de tokens com um vídeo em AVI de 5 segundos e 10GB).
+
+E, para chamar o `ffmpeg` para fazer a conversão, você use o famoso `exec` do Node.js:
+
+```javascript
+import { exec } from 'child_process';
+
+// Suponha que inputPath e outputPath estejam devidamente sanitizados e validados
+export default async function convertToSmallVideoFormat(inputPath, outputPath) {
+  const process = exec(
+    `ffmpeg -i "${inputPath}" -c:v libx264 -preset fast -crf 28 "${outputPath}"`
+  );
+
+  await new Promise((resolve, reject) => {
+    process.on("exit", code => {
+      if (!code) {
+        resolve();
+      } else {
+        reject(new Error(`ffmpeg exited with code ${code}`));
+      }
+    });
+  })
+}
+```
+
+Na tua máquina vai funcionar, já que o FFMpeg vai estar instalado e disponível no `PATH`. Mas... e se tu precisar rodar em uma plataforma diferente, como Azure Functions, um Web App ou em uma VM Windows?
+
+Daí tu vai precisar instalar o FFMpeg na máquina, o que não é possível e muitas plataformas serverless, como Azure Functions.
+
+Então, qual a solução? Contêineres! Tu pode criar uma imagem com o Node.js e o FFMpeg instalados, e rodar a tua API em qualquer lugar que aceite contêineres, que é o caso da maioria das plataformas modernas, incluindo as que citei acima.
+
+Um container para esta solução seria algo assim:
+
+```dockerfile
+FROM node:24.15.0
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y ffmpeg
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+
+CMD ["npm", "start"]
+```
+
+Depois é só rodar um `docker build .` e a imagem estará prontinha para rodar em praticamente qualquer lugar.
+
+> [!tip]
+> O código acima foi simplificado para fins didáticos. Para uso em produção, sempre procure as boas práticas da linguagem e/ou framework que você estiver usando.
+
+## O repositório
+
+Com a nossa imagem pronta, vem o ponto principal do artigo: o [container2wasm](https://github.com/container2wasm/container2wasm). Quando descobri ele fiquei pasmo, pois, teoricamente, ele permite rodar qualquer coisa diretamente do navegador, sem instalar nada.
+
+Mas claro, nem tudo são flores. Mesmo com um computador bem potente, o contêiner vai rodar com uma performance questionável, e não dá pra dizer que a experiência do usuário vai ser a melhor do mundo.
+
+Além disso, a não ser que tenha um servidor de proxy de rede, as chamadas HTTP de contêiner vão usar a função `fetch` do navegador, que traz o infame `CORS` pra jogada, bloqueando qualquer requisição cross-domain sem o cabeçalho `Access-Control-Allow-Origin` adequado.
+
+Mas, chega de enrolar. Como fazer um contêiner rodar no navegador? Primeiramente, precisamos instalar a ferramenta a partir das [releases](https://github.com/container2wasm/container2wasm/releases/latest).
+
+> [!tip]
+> Para usuários Windows, é necessário usar o [WSL](https://learn.microsoft.com/pt-br/windows/wsl/install) ou outra forma de virtualização Linux, já que o container2wasm não tem suporte nativo para Windows. E para usuários do MacOS, existe uma [fórmula no Homebrew](https://formulae.brew.sh/formula/container2wasm) que deixa a instalação bem mais simples: `brew install container2wasm`.
+
+Depois de instalado e configurado no `PATH`, os comandos `c2w` e `c2w-net` devem estar disponíveis no terminal.
+
+Agora, pegue uma imagem salva localmente, pode ser uma imagem criada com `docker build` ou uma imagem baixada com `docker pull`, e rode o seguinte comando:
+
+```bash
+c2w --to-js "<imagem>:<tag>" "<pasta de saída>/"
+```
+
+> [!important]
+> Ao rodar a versão instalada via Homebrew, tive um erro de `git clone` ao fazer o build da imagem WASM. Pra resolver, adicionei esta flag: `--build-arg "SOURCE_REPO=https://github.com/container2wasm/container2wasm"`. Não tive o mesmo problema ao clonar o repositório e fazer o build manualmente em Go.
+
+Com isso, uma imagem WASM será gerada, e será possível adicionar o contêiner a um site. Mas... como fazer isso?
+
+## Rodando o contêiner WASM no navegador
+
+Com os arquivos em mãos, é necessário criar um arquivo HTML que vá carregar o contêiner WASM. A [pasta de exemplos do projeto](https://github.com/container2wasm/container2wasm/tree/main/examples) contém uma boa referência. Para o caso de imagens usando a flag `--to-js` os exemplos de [`ecmascripten`](https://github.com/container2wasm/container2wasm/tree/main/examples/emscripten) e [`ecmascripten-simple`](https://github.com/container2wasm/container2wasm/tree/main/examples/emscripten-simple) são o melhor ponto de partida.
+
+> E qual deles escolher?
+
+A diferença entre eles é o **gerenciamento de rede**.
+
+O `ecmascripten` permite que o contêiner se comunique com a internet por meio da API `fetch` do navegador, ou usando um WebSocket como proxy de rede (com o `c2w-net`, por exemplo).
+
+Já o `ecmascripten-simple` não tem suporte a rede, e é mais simples de configurar.
+
+Cada exemplo possui um `README.md` que mostra como criar uma imagem compatível e como configurar a rede, se necessário.
+
+> [!important]
+> Todas as instruções a seguir foram retiradas do [repositório](https://github.com/container2wasm/container2wasm) e podem ficar desatualizadas. Se for seguir estes passos, confira se não houve atualizações no repositório antes de prosseguir.
+
+### Exemplo 1 - Neovim no navegador
+
+Vamos começar pelo mais fácil primeiro. Este é o `Dockerfile` que criei para abrir o [Neovim](https://neovim.io/) diretamente na raíz do [repositório de tipografia da LuzTech](https://github.com/LuzTech-Development/Typography):
+
+```dockerfile
+FROM alpine:latest AS builder
+
+RUN apk add --no-cache git
+
+WORKDIR /workspace
+
+RUN git clone "https://github.com/LuzTech-Development/Typography" .
+
+RUN rm -rf .git
+
+FROM alpine:latest AS runtime
+
+RUN apk add --no-cache neovim
+
+COPY --from=builder /workspace /workspace
+
+WORKDIR /workspace
+
+ENTRYPOINT ["nvim", "."]
+```
+
+Construí a imagem com o comando:
+
+```bash
+docker build --platform linux/amd64 -t nvim-demo:latest .
+```
+
+> [!tip]
+> Eu adicionei a flag `--platform linux/amd64` para forçar a construção da imagem para a arquitetura x86_64, já que o [README do container2wasm](https://github.com/container2wasm/container2wasm/blob/ecb4caa499f19f1d5cfcddd43b80aa78f98e5102/README.md?plain=1#L36) recomenda esta arquitetura para diminuir as camadas de emulação.
+
+Depois disso rodei o comando que descrevi na seção acima para gerar os arquivos em WebAssembly.
+
+[Link externo](/posts/stargazed-container2wasm/index.html) para o exemplo rodando no navegador.
