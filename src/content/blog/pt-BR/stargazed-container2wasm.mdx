@@ -6,7 +6,7 @@ author: Giancarlo Luz
 authorEmail: giancarlo.luz@luztech.dev.br
 tags:
   - stargazed
-draft: false
+draft: true
 ---
 
 import RainbowText from "@/components/RainbowText.astro";
@@ -88,14 +88,14 @@ Depois é só rodar um `docker build .` e a imagem estará prontinha para rodar 
 
 Com a nossa imagem pronta, vem o ponto principal do artigo: o [container2wasm](https://github.com/container2wasm/container2wasm). Quando descobri ele fiquei pasmo, pois, teoricamente, ele permite rodar qualquer coisa diretamente do navegador, sem instalar nada.
 
-Mas claro, nem tudo são flores. Mesmo com um computador bem potente, o contêiner vai rodar com uma performance questionável, e não dá pra dizer que a experiência do usuário vai ser a melhor do mundo.
+Mas claro, nem tudo são flores. Mesmo com um computador bem potente, o contêiner vai rodar com uma performance péssima, então não dá pra dizer que a experiência do usuário vai ser a melhor do mundo (se tiver como o usuário ter uma experiência, pra começo de conversa).
 
 Além disso, a não ser que tenha um servidor de proxy de rede, as chamadas HTTP de contêiner vão usar a função `fetch` do navegador, que traz o infame `CORS` pra jogada, bloqueando qualquer requisição cross-domain sem o cabeçalho `Access-Control-Allow-Origin` adequado.
 
 Mas, chega de enrolar. Como fazer um contêiner rodar no navegador? Primeiramente, precisamos instalar a ferramenta a partir das [releases](https://github.com/container2wasm/container2wasm/releases/latest).
 
 > [!tip]
-> Para usuários Windows, é necessário usar o [WSL](https://learn.microsoft.com/pt-br/windows/wsl/install) ou outra forma de virtualização Linux, já que o container2wasm não tem suporte nativo para Windows. E para usuários do MacOS, existe uma [fórmula no Homebrew](https://formulae.brew.sh/formula/container2wasm) que deixa a instalação bem mais simples: `brew install container2wasm`.
+> Para usuários Windows, é necessário usar o [WSL](https://learn.microsoft.com/pt-br/windows/wsl/install) ou outra forma de virtualização Linux, já que o container2wasm não tem suporte nativo para Windows. E para usuários do MacOS, existe uma [fórmula no Homebrew](https://formulae.brew.sh/formula/container2wasm) que deixa a instalação bem mais simples.
 
 Depois de instalado e configurado no `PATH`, os comandos `c2w` e `c2w-net` devem estar disponíveis no terminal.
 
@@ -127,7 +127,7 @@ Cada exemplo possui um `README.md` que mostra como criar uma imagem compatível 
 > [!important]
 > Todas as instruções a seguir foram retiradas do [repositório](https://github.com/container2wasm/container2wasm) e podem ficar desatualizadas. Se for seguir estes passos, confira se não houve atualizações no repositório antes de prosseguir.
 
-### Exemplo 1 - Neovim no navegador
+### Exemplo 1 - Neovim com o repositório de tipografia da LuzTech
 
 Vamos começar pelo mais fácil primeiro. Este é o `Dockerfile` que criei para abrir o [Neovim](https://neovim.io/) diretamente na raíz do [repositório de tipografia da LuzTech](https://github.com/LuzTech-Development/Typography):
 
@@ -162,6 +162,267 @@ docker build --platform linux/amd64 -t nvim-demo:latest .
 > [!tip]
 > Eu adicionei a flag `--platform linux/amd64` para forçar a construção da imagem para a arquitetura x86_64, já que o [README do container2wasm](https://github.com/container2wasm/container2wasm/blob/ecb4caa499f19f1d5cfcddd43b80aa78f98e5102/README.md?plain=1#L36) recomenda esta arquitetura para diminuir as camadas de emulação.
 
-Depois disso rodei o comando que descrevi na seção acima para gerar os arquivos em WebAssembly.
+Depois disso rodei o comando que descrevi [na seção acima](#o-repositório) para gerar os arquivos em WebAssembly.
 
-[Link externo](/posts/stargazed-container2wasm/index.html) para o exemplo rodando no navegador.
+Então copiei o [`index.html`](https://github.com/container2wasm/container2wasm/blob/main/examples/emscripten-simple/htdocs/index.html) do exemplo e adicionei o [Fit Addon para o XTerm.js](https://www.npmjs.com/package/@xterm/addon-fit) para o terminal ficar em tela cheia:
+
+```html
+<html>
+  <head>
+    <title>container2wasm: Neovim + LuzTech Typography</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@xterm/xterm@5.5.0/css/xterm.css"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+
+      #terminal {
+        width: 100%;
+        height: 100dvh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="terminal"></div>
+    <script src="./load.js"></script>
+    <script type="module">
+      import 'https://unpkg.com/xterm@5.3.0/lib/xterm.js';
+      import 'https://unpkg.com/xterm-pty/index.js';
+      import { FitAddon } from 'https://esm.sh/@xterm/addon-fit@0.10.0';
+      import './arg-module.js';
+      import initEmscriptenModule from './out.js';
+
+      const xterm = new Terminal();
+      const fitAddon = new FitAddon();
+      xterm.loadAddon(fitAddon);
+      xterm.open(document.getElementById('terminal'));
+      fitAddon.fit();
+
+      const { master, slave } = openpty();
+
+      xterm.loadAddon(master);
+
+      Module.pty = slave;
+      Module['mainScriptUrlOrBlob'] = location.origin + '/out.js';
+
+      // "/pack/info" file needs to be provided to the filesystem to start
+      // the container. Refer to /cmd/init/main.go for the detail of info file.
+      let info = 't:' + Math.round(new Date() / 1000) + '\n';
+      Module['preRun'].push(mod => {
+        try {
+          FS.mkdir('/pack');
+        } catch (e) {}
+        mod.FS.writeFile('/pack/info', info);
+      });
+      var readableCallbacks = [];
+      Module.pty.onReadable(() => {
+        readableCallbacks.forEach(cb => cb());
+        readableCallbacks = [];
+      });
+      Module['preRun'].push(Module => {
+        Module['TTY'].stream_ops.poll = (stream, timeout, notifyCallback) => {
+          if (Module.pty.readable) {
+            return 1;
+          }
+          if (notifyCallback != null) {
+            notifyCallback.registerCleanupFunc(() => {
+              const i = readableCallbacks.indexOf(notifyCallback);
+              if (i != -1) readableCallbacks.splice(i, 1);
+            });
+            readableCallbacks.push(notifyCallback);
+          }
+          return 0;
+        };
+      });
+
+      const fitTerminal = () => fitAddon.fit();
+      addEventListener('resize', fitTerminal);
+      new ResizeObserver(fitTerminal).observe(document.getElementById('terminal'));
+
+      (async () => {
+        await initEmscriptenModule(Module);
+        fitTerminal();
+      })();
+    </script>
+  </body>
+</html>
+```
+
+Por fim, para ver como ficou, rodei o comando [`serve` de Vercel](https://github.com/vercel/serve) com o seguinte arquivo `serve.json` na raíz:
+
+```json
+{
+    "headers": [{
+        "source": "**/*",
+        "headers": [
+            {
+                "key": "Cross-Origin-Embedder-Policy",
+                "value": "require-corp"
+            }, {
+                "key": "Cross-Origin-Opener-Policy",
+                "value": "same-origin"
+            }
+        ]
+    }]
+}
+```
+
+> [!tip]
+> Estes cabeçalhos são obrigatórios para o sistema funcionar, porém eles causam outros problemas, como, no caso do blog, impedir que o Gravatar funcione. Se for usar este repositório em algum projeto tenha isto em mente.
+
+Se quiser testar: <RainbowText><a href="/posts/stargazed-container2wasm/ecmascripten-simple/index.html" alt="Link para testar o container2wasm" target="_blank" referrer="noreferrer">Clique aqui</a></RainbowText>
+
+> [!important]
+> Demora **BASTANTE** para o contêiner iniciar, não é erro na implementação. Em um Macbook Air M5 demorou cerca **3m30s** para aparecer a primeira tela do Neovim.
+
+### Exemplo 2 - Caddy servindo o repositório de tipografia da LuzTech
+
+Agora, indo pro exemplo mais difícil, vamos rodar o [Caddy](https://caddyserver.com/) no navegador, servindo o mesmo [repositório de tipografia da LuzTech](https://github.com/LuzTech-Development/Typography):
+
+```dockerfile
+FROM alpine:latest AS builder
+
+RUN apk add --no-cache git
+
+WORKDIR /build
+
+RUN git clone --depth 1 "https://github.com/LuzTech-Development/Typography" /public && \
+    rm -rf /public/.git
+
+FROM alpine:latest AS runtime
+
+RUN apk add --no-cache caddy
+
+COPY --from=builder /public /public
+
+ENV TERM=xterm-256color
+
+EXPOSE 80
+
+CMD ["caddy", "file-server", "--browse", "--listen", ":80", "--root", "/public"]
+```
+
+O comando de build da imagem e o arquivo `server.json` são os mesmos do [exemplo anterior](#exemplo-1---neovim-com-o-repositório-de-tipografia-da-luztech), o que muda são os arquivos estáticos, como o `index.html`, que agora vem a partir [desta pasta](https://github.com/container2wasm/container2wasm/blob/main/examples/emscripten/htdocs):
+
+```html
+<html>
+  <head>
+    <title>container on browser</title>
+    <link rel="stylesheet" href="./xterm.css" />
+  </head>
+  <body>
+    <div id="terminal"></div>
+    <script src="./load.js"></script>
+    <script src="./dist/stack.js"></script>
+    <script type="module">
+      import 'https://unpkg.com/xterm@5.3.0/lib/xterm.js';
+      import 'https://unpkg.com/xterm-pty/index.js';
+      import './arg-module.js'
+      import initEmscriptenModule from './out.js';
+
+      const xterm = new Terminal();
+      xterm.open(document.getElementById("terminal"));
+
+      const { master, slave } = openpty();
+
+      xterm.loadAddon(master);
+
+      Module.pty = slave;
+
+      Module['mainScriptUrlOrBlob'] = location.origin + "/out.js";
+
+      let info = "t:" + Math.round(new Date() / 1000) + "\n";
+      
+      var netParam = getNetParam();
+      if (!netParam) {
+          start(info);
+      } else {
+          if (netParam.mode == 'delegate') {
+              Module['websocket'] = {
+                  'url': netParam.param
+              };
+              info += 'n:' + genmac() + '\n';
+              start(info);
+          } else if (netParam.mode == 'browser') {
+              const stackAddress = 'http://localhost:9999/'; // listened and served by a mock inside browser
+              const stackWorkerFile = location.origin + "/dist/stack-worker.js";
+              const stackImage = location.origin + "/c2w-net-proxy.wasm.gzip";
+              Module['websocket'] = {
+                  'url': stackAddress
+              };
+              Stack.Start(stackAddress, stackWorkerFile, stackImage, (cert) => {
+                  Module['preRun'].push((mod) => {
+                      mod.FS.mkdir('/.wasmenv');
+                      mod.FS.writeFile('/.wasmenv/proxy.crt', cert);
+                  });
+                  info += 'n:' + genmac() + '\n';
+                  info += `m: .wasmenv
+env: SSL_CERT_FILE=/.wasmenv/proxy.crt
+env: https_proxy=http://192.168.127.253:80
+env: http_proxy=http://192.168.127.253:80
+env: HTTPS_PROXY=http://192.168.127.253:80
+env: HTTP_PROXY=http://192.168.127.253:80`;
+                  start(info);
+              });
+          }
+      }
+      function start(info) {
+          Module['preRun'].push((mod) => {
+              try { FS.mkdir('/pack'); } catch (e) {}
+              mod.FS.writeFile('/pack/info', info);
+          });
+          var readableCallbacks = [];
+          Module.pty.onReadable(() => {
+              readableCallbacks.forEach(cb => cb());
+              readableCallbacks = [];
+          });
+          Module['preRun'].push((Module) => {
+              Module['TTY'].stream_ops.poll = (stream, timeout, notifyCallback) => {
+                  if (Module.pty.readable) {
+                      return 1;
+                  }
+                  if (notifyCallback != null) {
+                      notifyCallback.registerCleanupFunc(() => {
+                          const i = readableCallbacks.indexOf(notifyCallback);
+                          if (i != -1) readableCallbacks.splice(i, 1);
+                      });
+                      readableCallbacks.push(notifyCallback);
+                  }
+                  return 0;
+              };
+          });
+          (async () => {
+              const instance = await initEmscriptenModule(Module);
+          })();
+      }
+      function getNetParam() {
+          var vars = location.search.substring(1).split('&');
+          for (var i = 0; i < vars.length; i++) {
+              var kv = vars[i].split('=');
+              if (decodeURIComponent(kv[0]) == 'net') {
+                  return {
+                      mode: kv[1],
+                      param: kv[2],
+                  };
+              }
+          }
+          return null;
+      }
+      function genmac(){
+          return "02:XX:XX:XX:XX:XX".replace(/X/g, function() {
+              return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16))
+          });
+      }
+    </script>
+  </body>
+</html>
+```
