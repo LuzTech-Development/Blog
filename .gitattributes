@@ -1,2 +1,6 @@
+public/posts/stargazed-container2wasm/emscripten-simple/qemu-system-x86_64.data filter=lfs diff=lfs merge=lfs -text
+public/posts/stargazed-container2wasm/emscripten/qemu-system-x86_64.data filter=lfs diff=lfs merge=lfs -text
+public/posts/stargazed-container2wasm/emscripten-simple/qemu-system-x86_64.wasm filter=lfs diff=lfs merge=lfs -text
+public/posts/stargazed-container2wasm/emscripten/qemu-system-x86_64.wasm filter=lfs diff=lfs merge=lfs -text
 *.wasm filter=lfs diff=lfs merge=lfs -text
 *.data filter=lfs diff=lfs merge=lfs -text
