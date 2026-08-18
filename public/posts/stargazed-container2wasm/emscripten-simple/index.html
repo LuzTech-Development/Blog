@@ -1,10 +1,7 @@
 <html>
   <head>
     <title>container2wasm: Neovim + LuzTech Typography</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@xterm/xterm@5.5.0/css/xterm.css"
-    />
+    <link rel="stylesheet" href="./vendor/xterm.css" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <style>
       html,
@@ -26,9 +23,9 @@
     <div id="terminal"></div>
     <script src="./load.js"></script>
     <script type="module">
-      import 'https://unpkg.com/xterm@5.3.0/lib/xterm.js';
-      import 'https://unpkg.com/xterm-pty/index.js';
-      import { FitAddon } from 'https://esm.sh/@xterm/addon-fit@0.10.0';
+      import './vendor/xterm.js';
+      import './vendor/xterm-pty.js';
+      import { FitAddon } from './vendor/addon-fit.mjs';
       import './arg-module.js';
       import initEmscriptenModule from './out.js';
 
@@ -43,7 +40,7 @@
       xterm.loadAddon(master);
 
       Module.pty = slave;
-      Module['mainScriptUrlOrBlob'] = location.origin + '/out.js';
+      Module['mainScriptUrlOrBlob'] = new URL('./out.js', import.meta.url).href;
 
       // "/pack/info" file needs to be provided to the filesystem to start
       // the container. Refer to /cmd/init/main.go for the detail of info file.

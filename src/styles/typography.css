@@ -81,7 +81,7 @@
     }
 
     details {
-      @apply text-foreground inline-block cursor-pointer select-none [&_p]:hidden [&_ul]:my-0!;
+      @apply text-foreground inline-block max-w-full cursor-pointer select-none [&_p]:hidden [&_ul]:my-0!;
     }
 
     summary {

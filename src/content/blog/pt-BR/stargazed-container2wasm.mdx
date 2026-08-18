@@ -10,6 +10,9 @@ draft: false
 ---
 
 import RainbowText from "@/components/RainbowText.astro";
+import Figure from "@/components/Figure.astro";
+import Demo1Screenshot1 from '@/assets/posts/stargazed-container2wasm/demo-1-screenshot-1.png';
+import Demo1Screenshot2 from '@/assets/posts/stargazed-container2wasm/demo-1-screenshot-2.png';
 
 Olá! Hoje quero compartilhar com você uma nova série de artigos no Blog da LuzTech, que vai se chamar <RainbowText>Stargazed</RainbowText>.
 
@@ -112,15 +115,15 @@ Com isso, uma imagem WASM será gerada, e será possível adicionar o contêiner
 
 ## Rodando o contêiner WASM no navegador
 
-Com os arquivos em mãos, é necessário criar um arquivo HTML que vá carregar o contêiner WASM. A [pasta de exemplos do projeto](https://github.com/container2wasm/container2wasm/tree/main/examples) contém uma boa referência. Para o caso de imagens usando a flag `--to-js` os exemplos de [`ecmascripten`](https://github.com/container2wasm/container2wasm/tree/main/examples/emscripten) e [`ecmascripten-simple`](https://github.com/container2wasm/container2wasm/tree/main/examples/emscripten-simple) são o melhor ponto de partida.
+Com os arquivos em mãos, é necessário criar um arquivo HTML que vá carregar o contêiner WASM. A [pasta de exemplos do projeto](https://github.com/container2wasm/container2wasm/tree/main/examples) contém uma boa referência. Para o caso de imagens usando a flag `--to-js` os exemplos de [`emscripten`](https://github.com/container2wasm/container2wasm/tree/main/examples/emscripten) e [`emscripten-simple`](https://github.com/container2wasm/container2wasm/tree/main/examples/emscripten-simple) são o melhor ponto de partida.
 
 > E qual deles escolher?
 
 A diferença entre eles é o **gerenciamento de rede**.
 
-O `ecmascripten` permite que o contêiner se comunique com a internet por meio da API `fetch` do navegador, ou usando um WebSocket como proxy de rede (com o `c2w-net`, por exemplo).
+O `emscripten` permite que o contêiner se comunique com a internet por meio da API `fetch` do navegador, ou usando um WebSocket como proxy de rede (com o `c2w-net`, por exemplo).
 
-Já o `ecmascripten-simple` não tem suporte a rede, e é mais simples de configurar.
+Já o `emscripten-simple` não tem suporte a rede, e é mais simples de configurar.
 
 Cada exemplo possui um `README.md` que mostra como criar uma imagem compatível e como configurar a rede, se necessário.
 
@@ -164,16 +167,16 @@ docker build --platform linux/amd64 -t nvim-demo:latest .
 
 Depois disso rodei o comando que descrevi [na seção acima](#o-repositório) para gerar os arquivos em WebAssembly.
 
-Então copiei o [`index.html`](https://github.com/container2wasm/container2wasm/blob/main/examples/emscripten-simple/htdocs/index.html) do exemplo e adicionei o [Fit Addon para o XTerm.js](https://www.npmjs.com/package/@xterm/addon-fit) para o terminal ficar em tela cheia:
+Então copiei o [`index.html`](https://github.com/container2wasm/container2wasm/blob/main/examples/emscripten-simple/htdocs/index.html) do exemplo e adicionei o [Fit Addon para o XTerm.js](https://www.npmjs.com/package/@xterm/addon-fit) para o terminal ficar em tela cheia.
+
+<details>
+<summary>Ver index.html modificado</summary>
 
 ```html
 <html>
   <head>
     <title>container2wasm: Neovim + LuzTech Typography</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@xterm/xterm@5.5.0/css/xterm.css"
-    />
+    <link rel="stylesheet" href="./vendor/xterm.css" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <style>
       html,
@@ -195,9 +198,9 @@ Então copiei o [`index.html`](https://github.com/container2wasm/container2wasm/
     <div id="terminal"></div>
     <script src="./load.js"></script>
     <script type="module">
-      import 'https://unpkg.com/xterm@5.3.0/lib/xterm.js';
-      import 'https://unpkg.com/xterm-pty/index.js';
-      import { FitAddon } from 'https://esm.sh/@xterm/addon-fit@0.10.0';
+      import './vendor/xterm.js';
+      import './vendor/xterm-pty.js';
+      import { FitAddon } from './vendor/addon-fit.mjs';
       import './arg-module.js';
       import initEmscriptenModule from './out.js';
 
@@ -212,7 +215,7 @@ Então copiei o [`index.html`](https://github.com/container2wasm/container2wasm/
       xterm.loadAddon(master);
 
       Module.pty = slave;
-      Module['mainScriptUrlOrBlob'] = location.origin + '/out.js';
+      Module['mainScriptUrlOrBlob'] = new URL('./out.js', import.meta.url).href;
 
       // "/pack/info" file needs to be provided to the filesystem to start
       // the container. Refer to /cmd/init/main.go for the detail of info file.
@@ -246,7 +249,9 @@ Então copiei o [`index.html`](https://github.com/container2wasm/container2wasm/
 
       const fitTerminal = () => fitAddon.fit();
       addEventListener('resize', fitTerminal);
-      new ResizeObserver(fitTerminal).observe(document.getElementById('terminal'));
+      new ResizeObserver(fitTerminal).observe(
+        document.getElementById('terminal')
+      );
 
       (async () => {
         await initEmscriptenModule(Module);
@@ -256,6 +261,25 @@ Então copiei o [`index.html`](https://github.com/container2wasm/container2wasm/
   </body>
 </html>
 ```
+</details>
+
+> [!note]
+> As dependências são carregadas via CDN no `index.html` original, mas os cabeçalhos `Cross-Origin-Embedder-Policy` e `Cross-Origin-Opener-Policy` (obrigatórios para o container2wasm funcionar) podem causar inconsistência no download delas. Para evitar isso, baixei tudo para uma pasta `vendor/` ao lado do `index.html`.
+
+<details>
+<summary>Ver script para baixar dependências localmente</summary>
+
+```bash
+#! /bin/bash
+
+mkdir -p vendor
+curl -fsSL "https://unpkg.com/@xterm/xterm@5.5.0/css/xterm.css" -o vendor/xterm.css
+curl -fsSL "https://unpkg.com/xterm@5.3.0/lib/xterm.js" -o vendor/xterm.js
+curl -fsSL "https://unpkg.com/xterm-pty/index.js" -o vendor/xterm-pty.js
+curl -fsSL "https://esm.sh/@xterm/addon-fit@0.10.0/es2022/addon-fit.mjs" -o vendor/addon-fit.mjs
+```
+
+</details>
 
 Por fim, para ver como ficou, rodei o comando [`serve` de Vercel](https://github.com/vercel/serve) com o seguinte arquivo `serve.json` na raíz:
 
@@ -276,12 +300,18 @@ Por fim, para ver como ficou, rodei o comando [`serve` de Vercel](https://github
 }
 ```
 
-> [!tip]
-> Estes cabeçalhos são obrigatórios para o sistema funcionar, porém eles causam outros problemas, como, no caso do blog, impedir que o Gravatar funcione. Se for usar este repositório em algum projeto tenha isto em mente.
-
-Se quiser testar: <RainbowText><a href="/posts/stargazed-container2wasm/ecmascripten-simple/index.html" alt="Link para testar o container2wasm" target="_blank" referrer="noreferrer">Clique aqui</a></RainbowText>
-
 > [!important]
+> Estes cabeçalhos são obrigatórios para o sistema funcionar, porém eles causam outros problemas, como, no caso do blog, impedir que o Gravatar funcione ou causar inconsistências com o download de dependências de CDNs. Se for usar este repositório em algum projeto tenha isto em mente.
+
+E assim funcionou! Olha como ficou:
+
+<Figure src={Demo1Screenshot1} alt="Neovim rodando no navegador no repositório de tipografia da LuzTech na pasta raíz" caption="" />
+
+<Figure src={Demo1Screenshot2} alt="Neovim rodando no navegador no repositório de tipografia da LuzTech com o arquivo clean.svg aberto" caption="" />
+
+Se quiser testar: <RainbowText><a href="/posts/stargazed-container2wasm/emscripten-simple/index.html" alt="Link para testar o container2wasm" target="_blank" referrer="noreferrer">Clique aqui</a></RainbowText>
+
+> [!note]
 > Demora **BASTANTE** para o contêiner iniciar, não é erro na implementação. Em um Macbook Air M5 demorou cerca **3m30s** para aparecer a primeira tela do Neovim.
 
 ### Exemplo 2 - Caddy servindo o repositório de tipografia da LuzTech
@@ -311,118 +341,185 @@ EXPOSE 80
 CMD ["caddy", "file-server", "--browse", "--listen", ":80", "--root", "/public"]
 ```
 
-O comando de build da imagem e o arquivo `server.json` são os mesmos do [exemplo anterior](#exemplo-1---neovim-com-o-repositório-de-tipografia-da-luztech), o que muda são os arquivos estáticos, como o `index.html`, que agora vem a partir [desta pasta](https://github.com/container2wasm/container2wasm/blob/main/examples/emscripten/htdocs):
+O comando de build da imagem e o arquivo `server.json` são os mesmos do [exemplo anterior](#exemplo-1---neovim-com-o-repositório-de-tipografia-da-luztech), o que muda são os arquivos estáticos, como o `index.html`, que agora vem a partir [desta pasta](https://github.com/container2wasm/container2wasm/blob/main/examples/emscripten/htdocs), também levemente modificado para usar o [Fit Addon para o XTerm.js](https://www.npmjs.com/package/@xterm/addon-fit) e ficar em tela cheia.
+
+<details>
+<summary>Ver index.html modificado</summary>
 
 ```html
 <html>
   <head>
-    <title>container on browser</title>
-    <link rel="stylesheet" href="./xterm.css" />
+    <title>container2wasm: Caddy + LuzTech Typography</title>
+    <link rel="stylesheet" href="./vendor/xterm.css" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+
+      #terminal {
+        width: 100%;
+        height: 100dvh;
+      }
+    </style>
   </head>
   <body>
     <div id="terminal"></div>
     <script src="./load.js"></script>
-    <script src="./dist/stack.js"></script>
     <script type="module">
-      import 'https://unpkg.com/xterm@5.3.0/lib/xterm.js';
-      import 'https://unpkg.com/xterm-pty/index.js';
-      import './arg-module.js'
+      import './vendor/xterm.js';
+      import './vendor/xterm-pty.js';
+      import { FitAddon } from './vendor/addon-fit.mjs';
+      import './arg-module.js';
       import initEmscriptenModule from './out.js';
 
       const xterm = new Terminal();
-      xterm.open(document.getElementById("terminal"));
+      const fitAddon = new FitAddon();
+      xterm.loadAddon(fitAddon);
+      xterm.open(document.getElementById('terminal'));
+      fitAddon.fit();
 
       const { master, slave } = openpty();
 
       xterm.loadAddon(master);
 
       Module.pty = slave;
+      Module['mainScriptUrlOrBlob'] = new URL('./out.js', import.meta.url).href;
 
-      Module['mainScriptUrlOrBlob'] = location.origin + "/out.js";
+      // "/pack/info" file needs to be provided to the filesystem to start
+      // the container. Refer to /cmd/init/main.go for the detail of info file.
+      let info = 't:' + Math.round(new Date() / 1000) + '\n';
+      Module['preRun'].push(mod => {
+        try {
+          FS.mkdir('/pack');
+        } catch (e) {}
+        mod.FS.writeFile('/pack/info', info);
+      });
+      var readableCallbacks = [];
+      Module.pty.onReadable(() => {
+        readableCallbacks.forEach(cb => cb());
+        readableCallbacks = [];
+      });
+      Module['preRun'].push(Module => {
+        Module['TTY'].stream_ops.poll = (stream, timeout, notifyCallback) => {
+          if (Module.pty.readable) {
+            return 1;
+          }
+          if (notifyCallback != null) {
+            notifyCallback.registerCleanupFunc(() => {
+              const i = readableCallbacks.indexOf(notifyCallback);
+              if (i != -1) readableCallbacks.splice(i, 1);
+            });
+            readableCallbacks.push(notifyCallback);
+          }
+          return 0;
+        };
+      });
 
-      let info = "t:" + Math.round(new Date() / 1000) + "\n";
-      
-      var netParam = getNetParam();
-      if (!netParam) {
-          start(info);
-      } else {
-          if (netParam.mode == 'delegate') {
-              Module['websocket'] = {
-                  'url': netParam.param
-              };
-              info += 'n:' + genmac() + '\n';
-              start(info);
-          } else if (netParam.mode == 'browser') {
-              const stackAddress = 'http://localhost:9999/'; // listened and served by a mock inside browser
-              const stackWorkerFile = location.origin + "/dist/stack-worker.js";
-              const stackImage = location.origin + "/c2w-net-proxy.wasm.gzip";
-              Module['websocket'] = {
-                  'url': stackAddress
-              };
-              Stack.Start(stackAddress, stackWorkerFile, stackImage, (cert) => {
-                  Module['preRun'].push((mod) => {
-                      mod.FS.mkdir('/.wasmenv');
-                      mod.FS.writeFile('/.wasmenv/proxy.crt', cert);
-                  });
-                  info += 'n:' + genmac() + '\n';
-                  info += `m: .wasmenv
-env: SSL_CERT_FILE=/.wasmenv/proxy.crt
-env: https_proxy=http://192.168.127.253:80
-env: http_proxy=http://192.168.127.253:80
-env: HTTPS_PROXY=http://192.168.127.253:80
-env: HTTP_PROXY=http://192.168.127.253:80`;
-                  start(info);
-              });
-          }
-      }
-      function start(info) {
-          Module['preRun'].push((mod) => {
-              try { FS.mkdir('/pack'); } catch (e) {}
-              mod.FS.writeFile('/pack/info', info);
-          });
-          var readableCallbacks = [];
-          Module.pty.onReadable(() => {
-              readableCallbacks.forEach(cb => cb());
-              readableCallbacks = [];
-          });
-          Module['preRun'].push((Module) => {
-              Module['TTY'].stream_ops.poll = (stream, timeout, notifyCallback) => {
-                  if (Module.pty.readable) {
-                      return 1;
-                  }
-                  if (notifyCallback != null) {
-                      notifyCallback.registerCleanupFunc(() => {
-                          const i = readableCallbacks.indexOf(notifyCallback);
-                          if (i != -1) readableCallbacks.splice(i, 1);
-                      });
-                      readableCallbacks.push(notifyCallback);
-                  }
-                  return 0;
-              };
-          });
-          (async () => {
-              const instance = await initEmscriptenModule(Module);
-          })();
-      }
-      function getNetParam() {
-          var vars = location.search.substring(1).split('&');
-          for (var i = 0; i < vars.length; i++) {
-              var kv = vars[i].split('=');
-              if (decodeURIComponent(kv[0]) == 'net') {
-                  return {
-                      mode: kv[1],
-                      param: kv[2],
-                  };
-              }
-          }
-          return null;
-      }
-      function genmac(){
-          return "02:XX:XX:XX:XX:XX".replace(/X/g, function() {
-              return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16))
-          });
-      }
+      const fitTerminal = () => fitAddon.fit();
+      addEventListener('resize', fitTerminal);
+      new ResizeObserver(fitTerminal).observe(
+        document.getElementById('terminal')
+      );
+
+      (async () => {
+        await initEmscriptenModule(Module);
+        fitTerminal();
+      })();
     </script>
   </body>
 </html>
 ```
+
+</details>
+
+Com o HTML acima, ainda é necessário rodar o Webpack para criar um pacote com rede, e, para isto, criei um script levemente diferente do que existe no repositório original.
+
+<details>
+<summary>Ver script modificado</summary>
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+OUT_PATH="${1:-}"
+CUSTOM_INDEX_HTML_PATH="${2:-}"
+INITIAL_CWD="$PWD"
+
+if [[ -z "$OUT_PATH" ]]; then
+  echo "Usage: $0 <OUT_PATH> [CUSTOM_INDEX_HTML_PATH]" >&2
+  exit 1
+fi
+
+if [[ "$OUT_PATH" != /* ]]; then
+  OUT_PATH="$INITIAL_CWD/$OUT_PATH"
+fi
+
+if [[ -n "$CUSTOM_INDEX_HTML_PATH" ]]; then
+  if [[ "$CUSTOM_INDEX_HTML_PATH" != /* ]]; then
+    CUSTOM_INDEX_HTML_PATH="$INITIAL_CWD/$CUSTOM_INDEX_HTML_PATH"
+  fi
+  if [[ ! -f "$CUSTOM_INDEX_HTML_PATH" ]]; then
+    echo "Custom index.html not found: $CUSTOM_INDEX_HTML_PATH" >&2
+    exit 1
+  fi
+fi
+
+mkdir -p "$OUT_PATH"
+
+WORK=/tmp/c2w
+DIST=/tmp/c2w-dist
+
+rm -rf "$WORK" "$DIST"
+mkdir -p "$WORK" "$DIST"
+
+git clone -q https://github.com/container2wasm/container2wasm "$WORK"
+cd "$WORK/examples/emscripten/htdocs"
+
+cat > serve.json <<'JSON'
+{
+  "headers": [
+    {
+      "source": "**/*",
+      "headers": [
+        { "key": "Cross-Origin-Embedder-Policy", "value": "require-corp" },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" }
+      ]
+    }
+  ]
+}
+JSON
+
+if [[ -n "$CUSTOM_INDEX_HTML_PATH" ]]; then
+  rm -f index.html
+  cp "$CUSTOM_INDEX_HTML_PATH" ./index.html
+fi
+
+npm install --no-audit --no-fund
+npx --no-install webpack
+
+curl -fsSL "https://unpkg.com/xterm@5.3.0/lib/xterm.js" -o vendor/xterm.js
+curl -fsSL "https://unpkg.com/xterm-pty/index.js" -o vendor/xterm-pty.js
+curl -fsSL "https://esm.sh/@xterm/addon-fit@0.10.0/es2022/addon-fit.mjs" -o vendor/addon-fit.mjs
+
+cp -R index.html dist vendor "$DIST"/
+
+C2W_TAG="$(c2w --version | awk '{ print "v" $3 }')"
+curl -fsSL "https://github.com/container2wasm/container2wasm/releases/download/${C2W_TAG}/c2w-net-proxy.wasm" \
+  | gzip > "$DIST/c2w-net-proxy.wasm.gzip"
+
+cp -R "$DIST"/. "$OUT_PATH"/
+
+rm -rf "$DIST" "$WORK"
+```
+
+</details>
+
+> [!note]
+> Usei este script para usar o [`serve` da Vercel](https://github.com/vercel/serve) em vez de rodar um contêiner com o Apache, além disso o script baixa o `c2w-net-proxy.wasm` da release com a mesma versão do `c2w` que está instalada na máquina, o que evita problemas de incompatibilidade. Também não é necessário baixar as dependências manualmente como no [exemplo anterior](#exemplo-1---neovim-com-o-repositório-de-tipografia-da-luztech), já que o script de build faz isso automaticamente.
+
