@@ -27,6 +27,7 @@ import slugify from "slugify";
 
 const ROOT = process.cwd();
 const BLOG = join(ROOT, "src/content/blog");
+const AUTHORS = join(ROOT, "src/content/authors");
 const PUBLIC_ASSETS = join(ROOT, "public/posts");
 const SRC_ASSETS = join(ROOT, "src/assets/posts");
 const LOCALES = ["en-US", "pt-BR"];
@@ -122,6 +123,10 @@ function getAuthorEmail() {
   return getGitConfig("user.email");
 }
 
+function getAuthorSlug(name) {
+  return toSlug(name);
+}
+
 function makePrompt(question, choices) {
   return new Promise(resolve => {
     const rl = createInterface({
@@ -146,7 +151,6 @@ function frontmatter({
   description,
   pubDatetime,
   author,
-  authorEmail,
   tags = ["others"],
 }) {
   const tagLines = tags.map(t => `  - ${t}`).join("\n");
@@ -156,13 +160,105 @@ function frontmatter({
     `description: ${description}`,
     `pubDatetime: ${pubDatetime}`,
     `author: ${author}`,
-    ...(authorEmail ? [`authorEmail: ${authorEmail}`] : []),
     "tags:",
     tagLines,
     "draft: true",
     "---",
     "",
   ].join("\n");
+}
+
+async function findAuthorProfiles(slug) {
+  const hits = [];
+  for (const loc of LOCALES) {
+    for (const ext of EXTS) {
+      const p = join(AUTHORS, loc, `${slug}${ext}`);
+      if (existsSync(p)) hits.push(p);
+    }
+  }
+  return hits;
+}
+
+function authorFrontmatter({
+  name,
+  description,
+  email,
+  website,
+  github,
+  linkedin,
+  x,
+}) {
+  const yamlValue = value =>
+    value === null || value === undefined ? "null" : String(value);
+
+  return [
+    "---",
+    `name: ${name}`,
+    `description: ${description}`,
+    `email: ${email}`,
+    `website: ${yamlValue(website)}`,
+    `github: ${yamlValue(github)}`,
+    `linkedin: ${yamlValue(linkedin)}`,
+    `x: ${yamlValue(x)}`,
+    "---",
+    "",
+  ].join("\n");
+}
+
+async function ensureAuthorProfile(author, authorSlug, authorEmail) {
+  const existing = await findAuthorProfiles(authorSlug);
+  if (existing.length) return [];
+
+  const email = authorEmail || `${authorSlug}@example.com`;
+  const website = null;
+  const github = null;
+  const linkedin = null;
+  const x = null;
+
+  const bodies = {
+    "en-US": [
+      authorFrontmatter({
+        name: author,
+        description: "TODO: Short author bio shown on author pages.",
+        email,
+        website,
+        github,
+        linkedin,
+        x,
+      }),
+      "Write a longer author bio here.",
+      ""
+    ].join("\n"),
+    "pt-BR": [
+      authorFrontmatter({
+        name: author,
+        description: "TODO: Bio curta mostrada na página do autor.",
+        email,
+        website,
+        github,
+        linkedin,
+        x,
+      }),
+      "Escreva uma bio mais completa do autor aqui.",
+      "",
+      "Links opcionais no frontmatter:",
+      "- website",
+      "- github",
+      "- linkedin",
+      "- x",
+      "",
+    ].join("\n"),
+  };
+
+  const created = [];
+  for (const loc of LOCALES) {
+    const dir = join(AUTHORS, loc);
+    await mkdir(dir, { recursive: true });
+    const path = join(dir, `${authorSlug}.mdx`);
+    await writeFile(path, bodies[loc], "utf8");
+    created.push(path);
+  }
+  return created;
 }
 
 async function cmdNew(args) {
@@ -184,7 +280,13 @@ async function cmdNew(args) {
   const ext = mdx ? "mdx" : "md";
   const pubDatetime = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   const author = getAuthor();
+  const authorSlug = getAuthorSlug(author);
   const authorEmail = getAuthorEmail();
+
+  if (!authorSlug) {
+    console.error(`Could not derive an author slug from "${author}".`);
+    process.exit(1);
+  }
 
   const existing = await findPair(slug);
   if (existing.length) {
@@ -200,7 +302,6 @@ async function cmdNew(args) {
         description: "TODO: short summary shown in listings and OG cards.",
         pubDatetime,
         author,
-        authorEmail,
       }),
       `Write the English version of "${title}" here.`,
       "",
@@ -213,7 +314,6 @@ async function cmdNew(args) {
         description: "TODO: descrição curta mostrada nas listagens e OG cards.",
         pubDatetime,
         author,
-        authorEmail,
       }),
       `Escreva a versão em português de "${title}" aqui.`,
       "",
@@ -236,6 +336,13 @@ async function cmdNew(args) {
     await mkdir(dir, { recursive: true });
     created.push(dir);
   }
+
+  const createdAuthorProfiles = await ensureAuthorProfile(
+    author,
+    authorSlug,
+    authorEmail
+  );
+  for (const p of createdAuthorProfiles) created.push(p);
 
   console.log(`Created ${ext.toUpperCase()} pair for slug "${slug}" (draft):`);
   for (const p of created) console.log("  " + relative(ROOT, p));

@@ -2,7 +2,9 @@ import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
 import { getSortedPosts } from '@/utils/getSortedPosts';
 import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
+import { getLocalizedAuthorProfiles } from '@/utils/getLocalizedAuthorProfiles';
 import { getPostUrl } from '@/utils/getPostPaths';
+import { resolveAuthorSlug } from '@/utils/getUniqueAuthors';
 import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
 import config from '@/config';
 
@@ -21,6 +23,7 @@ function escapeXml(value: string): string {
 export const GET: APIRoute = async ({ params }) => {
   const locale = assertLocaleParam(params.locale);
   const posts = await getLocalizedPosts(locale);
+  const profiles = await getLocalizedAuthorProfiles(locale);
   const sortedPosts = getSortedPosts(posts);
   const siteBase = config.site.url;
 
@@ -39,7 +42,10 @@ export const GET: APIRoute = async ({ params }) => {
     },
     items: sortedPosts.map(({ data, id, filePath }) => {
       const authorName = data.author ?? config.site.author;
-      const authorEmail = data.authorEmail ?? undefined;
+      const authorSlug = resolveAuthorSlug(authorName);
+      const authorEmail = authorSlug
+        ? profiles.get(authorSlug)?.data.email
+        : undefined;
 
       const postUrl = getPostUrl(id, filePath, locale);
 
