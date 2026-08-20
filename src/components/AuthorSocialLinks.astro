@@ -1,0 +1,76 @@
+---
+import IconLink from '@/assets/icons/IconLink.svg';
+import IconGithub from '@/assets/icons/socials/github.svg';
+import IconLinkedIn from '@/assets/icons/socials/linkedin.svg';
+import IconMail from '@/assets/icons/socials/mail.svg';
+import IconX from '@/assets/icons/socials/x.svg';
+
+type Props = {
+  github?: string;
+  linkedin?: string;
+  website?: string;
+  x?: string;
+  email?: string | null;
+  class?: string;
+};
+
+const {
+  github,
+  linkedin,
+  website,
+  x,
+  email,
+  class: className = ''
+} = Astro.props;
+
+type SocialLinkItem = {
+  href: string;
+  title: string;
+  Icon: typeof IconGithub;
+};
+
+const links: SocialLinkItem[] = [];
+
+if (github) {
+  links.push({ href: github, title: 'GitHub', Icon: IconGithub });
+}
+if (linkedin) {
+  links.push({ href: linkedin, title: 'LinkedIn', Icon: IconLinkedIn });
+}
+if (website) {
+  links.push({ href: website, title: 'Website', Icon: IconLink });
+}
+if (x) {
+  links.push({ href: x, title: 'X', Icon: IconX });
+}
+if (email) {
+  links.push({ href: `mailto:${email}`, title: 'Email', Icon: IconMail });
+}
+---
+
+{
+  links.length > 0 && (
+    <ul class:list={['mt-3 flex flex-wrap items-center gap-2', className]}>
+      {links.map(({ href, title, Icon }) => (
+        <li>
+          <a
+            href={href}
+            class:list={[
+              'inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm',
+              'border-border text-muted-foreground hover:border-accent/40',
+              'hover:text-accent focus-visible:text-accent',
+              'focus-visible:no-underline focus-visible:outline-none'
+            ]}
+            target={href.startsWith('mailto:') ? undefined : '_blank'}
+            rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+            title={title}
+            aria-label={title}
+          >
+            <Icon class="size-4 shrink-0" />
+            <span>{title}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

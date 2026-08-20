@@ -7,11 +7,21 @@ export type Author = {
   slug: string;
   /** Display name exactly as written in the post frontmatter. */
   name: string;
-  /** Email captured at post creation time, or `null` if not set. */
+  /** Optional email resolved elsewhere (kept for backwards compatibility). */
   email: string | null;
   /** Number of published posts by this author. */
   count: number;
 };
+
+/**
+ * Resolves the canonical author slug used in URLs.
+ */
+export function resolveAuthorSlug(
+  name: string | null | undefined
+): string | null {
+  const fallback = slugifyStr(name ?? '');
+  return fallback || null;
+}
 
 /**
  * Builds a de-duplicated, sorted author list from posts.
@@ -19,26 +29,23 @@ export type Author = {
  * - Drafts and scheduled posts are excluded via `postFilter()`
  * - Uniqueness is based on the slugified author name (so casing differences
  *   collapse). Kept intentionally simple: two authors with the same slug are
- *   assumed to be the same person, and their first-seen `name` + `email` wins.
+ *   assumed to be the same person.
  */
 export function getUniqueAuthors(posts: CollectionEntry<'posts'>[]): Author[] {
   const seen = new Map<string, Author>();
   for (const post of posts.filter(postFilter)) {
     const name = post.data.author;
     if (!name) continue;
-    const slug = slugifyStr(name);
+    const slug = resolveAuthorSlug(name);
     if (!slug) continue;
     const existing = seen.get(slug);
     if (existing) {
       existing.count += 1;
-      if (!existing.email && post.data.authorEmail) {
-        existing.email = post.data.authorEmail;
-      }
     } else {
       seen.set(slug, {
         slug,
         name,
-        email: post.data.authorEmail ?? null,
+        email: null,
         count: 1
       });
     }
@@ -55,7 +62,7 @@ export function getPostAuthor(
 ): Pick<Author, 'slug' | 'name' | 'email'> | null {
   const name = post.data.author;
   if (!name) return null;
-  const slug = slugifyStr(name);
+  const slug = resolveAuthorSlug(name);
   if (!slug) return null;
-  return { slug, name, email: post.data.authorEmail ?? null };
+  return { slug, name, email: null };
 }

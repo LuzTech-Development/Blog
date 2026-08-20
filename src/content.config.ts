@@ -5,6 +5,12 @@ import config from '@/config';
 import { LOCALES, type Locale } from '@/utils/i18n';
 
 export const BLOG_PATH = 'src/content/blog';
+export const AUTHORS_PATH = 'src/content/authors';
+
+const optionalUrlFromNullable = z.preprocess(
+  value => (value === null ? undefined : value),
+  z.url().optional()
+);
 
 /**
  * Derive `{ locale, slugId }` from the content collection `id`, which for a file
@@ -31,12 +37,35 @@ function splitLocaleFromId(id: string): { locale: Locale; slugId: string } {
   );
 }
 
+/**
+ * Same as `splitLocaleFromId`, but for author profile entries under
+ * `src/content/authors/{locale}/...`.
+ */
+function splitLocaleFromAuthorsId(id: string): {
+  locale: Locale;
+  slugId: string;
+} {
+  const [maybeLocale, ...rest] = id.split('/');
+  const canonical = LOCALES.find(
+    l => l.toLowerCase() === maybeLocale.toLowerCase()
+  );
+  if (canonical) {
+    return {
+      locale: canonical,
+      slugId: rest.join('/') || canonical
+    };
+  }
+  throw new Error(
+    `Content entry "${id}" is missing a locale folder prefix. Place it under ` +
+      `one of: ${LOCALES.map(l => `${AUTHORS_PATH}/${l}/`).join(', ')}.`
+  );
+}
+
 const posts = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: `./${BLOG_PATH}` }),
   schema: ({ image }) =>
     z.object({
       author: z.string().default(config.site.author),
-      authorEmail: z.string().optional(),
       pubDatetime: z.date(),
       modDatetime: z.date().optional().nullable(),
       title: z.string(),
@@ -51,6 +80,19 @@ const posts = defineCollection({
     })
 });
 
+const authors = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: `./${AUTHORS_PATH}` }),
+  schema: z.object({
+    name: z.string(),
+    description: z.string().optional(),
+    email: z.email(),
+    website: optionalUrlFromNullable,
+    github: optionalUrlFromNullable,
+    linkedin: optionalUrlFromNullable,
+    x: optionalUrlFromNullable
+  })
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/pages' }),
   schema: z.object({
@@ -61,5 +103,5 @@ const pages = defineCollection({
   })
 });
 
-export const collections = { posts, pages };
-export { splitLocaleFromId };
+export const collections = { posts, pages, authors };
+export { splitLocaleFromId, splitLocaleFromAuthorsId };
