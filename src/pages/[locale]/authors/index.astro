@@ -6,6 +6,7 @@ import Main from '@/components/Main.astro';
 import Footer from '@/components/Footer.astro';
 import AuthorLink from '@/components/AuthorLink.astro';
 import { getUniqueAuthors } from '@/utils/getUniqueAuthors';
+import { getLocalizedAuthorProfiles } from '@/utils/getLocalizedAuthorProfiles';
 import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
 import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
 import { useTranslations } from '@/i18n';
@@ -18,6 +19,16 @@ const t = useTranslations(locale);
 
 const posts = await getLocalizedPosts(locale);
 const authors = getUniqueAuthors(posts);
+const profiles = await getLocalizedAuthorProfiles(locale);
+
+const authorCards = authors.map(author => {
+  const profile = profiles.get(author.slug);
+  return {
+    ...author,
+    email: profile?.data.email ?? author.email,
+    description: profile?.data.description
+  };
+});
 ---
 
 <Layout
@@ -31,14 +42,19 @@ const authors = getUniqueAuthors(posts);
   <Main pageTitle={t.pages.authorsTitle} pageDesc={t.pages.authorsDesc}>
     <ul class="mt-4 flex flex-col gap-4">
       {
-        authors.map(author => (
-          <li>
+        authorCards.map(author => (
+          <li class="my-6">
             <AuthorLink
               slug={author.slug}
               name={author.name}
               email={author.email}
               size="md"
             />
+            {author.description && (
+              <p class="text-muted-foreground mt-2 text-sm sm:text-base">
+                {author.description}
+              </p>
+            )}
           </li>
         ))
       }
