@@ -3,7 +3,7 @@ title: 'Sobre'
 description: 'Sobre o blog técnico oficial da LuzTech.'
 ---
 
-O LuzTech Blog é a publicação técnica oficial da **LuzTech Development**.
+O LuzTech Blog é a publicação técnica oficial da [**LuzTech Development**](https://www.luztech.dev.br).
 
 Usamos este espaço para compartilhar artigos de engenharia, notas de
 implementação, tutoriais, decisões de arquitetura e lições práticas aprendidas
