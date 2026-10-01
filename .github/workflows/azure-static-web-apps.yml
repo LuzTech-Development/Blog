@@ -53,4 +53,3 @@ jobs:
           app_location: 'dist'
           output_location: ''
           skip_app_build: true
-          production_branch: main
