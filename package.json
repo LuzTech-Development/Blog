@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/",
+    "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/ && cp staticwebapp.config.json dist/",
     "preview": "astro preview",
     "sync": "astro sync",
     "astro": "astro",
