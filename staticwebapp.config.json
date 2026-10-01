@@ -34,7 +34,7 @@
       }
     },
     {
-      "route": "/sitemap-*.xml",
+      "route": "/sitemap-*",
       "headers": {
         "cache-control": "public, max-age=3600"
       }
