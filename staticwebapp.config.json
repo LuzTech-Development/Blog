@@ -51,7 +51,7 @@
     "exclude": [
       "/_astro/*",
       "/pagefind/*",
-      "/*.{png,jpg,jpeg,gif,svg,webp,ico,avif,js,css,map,txt,xml,woff,woff2,ttf,otf,json}"
+      "*.{png,jpg,jpeg,gif,svg,webp,ico,avif,js,css,map,txt,xml,woff,woff2,ttf,otf,json,wasm,data}"
     ]
   },
   "mimeTypes": {
