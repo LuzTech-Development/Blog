@@ -40,7 +40,13 @@
       }
     },
     {
-      "route": "/*/rss.xml",
+      "route": "/en-us/rss.xml",
+      "headers": {
+        "cache-control": "public, max-age=1800"
+      }
+    },
+    {
+      "route": "/pt-br/rss.xml",
       "headers": {
         "cache-control": "public, max-age=1800"
       }
