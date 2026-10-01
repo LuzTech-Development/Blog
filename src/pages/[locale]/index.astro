@@ -35,18 +35,12 @@ const homePath = getRelativeLocaleUrl(locale, '');
     class="app-layout"
   >
     <section id="hero" class="pt-8 pb-8">
-      <div
-        class="hero-mesh overflow-hidden rounded-3xl border border-white/20 px-6 py-10 text-white shadow-lg sm:px-10 sm:py-14"
-      >
+      <div class="hero-mesh overflow-hidden rounded-3xl border border-white/20 px-6 py-10 text-white shadow-lg sm:px-10 sm:py-14">
         <div class="max-w-2xl">
           <h1 class="mb-4 text-4xl sm:text-5xl">LuzTech Blog</h1>
 
-          <p class="text-base/7 text-white/90 sm:text-lg/8">
-            {t.home.tagline}
-          </p>
-          <p class="mt-3 text-white/80">
-            {t.home.intro}
-          </p>
+          <p class="text-base/7 text-white/90 sm:text-lg/8">{t.home.tagline}</p>
+          <p class="mt-3 text-white/80">{t.home.intro}</p>
 
           <div class="mt-6 flex flex-wrap gap-4">
             <LinkButton
@@ -56,54 +50,48 @@ const homePath = getRelativeLocaleUrl(locale, '');
               {t.home.allPosts}
               <IconArrowRight class="inline-block" />
             </LinkButton>
-            {
-              socials.length > 0 && (
-                <LinkButton
-                  href={socials[0].url}
-                  target="_blank"
-                  rel="noreferrer"
-                  class="rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 hover:text-white"
-                >
-                  GitHub
-                </LinkButton>
-              )
-            }
+            {socials.length > 0 && (
+              <LinkButton
+                href={socials[0].url}
+                target="_blank"
+                rel="noreferrer"
+                class="rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 hover:text-white"
+              >
+                GitHub
+              </LinkButton>
+            )}
           </div>
         </div>
       </div>
     </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            'pt-4 pb-6',
-            { 'border-border border-b': recentPosts.length > 0 }
-          ]}
-        >
-          <h2 class="text-2xl tracking-wide">{t.home.featured}</h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    {featuredPosts.length > 0 && (
+      <section
+        id="featured"
+        class:list={[
+          'pt-4 pb-6',
+          { 'border-border border-b': recentPosts.length > 0 }
+        ]}
+      >
+        <h2 class="text-2xl tracking-wide">{t.home.featured}</h2>
+        <ul>
+          {featuredPosts.map(data => (
+            <Card variant="h3" {...data} />
+          ))}
+        </ul>
+      </section>
+    )}
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-8 pb-6">
-          <h2 class="text-2xl tracking-wide">{t.home.recentPosts}</h2>
-          <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    {recentPosts.length > 0 && (
+      <section id="recent-posts" class="pt-8 pb-6">
+        <h2 class="text-2xl tracking-wide">{t.home.recentPosts}</h2>
+        <ul>
+          {recentPosts.slice(0, postsConfig.perIndex).map(data => (
+            <Card variant="h3" {...data} />
+          ))}
+        </ul>
+      </section>
+    )}
 
     <div class="my-8 text-center">
       <LinkButton href={getRelativeLocaleUrl(locale, 'posts')}>

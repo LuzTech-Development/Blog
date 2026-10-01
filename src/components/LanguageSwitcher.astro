@@ -31,26 +31,24 @@ const targets = LOCALES.map(locale => ({
   role="group"
   aria-label="Language"
 >
-  {
-    targets.map(({ locale, href, short, label, isActive }) => (
-      <a
-        href={href}
-        hreflang={locale}
-        lang={locale}
-        aria-label={label}
-        aria-current={isActive ? 'true' : undefined}
-        data-locale={locale}
-        class:list={[
-          'focus-outline rounded px-2 py-1 text-sm font-semibold tracking-wide uppercase',
-          isActive
-            ? 'text-accent underline decoration-dashed underline-offset-4'
-            : 'hover:text-accent opacity-75 hover:opacity-100'
-        ]}
-      >
-        {short}
-      </a>
-    ))
-  }
+  {targets.map(({ locale, href, short, label, isActive }) => (
+    <a
+      href={href}
+      hreflang={locale}
+      lang={locale}
+      aria-label={label}
+      aria-current={isActive ? 'true' : undefined}
+      data-locale={locale}
+      class:list={[
+        'focus-outline rounded px-2 py-1 text-sm font-semibold tracking-wide uppercase',
+        isActive
+          ? 'text-accent underline decoration-dashed underline-offset-4'
+          : 'hover:text-accent opacity-75 hover:opacity-100'
+      ]}
+    >
+      {short}
+    </a>
+  ))}
 </div>
 
 <script>

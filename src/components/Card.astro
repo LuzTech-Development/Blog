@@ -26,22 +26,18 @@ const author = getPostAuthor(post);
       'focus-visible:no-underline focus-visible:underline-offset-0'
     ]}
   >
-    <Heading transition:name={toTransitionName(title)}>
-      {title}
-    </Heading>
+    <Heading transition:name={toTransitionName(title)}>{title}</Heading>
   </a>
   <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
     <Datetime {...props} />
-    {
-      author && (
-        <AuthorLink
-          slug={author.slug}
-          name={author.name}
-          email={author.email}
-          size="sm"
-        />
-      )
-    }
+    {author && (
+      <AuthorLink
+        slug={author.slug}
+        name={author.name}
+        email={author.email}
+        size="sm"
+      />
+    )}
   </div>
   <p>{description}</p>
 </li>

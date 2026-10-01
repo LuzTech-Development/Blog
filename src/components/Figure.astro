@@ -34,18 +34,14 @@ const showCaption = hasCaptionSlot || Boolean(caption);
 ---
 
 <figure {...figureAttrs} class:list={['app-figure', className]}>
-  {
-    typeof src === 'string' ? (
-      <img src={src} alt={alt} width={width} height={height} loading="lazy" />
-    ) : (
-      <Image src={src} alt={alt} width={width} height={height} />
-    )
-  }
-  {
-    showCaption && (
-      <figcaption class="text-center">
-        {hasCaptionSlot ? <slot name="caption" /> : caption}
-      </figcaption>
-    )
-  }
+  {typeof src === 'string' ? (
+    <img src={src} alt={alt} width={width} height={height} loading="lazy" />
+  ) : (
+    <Image src={src} alt={alt} width={width} height={height} />
+  )}
+  {showCaption && (
+    <figcaption class="text-center">
+      {hasCaptionSlot ? <slot name="caption" /> : caption}
+    </figcaption>
+  )}
 </figure>
