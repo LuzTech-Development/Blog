@@ -25,31 +25,31 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.2.2",
-    "@astrojs/mdx": "^7.0.5",
+    "@astrojs/markdown-remark": "^7.3.0",
+    "@astrojs/mdx": "^8.0.0",
     "@astrojs/rss": "^4.0.19",
-    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/sitemap": "^3.7.4",
     "@fontsource/space-grotesk": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.2.0",
-    "dayjs": "^1.11.21",
+    "astro": "^7.2.10",
+    "dayjs": "^1.11.23",
     "lodash.kebabcase": "^4.1.1",
     "rehype-callouts": "^2.2.0",
     "remark-collapse": "^0.1.2",
     "remark-toc": "^9.0.0",
-    "satori": "^0.29.0",
-    "sharp": "^0.35.3",
+    "satori": "^0.33.4",
+    "sharp": "^0.35.4",
     "slugify": "^1.6.9",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@pagefind/default-ui": "^1.5.2",
-    "@shikijs/transformers": "4.1.0",
+    "@shikijs/transformers": "4.4.3",
     "@tailwindcss/typography": "^0.5.20",
     "@types/lodash.kebabcase": "^4.1.9",
-    "@typescript-eslint/parser": "^8.66.0",
-    "eslint": "^10.8.0",
+    "@typescript-eslint/parser": "^8.69.0",
+    "eslint": "^10.9.1",
     "eslint-plugin-astro": "^3.1.0",
     "husky": "^9.1.7",
     "mdast-util-to-string": "^4.0.0",
@@ -61,5 +61,5 @@
     "typescript": "^6.0.3",
     "unified": "^11.0.5"
   },
-  "packageManager": "pnpm@11.20.0+sha512.9a6f330a95b66446ea088faf1521405a8a01f07fde7124cc9958dfed52d4bb436737e65b08f85f37b46fcba375092558ac51262b816844b22f63406ed166bfee"
+  "packageManager": "pnpm@11.25.0"
 }
