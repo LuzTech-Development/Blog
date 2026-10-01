@@ -5,3 +5,5 @@ dist/
 .env*
 pnpm-debug.log*
 public/pagefind/
+public/posts/stargazed-container2wasm/**/serve.json
+*.dev.*

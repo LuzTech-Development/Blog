@@ -3,6 +3,7 @@ import satori from 'satori';
 import sharp from 'sharp';
 import { getPostSlug, getPostLocale } from '@/utils/getPostPaths';
 import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
+import { isPublished } from '@/utils/postFilter';
 import { LOCALES, localeToPath, type Locale } from '@/utils/i18n';
 import { loadOgFonts } from '@/utils/ogFonts';
 import config from '@/config';
@@ -16,7 +17,7 @@ export async function getStaticPaths() {
     LOCALES.map(async locale => {
       const posts = await getLocalizedPosts(locale as Locale);
       return posts
-        .filter(({ data }) => !data.draft && !data.ogImage)
+        .filter(post => isPublished(post) && !post.data.ogImage)
         .map(post => ({
           params: {
             locale: localeToPath(getPostLocale(post.id)),

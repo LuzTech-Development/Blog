@@ -23,5 +23,12 @@ export default [
     files: ['scripts/**/*.{js,mjs,cjs,ts}'],
     rules: { 'no-console': 'off' }
   },
-  { ignores: ['dist/**', '.astro/**', 'public/pagefind/**'] }
+  {
+    ignores: [
+      'dist/**',
+      '.astro/**',
+      'public/pagefind/**',
+      'public/posts/stargazed-container2wasm/**'
+    ]
+  }
 ];

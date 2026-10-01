@@ -7,7 +7,11 @@ type Post = CollectionEntry<'posts'>;
 /**
  * Ensures every published post has a translation in every configured locale.
  *
- * A post is considered published when `draft` is not `true`.
+ * A post is considered published when `draft` is not `true`. Drafts are
+ * exempt from this check so authors can start writing a single locale
+ * without a translation pair; the parity requirement only kicks in once a
+ * post is marked `draft: false` (i.e. ready to appear on the blog).
+ *
  * If a published post exists in some (but not all) locales, this throws a
  * descriptive error listing the missing translations. That surfaces as a
  * hard failure during `astro build` / `astro check`, which is the intended

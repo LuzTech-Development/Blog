@@ -3,6 +3,13 @@
   "trailingSlash": "auto",
   "routes": [
     {
+      "route": "/posts/stargazed-container2wasm/*",
+      "headers": {
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      }
+    },
+    {
       "route": "/_astro/*",
       "headers": {
         "cache-control": "public, max-age=31536000, immutable"
