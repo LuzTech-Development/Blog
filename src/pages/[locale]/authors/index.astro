@@ -41,23 +41,21 @@ const authorCards = authors.map(author => {
 
   <Main pageTitle={t.pages.authorsTitle} pageDesc={t.pages.authorsDesc}>
     <ul class="mt-4 flex flex-col gap-4">
-      {
-        authorCards.map(author => (
-          <li class="my-6">
-            <AuthorLink
-              slug={author.slug}
-              name={author.name}
-              email={author.email}
-              size="md"
-            />
-            {author.description && (
-              <p class="text-muted-foreground mt-2 text-sm sm:text-base">
-                {author.description}
-              </p>
-            )}
-          </li>
-        ))
-      }
+      {authorCards.map(author => (
+        <li class="my-6">
+          <AuthorLink
+            slug={author.slug}
+            name={author.name}
+            email={author.email}
+            size="md"
+          />
+          {author.description && (
+            <p class="text-muted-foreground mt-2 text-sm sm:text-base">
+              {author.description}
+            </p>
+          )}
+        </li>
+      ))}
     </ul>
   </Main>
 

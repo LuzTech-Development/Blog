@@ -32,9 +32,7 @@ const siteTitle = 'LuzTech Landing Page';
   class:list={['app-layout', { 'mt-auto': !noMarginTop }, className]}
   {...attrs}
 >
-  <div
-    class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"
-  >
+  <div class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4">
     <div class="flex flex-wrap items-center gap-1">
       <LinkButton
         href={siteUrl}
@@ -44,9 +42,7 @@ const siteTitle = 'LuzTech Landing Page';
         title={siteTitle}
         aria-label={siteTitle}
       >
-        <IconGlobe
-          class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"
-        />
+        <IconGlobe class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />
         <span class="sr-only">{siteTitle}</span>
       </LinkButton>
       <Socials />
@@ -56,14 +52,14 @@ const siteTitle = 'LuzTech Landing Page';
         title={rssTitle}
         aria-label={rssTitle}
       >
-        <IconRss
-          class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"
-        />
+        <IconRss class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />
         <span class="sr-only">{rssTitle}</span>
       </LinkButton>
     </div>
     <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
-      <span>{t.footer.copyright} &#169; {currentYear} LuzTech Development</span>
+      <span>
+        {t.footer.copyright} &#169; {currentYear} LuzTech Development
+      </span>
     </div>
   </div>
 </footer>

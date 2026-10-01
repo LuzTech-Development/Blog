@@ -41,11 +41,9 @@ const supportedJson = JSON.stringify(LOCALE_URL_PATH);
     <title>{config.site.title}</title>
     <link rel="icon" type="image/svg+xml" href={getAssetPath('favicon.svg')} />
     <link rel="canonical" href={new URL('/', Astro.site ?? Astro.url).href} />
-    {
-      alternates.map(alt => (
-        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
-      ))
-    }
+    {alternates.map(alt => (
+      <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+    ))}
     <link
       rel="alternate"
       hreflang="x-default"
@@ -93,13 +91,11 @@ const supportedJson = JSON.stringify(LOCALE_URL_PATH);
       <h1>{config.site.title}</h1>
       <p>Select a language / Selecione um idioma:</p>
       <ul>
-        {
-          alternates.map(alt => (
-            <li>
-              <a href={alt.href}>{alt.label}</a>
-            </li>
-          ))
-        }
+        {alternates.map(alt => (
+          <li>
+            <a href={alt.href}>{alt.label}</a>
+          </li>
+        ))}
       </ul>
     </noscript>
   </body>

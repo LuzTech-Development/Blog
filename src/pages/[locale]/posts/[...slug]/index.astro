@@ -148,40 +148,36 @@ const ogImage = ogImageUrl
 
     <div class="my-2 flex flex-wrap items-center gap-x-3 gap-y-1">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-      {
-        minutesRead !== undefined && (
-          <>
-            <span aria-hidden="true" class="text-muted-foreground">
-              |
-            </span>
-            <span class="text-muted-foreground flex items-center gap-x-2 text-sm sm:text-base">
-              <IconClock
-                class="inline-block size-6 min-w-5.5"
-                aria-hidden="true"
-              />
-              {minutesRead} {t.post.minutesReadUnit}
-            </span>
-          </>
-        )
-      }
-      {
-        author && (
-          <>
-            <span aria-hidden="true" class="text-muted-foreground">
-              |
-            </span>
-            <span class="text-muted-foreground text-sm sm:text-base">
-              {t.post.byAuthor}
-            </span>
-            <AuthorLink
-              slug={author.slug}
-              name={author.name}
-              email={author.email}
-              size="md"
+      {minutesRead !== undefined && (
+        <>
+          <span aria-hidden="true" class="text-muted-foreground">
+            |
+          </span>
+          <span class="text-muted-foreground flex items-center gap-x-2 text-sm sm:text-base">
+            <IconClock
+              class="inline-block size-6 min-w-5.5"
+              aria-hidden="true"
             />
-          </>
-        )
-      }
+            {minutesRead} {t.post.minutesReadUnit}
+          </span>
+        </>
+      )}
+      {author && (
+        <>
+          <span aria-hidden="true" class="text-muted-foreground">
+            |
+          </span>
+          <span class="text-muted-foreground text-sm sm:text-base">
+            {t.post.byAuthor}
+          </span>
+          <AuthorLink
+            slug={author.slug}
+            name={author.name}
+            email={author.email}
+            size="md"
+          />
+        </>
+      )}
       <span
         aria-hidden="true"
         class:list={[
@@ -212,7 +208,9 @@ const ogImage = ogImageUrl
     <BackToTopButton />
 
     <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      {tags.map(tag => (
+        <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />
+      ))}
     </ul>
 
     <ShareLinks />

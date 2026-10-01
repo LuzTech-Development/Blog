@@ -82,13 +82,11 @@ const alternates = LOCALES.map(locale => ({
       <h1>404</h1>
       <p>Page not found / Página não encontrada.</p>
       <ul>
-        {
-          alternates.map(alt => (
-            <li>
-              <a href={alt.href}>{alt.label}</a>
-            </li>
-          ))
-        }
+        {alternates.map(alt => (
+          <li>
+            <a href={alt.href}>{alt.label}</a>
+          </li>
+        ))}
       </ul>
     </noscript>
   </body>

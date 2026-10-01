@@ -96,25 +96,23 @@ const { Content } = authorProfile
         email={profileEmail}
       />
 
-      {
-        profileDescription && (
-          <p class="text-muted-foreground mt-3 text-sm sm:text-base">
-            {profileDescription}
-          </p>
-        )
-      }
+      {profileDescription && (
+        <p class="text-muted-foreground mt-3 text-sm sm:text-base">
+          {profileDescription}
+        </p>
+      )}
 
-      {
-        Content && (
-          <div class="app-prose max-w-app mt-5">
-            <Content />
-          </div>
-        )
-      }
+      {Content && (
+        <div class="app-prose max-w-app mt-5">
+          <Content />
+        </div>
+      )}
     </section>
 
     <ul>
-      {page.data.map(data => <Card {...data} />)}
+      {page.data.map(data => (
+        <Card {...data} />
+      ))}
     </ul>
   </Main>
 

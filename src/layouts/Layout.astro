@@ -102,11 +102,9 @@ const xDefaultHref = new URL('/', Astro.site ?? Astro.url).href;
     <meta name="author" content={site.author} />
     <link rel="sitemap" href={getAssetPath('sitemap-index.xml')} />
 
-    {
-      alternates.map(alt => (
-        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
-      ))
-    }
+    {alternates.map(alt => (
+      <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+    ))}
     <link rel="alternate" hreflang="x-default" href={xDefaultHref} />
 
     <meta property="og:type" content="website" />
@@ -121,11 +119,9 @@ const xDefaultHref = new URL('/', Astro.site ?? Astro.url).href;
     <meta property="og:image:height" content={String(ogImageHeight)} />
     <meta property="og:image:alt" content={resolvedOgImageAlt} />
     <meta property="og:locale" content={activeLocale.replace('-', '_')} />
-    {
-      LOCALES.filter(l => l !== activeLocale).map(l => (
-        <meta property="og:locale:alternate" content={l.replace('-', '_')} />
-      ))
-    }
+    {LOCALES.filter(l => l !== activeLocale).map(l => (
+      <meta property="og:locale:alternate" content={l.replace('-', '_')} />
+    ))}
 
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
@@ -148,14 +144,9 @@ const xDefaultHref = new URL('/', Astro.site ?? Astro.url).href;
 
     <slot name="head" />
 
-    {
-      site.googleVerification && (
-        <meta
-          name="google-site-verification"
-          content={site.googleVerification}
-        />
-      )
-    }
+    {site.googleVerification && (
+      <meta name="google-site-verification" content={site.googleVerification} />
+    )}
 
     <script is:inline>
       (function () {
@@ -170,12 +161,9 @@ const xDefaultHref = new URL('/', Astro.site ?? Astro.url).href;
         window.__theme = { value: theme };
       })();
     </script>
-
     <ClientRouter />
   </head>
-  <body
-    class="bg-background text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
-  >
+  <body class="bg-background text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col">
     <div
       id="route-loading-indicator"
       aria-hidden="true"
@@ -185,15 +173,13 @@ const xDefaultHref = new URL('/', Astro.site ?? Astro.url).href;
         <div
           id="route-loading-bar"
           class="bg-accent h-full origin-left scale-x-0 transition-transform duration-200 ease-out"
-        >
-        </div>
+        ></div>
       </div>
       <div class="fixed inset-e-4 bottom-4">
         <div
           id="route-loading-spinner"
           class="border-accent border-t-background size-8 animate-spin rounded-full border-2 opacity-0 transition-opacity duration-200"
-        >
-        </div>
+        ></div>
       </div>
     </div>
     <slot />
