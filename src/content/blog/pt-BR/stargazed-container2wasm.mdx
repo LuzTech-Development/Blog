@@ -1,7 +1,7 @@
 ---
 title: 'Stargazed: container2wasm'
 description: Um repositório que permite rodar contêineres no navegador.
-pubDatetime: 2026-08-03T03:26:44Z
+pubDatetime: 2026-10-01T21:49:39Z
 author: Giancarlo Luz
 authorEmail: giancarlo.luz@luztech.dev.br
 tags:
@@ -130,9 +130,12 @@ Cada exemplo possui um `README.md` que mostra como criar uma imagem compatível 
 > [!important]
 > Todas as instruções a seguir foram retiradas do [repositório](https://github.com/container2wasm/container2wasm) e podem ficar desatualizadas. Se for seguir estes passos, confira se não houve atualizações no repositório antes de prosseguir.
 
-### Exemplo 1 - Neovim com o repositório de tipografia da LuzTech
+## Na prática: Neovim com o repositório de tipografia da LuzTech
 
-Vamos começar pelo mais fácil primeiro. Este é o `Dockerfile` que criei para abrir o [Neovim](https://neovim.io/) diretamente na raíz do [repositório de tipografia da LuzTech](https://github.com/LuzTech-Development/Typography):
+Vamos testar o mais simples (`emscripten-simple`). Este é o `Dockerfile` que criei para abrir o [Neovim](https://neovim.io/) diretamente na raíz do [repositório de tipografia da LuzTech](https://github.com/LuzTech-Development/Typography/tree/v2026.08.03-02.22/):
+
+> [!important]
+> Se você olher no link do repositório, vai ver que usei a tag `v2026.08.03-02.22`. Isto porque, no momento em que eu estava trabalhando neste artigo, o repositório ainda não era um site.
 
 ```dockerfile
 FROM alpine:latest AS builder
@@ -314,212 +317,21 @@ Se quiser testar: <RainbowText><a href="/posts/stargazed-container2wasm/emscript
 > [!note]
 > Demora **BASTANTE** para o contêiner iniciar, não é erro na implementação. Em um Macbook Air M5 demorou cerca **3m30s** para aparecer a primeira tela do Neovim.
 
-### Exemplo 2 - Caddy servindo o repositório de tipografia da LuzTech
+## Conclusão
 
-Agora, indo pro exemplo mais difícil, vamos rodar o [Caddy](https://caddyserver.com/) no navegador, servindo o mesmo [repositório de tipografia da LuzTech](https://github.com/LuzTech-Development/Typography):
+> Tá, mas e o exemplo com rede? Estamos já na conclusão?
 
-```dockerfile
-FROM alpine:latest AS builder
+Sim! Eu me propus a explorar bem o repositório, mas o exemplo com rede consumiu bem mais tempo e energia do que eu tinha me proposto a usar. Então decidi focar no exemplo mais simples para esta postagem.
 
-RUN apk add --no-cache git
+**Dito isso, o que podemos concluir deste repositório?**
 
-WORKDIR /build
+Bom, é uma ideia bem interessante. Deixar contêineres mais portáteis do que já são. No entanto, sendo bem honesto, ainda há muitos desafios a serem superados para que isso seja realmente prático no dia a dia.
 
-RUN git clone --depth 1 "https://github.com/LuzTech-Development/Typography" /public && \
-    rm -rf /public/.git
+Primeiro eu diria que a experiência de uso não é muito boa, já que há várias variações e flags relevantes para configurar. No Docker, por exemplo, é `docker build` e `docker run`. 
 
-FROM alpine:latest AS runtime
+Em segundo lugar, apesar de ser compreensível, o tempo de compilação é bem longo, mesmo para imagens pequenas, o que torna iterações lentas e frustrantes.
 
-RUN apk add --no-cache caddy
+E por fim eu diria que o uso ainda não faz sentido no cenário atual. Contêineres já são portáteis, tempos de carregamento são vitais no navegador e muitas ferramentas (Vite+, por exemplo) estão otimizando para experiência de desenvolvimento.
 
-COPY --from=builder /public /public
-
-ENV TERM=xterm-256color
-
-EXPOSE 80
-
-CMD ["caddy", "file-server", "--browse", "--listen", ":80", "--root", "/public"]
-```
-
-O comando de build da imagem e o arquivo `server.json` são os mesmos do [exemplo anterior](#exemplo-1---neovim-com-o-repositório-de-tipografia-da-luztech), o que muda são os arquivos estáticos, como o `index.html`, que agora vem a partir [desta pasta](https://github.com/container2wasm/container2wasm/blob/main/examples/emscripten/htdocs), também levemente modificado para usar o [Fit Addon para o XTerm.js](https://www.npmjs.com/package/@xterm/addon-fit) e ficar em tela cheia.
-
-<details>
-<summary>Ver index.html modificado</summary>
-
-```html
-<html>
-  <head>
-    <title>container2wasm: Caddy + LuzTech Typography</title>
-    <link rel="stylesheet" href="./vendor/xterm.css" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <style>
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        overflow: hidden;
-        background: #000;
-      }
-
-      #terminal {
-        width: 100%;
-        height: 100dvh;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="terminal"></div>
-    <script src="./load.js"></script>
-    <script type="module">
-      import './vendor/xterm.js';
-      import './vendor/xterm-pty.js';
-      import { FitAddon } from './vendor/addon-fit.mjs';
-      import './arg-module.js';
-      import initEmscriptenModule from './out.js';
-
-      const xterm = new Terminal();
-      const fitAddon = new FitAddon();
-      xterm.loadAddon(fitAddon);
-      xterm.open(document.getElementById('terminal'));
-      fitAddon.fit();
-
-      const { master, slave } = openpty();
-
-      xterm.loadAddon(master);
-
-      Module.pty = slave;
-      Module['mainScriptUrlOrBlob'] = new URL('./out.js', import.meta.url).href;
-
-      // "/pack/info" file needs to be provided to the filesystem to start
-      // the container. Refer to /cmd/init/main.go for the detail of info file.
-      let info = 't:' + Math.round(new Date() / 1000) + '\n';
-      Module['preRun'].push(mod => {
-        try {
-          FS.mkdir('/pack');
-        } catch (e) {}
-        mod.FS.writeFile('/pack/info', info);
-      });
-      var readableCallbacks = [];
-      Module.pty.onReadable(() => {
-        readableCallbacks.forEach(cb => cb());
-        readableCallbacks = [];
-      });
-      Module['preRun'].push(Module => {
-        Module['TTY'].stream_ops.poll = (stream, timeout, notifyCallback) => {
-          if (Module.pty.readable) {
-            return 1;
-          }
-          if (notifyCallback != null) {
-            notifyCallback.registerCleanupFunc(() => {
-              const i = readableCallbacks.indexOf(notifyCallback);
-              if (i != -1) readableCallbacks.splice(i, 1);
-            });
-            readableCallbacks.push(notifyCallback);
-          }
-          return 0;
-        };
-      });
-
-      const fitTerminal = () => fitAddon.fit();
-      addEventListener('resize', fitTerminal);
-      new ResizeObserver(fitTerminal).observe(
-        document.getElementById('terminal')
-      );
-
-      (async () => {
-        await initEmscriptenModule(Module);
-        fitTerminal();
-      })();
-    </script>
-  </body>
-</html>
-```
-
-</details>
-
-Com o HTML acima, ainda é necessário rodar o Webpack para criar um pacote com rede, e, para isto, criei um script levemente diferente do que existe no repositório original.
-
-<details>
-<summary>Ver script modificado</summary>
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-OUT_PATH="${1:-}"
-CUSTOM_INDEX_HTML_PATH="${2:-}"
-INITIAL_CWD="$PWD"
-
-if [[ -z "$OUT_PATH" ]]; then
-  echo "Usage: $0 <OUT_PATH> [CUSTOM_INDEX_HTML_PATH]" >&2
-  exit 1
-fi
-
-if [[ "$OUT_PATH" != /* ]]; then
-  OUT_PATH="$INITIAL_CWD/$OUT_PATH"
-fi
-
-if [[ -n "$CUSTOM_INDEX_HTML_PATH" ]]; then
-  if [[ "$CUSTOM_INDEX_HTML_PATH" != /* ]]; then
-    CUSTOM_INDEX_HTML_PATH="$INITIAL_CWD/$CUSTOM_INDEX_HTML_PATH"
-  fi
-  if [[ ! -f "$CUSTOM_INDEX_HTML_PATH" ]]; then
-    echo "Custom index.html not found: $CUSTOM_INDEX_HTML_PATH" >&2
-    exit 1
-  fi
-fi
-
-mkdir -p "$OUT_PATH"
-
-WORK=/tmp/c2w
-DIST=/tmp/c2w-dist
-
-rm -rf "$WORK" "$DIST"
-mkdir -p "$WORK" "$DIST"
-
-git clone -q https://github.com/container2wasm/container2wasm "$WORK"
-cd "$WORK/examples/emscripten/htdocs"
-
-cat > serve.json <<'JSON'
-{
-  "headers": [
-    {
-      "source": "**/*",
-      "headers": [
-        { "key": "Cross-Origin-Embedder-Policy", "value": "require-corp" },
-        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" }
-      ]
-    }
-  ]
-}
-JSON
-
-if [[ -n "$CUSTOM_INDEX_HTML_PATH" ]]; then
-  rm -f index.html
-  cp "$CUSTOM_INDEX_HTML_PATH" ./index.html
-fi
-
-npm install --no-audit --no-fund
-npx --no-install webpack
-
-curl -fsSL "https://unpkg.com/xterm@5.3.0/lib/xterm.js" -o vendor/xterm.js
-curl -fsSL "https://unpkg.com/xterm-pty/index.js" -o vendor/xterm-pty.js
-curl -fsSL "https://esm.sh/@xterm/addon-fit@0.10.0/es2022/addon-fit.mjs" -o vendor/addon-fit.mjs
-
-cp -R index.html dist vendor "$DIST"/
-
-C2W_TAG="$(c2w --version | awk '{ print "v" $3 }')"
-curl -fsSL "https://github.com/container2wasm/container2wasm/releases/download/${C2W_TAG}/c2w-net-proxy.wasm" \
-  | gzip > "$DIST/c2w-net-proxy.wasm.gzip"
-
-cp -R "$DIST"/. "$OUT_PATH"/
-
-rm -rf "$DIST" "$WORK"
-```
-
-</details>
-
-> [!note]
-> Usei este script para usar o [`serve` da Vercel](https://github.com/vercel/serve) em vez de rodar um contêiner com o Apache, além disso o script baixa o `c2w-net-proxy.wasm` da release com a mesma versão do `c2w` que está instalada na máquina, o que evita problemas de incompatibilidade. Também não é necessário baixar as dependências manualmente como no [exemplo anterior](#exemplo-1---neovim-com-o-repositório-de-tipografia-da-luztech), já que o script de build faz isso automaticamente.
+De qualquer forma, é um projeto legal para explorar e aprender sobre a arquitetura de contêineres e para ver até onde o navegador aguenta.
 

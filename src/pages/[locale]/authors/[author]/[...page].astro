@@ -14,6 +14,7 @@ import { getUniqueAuthors, resolveAuthorSlug } from '@/utils/getUniqueAuthors';
 import { getSortedPosts } from '@/utils/getSortedPosts';
 import { getLocalizedAuthorProfiles } from '@/utils/getLocalizedAuthorProfiles';
 import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
+import { isPublished } from '@/utils/postFilter';
 import {
   LOCALES,
   assertLocaleParam,
@@ -27,7 +28,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const groups = await Promise.all(
     LOCALES.map(async locale => {
       const posts = (await getLocalizedPosts(locale as Locale)).filter(
-        ({ data }) => !data.draft
+        isPublished
       );
       const authors = getUniqueAuthors(posts);
 

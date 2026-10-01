@@ -7,6 +7,7 @@ import Footer from '@/components/Footer.astro';
 import Tag from '@/components/Tag.astro';
 import { getUniqueTags } from '@/utils/getUniqueTags';
 import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
+import { isPublished } from '@/utils/postFilter';
 import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
 import { useTranslations } from '@/i18n';
 import config from '@/config';
@@ -15,7 +16,7 @@ export const getStaticPaths = getStaticLocalePaths;
 
 const locale = assertLocaleParam(Astro.params.locale);
 const posts = await getLocalizedPosts(locale);
-const publishedPosts = posts.filter(({ data }) => !data.draft);
+const publishedPosts = posts.filter(isPublished);
 const tags = getUniqueTags(publishedPosts);
 
 const t = useTranslations(locale);
