@@ -3,6 +3,22 @@
   "trailingSlash": "auto",
   "routes": [
     {
+      "route": "/posts/stargazed-container2wasm/emscripten-simple/qemu-system-x86_64.wasm",
+      "headers": {
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "Cross-Origin-Opener-Policy": "same-origin",
+        "cache-control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "route": "/posts/stargazed-container2wasm/emscripten-simple/qemu-system-x86_64.data",
+      "headers": {
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "Cross-Origin-Opener-Policy": "same-origin",
+        "cache-control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
       "route": "/posts/stargazed-container2wasm/*",
       "headers": {
         "Cross-Origin-Embedder-Policy": "require-corp",
