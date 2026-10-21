@@ -1,0 +1,142 @@
+---
+title: Refatoração da UI da LuzTech
+description: Como a LuzTech refatorou suas diretrizes de UI para melhorar o alcance e engajamento
+pubDatetime: 2026-10-21T18:13:31Z
+author: Giancarlo Luz
+tags:
+  - ui/ux
+  - luztech
+draft: false
+---
+
+import RainbowText from '@/components/RainbowText.astro'
+import Figure from '@/components/Figure.astro'
+
+import Instructions from '@/assets/posts/luztech-ui/instructions-pt-br.png'
+import Licenses from '@/assets/posts/luztech-ui/licenses-pt-br.png'
+import Icons1 from '@/assets/posts/luztech-ui/icons1-pt-br.png'
+import Icons2 from '@/assets/posts/luztech-ui/icons2-pt-br.png'
+import Font from '@/assets/posts/luztech-ui/font-pt-br.png'
+import Backgrounds1 from '@/assets/posts/luztech-ui/backgrounds1-pt-br.png'
+import Backgrounds2 from '@/assets/posts/luztech-ui/backgrounds2-pt-br.png'
+import Backgrounds3 from '@/assets/posts/luztech-ui/backgrounds3-pt-br.png'
+
+> Terceiro artigo do Blog e já é uma refatoração?
+
+Sim! Meus pensamentos intrusivos venceram dessa vez e refatorei as diretrizes de UI da LuzTech.
+
+> Mas por quê? O modelo antigo já não funcionava?
+
+Sim, funcionava, e muito bem por sinal. Porém, eu tive um novo requisito: uma pessoa de fora precisava entender e aplicar nossas diretrizes de UI sem depender de mim.
+
+E, cá entre nós, Markdown e código é fácil de ler mas também não é o ideal, principalmente para quem não é desenvolvedor.
+
+Então eu decidi mudar, e transformei a documentação em um site estático.
+
+## Sumário
+
+## O pré-requisito novo
+
+Minha esposa começou a aprender a gerenciar redes sociais, e eu pedi <RainbowText>✨com muito carinho✨</RainbowText> que eu fosse o primeiro cliente dela.
+
+Para minha alegria ela aceitou, e vem postado no [Instagram da LuzTech](https://www.instagram.com/luztech.development/) regularmente.
+
+Mas isso trouxe um novo desafio: diferente de uma LLM, eu não poderia dizer pra ela `"leia um monte de Markdown, Shell Script e JavaScript e monte posts condizentes com as diretrizes de UI da LuzTech"`.
+
+E como um desenvolvedor resolve problemas? Fazendo tudo de novo!
+
+## A nova abordagem
+
+Para dar o mesmo conteúdo de forma acessível e palatável, decidi construir o [site de UI da LuzTech](https://ui.luztech.dev.br), separado em 5 seções:
+
+1. Instruções
+2. Licenças
+3. Ícones
+4. Fonte
+5. Fundos
+
+Todos eles existiam já no repositório antigo, mas agora estão organizados para que desenvolvedores e, **principalmente**, não-desenvolvedores consigam encontrar e aplicar as diretrizes de UI da LuzTech de forma intuitiva.
+
+> [!tip]
+> O repositório antigo na verdade não mudou, se quiser comparar as versões, a atual está [aqui](https://github.com/LuzTech-Development/Typography) e a antiga está [aqui](https://github.com/LuzTech-Development/Typography/tree/c4a0c0f65fc033178d7925e6f7b46af1e1b56287).
+
+Vamos explorar cada sessão em detalhes.
+
+## Instruções
+
+Essa seção é meio que uma `Home` do site, mais pra não já chegar enfiando especificação na cara de quem acessa. Aqui aparece basicamente o objetivo do site e o que ele cobre.
+
+<Figure src={Instructions} alt="Screenshot da página de instruções do site de UI da LuzTech" caption="Produção própria" />
+
+Além disso, como todo site público da LuzTech, ele é bilíngue, oferecendo conteúdo tanto em português quanto em inglês.
+
+## Licenças
+
+Diria que a parte mais chata e que quase todo mundo pula em um repositório (a não ser que você tenha que usar o código em algo que vai vender) são as licenças. Mesmo assim, se não quiser ter problemas legais, é importante sempre ter uma licença prontinha. Era isso que `LICENSE` e `TRADEMARKS.md` faziam no repositório antigo.
+
+Como em geral ninguém gosta de ler esse tipo de texto, deixei bem simplificado no site, com links para os documentos completos para quem realmente precisar.
+
+<Figure src={Licenses} alt="Screenshot da página de licenças do site de UI da LuzTech" caption="Produção própria" />
+
+## Ícones
+
+Agora sim chegamos em uma parte legal! Os ícones. No repositório antigo, eles eram gerados via shell script e mais um monte de dependências, o que não tornava o processo exatamente intuitivo.
+
+No novo site, é basicamente um monte de botãozinho para selecionar o que quer, e baixar ou copiar uma URL imutável, além de ao fundo, se o usuário quiser, ele pode baixar tudo como um ZIP, se precisar de várias variantes para seu trabalho.
+
+<Figure src={Icons1} alt="Screenshot da página de ícones do site de UI da LuzTech" caption="Produção própria" />
+
+<Figure src={Icons2} alt="Screenshot da página de ícones do site de UI da LuzTech" caption="Produção própria" />
+
+Além de dar fácil acesso a todas as variantes de um ícone para o usuário, o uso de URLs fixas tirou a necessidade da CDN que antes era usada para servir os ícones, agora ficando tudo centralizado no próprio site.
+
+> Certo, vi que tem algumas variantes ali, fixas, porque não permitir que o usuário digite texto personalizado?
+
+Boa pergunta! Mas isso me traria um risco. Veja, o site é a fonte oficial de insumos para a LuzTech. Se eu permitisse que qualquer usuário digitasse texto personalizado, teoricamente o que ele digitasse seria um insumo oficial da LuzTech, mesmo nunca tendo sido aprovado. Portanto, para manter a integridade e a confiabilidade dos insumos, optei por permitir apenas variantes fixas, que eu mesmo decido ao escrever os SVGs no repositório.
+
+## Fonte
+
+A fonte que eu utilizo nos sites e materiais da LuzTech, em geral, é a [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk). Ela é uma fonte sans-serif com um estilo moderno e legível, adequada para interfaces de usuário e materiais de comunicação visual da LuzTech.
+
+Mas não é própria, então o link de download redireciona o usuário para a página oficial da fonte no Google Fonts.
+
+Esta página demonstra o uso da fonte em diversos contextos, permitindo ao usuário visualizar como ela se comporta em diferentes tamanhos, pesos e estilos, ajudando a decidir se é adequada para seu projeto.
+
+<Figure src={Font} alt="Screenshot da página de fonte do site de UI da LuzTech" caption="Produção própria" />
+
+## Fundos
+
+Chegamos na última seção, e, em minha opinião, a parte mais legal do site.
+
+Esta seção aborda os fundos da LuzTech. Seja fundos para sites, redes sociais, material para edição, que seja.
+
+Antigamente, o fundo base era feito usando o [Mesh Gradient Generator](https://meshgradient.com/), que gerava um gradiente complexo a partir das 4 cores principais da LuzTech. Na nova versão, o processo foi movido para o próprio site, usando WebGL, permitindo gerar gradientes usando qualquer tamanho solicitado pelo usuário, além de ao final da página ter as cores prontas para serem copiadas pelo usuário, caso ele precise utilizá-las em outros contextos.
+
+<Figure src={Backgrounds1} alt="Screenshot da página de fundos do site de UI da LuzTech, na aba Plano" caption="Produção própria" />
+
+<RainbowText>✨MAS não para por aí!✨</RainbowText> O site também tem duas novas abas: **Espiralado** e **Animado**, que vieram diretamente da pasta `animations/` do repositório antigo.
+
+O espiralado usa o `MeshGradient`, vindo do pacote `@paper-design/shaders-react`, que cria um gradiente em espiral a partir das cores fornecidas, resultando em um efeito visual dinâmico e interessante.
+
+<Figure src={Backgrounds2} alt="Screenshot da página de fundos do site de UI da LuzTech, na aba Espiralado" caption="Produção própria" />
+
+E o animado utiliza o mesmo `MeshGradient`, mas em vez de salvar um único frame, como nas abas **Espiralado** e **Plano**, ele gera uma animação contínua em MP4, facilitando o uso em vídeos, apresentações e outros contextos onde um fundo animado é desejado.
+
+<Figure src={Backgrounds3} alt="Screenshot da página de fundos do site de UI da LuzTech, na aba Animado" caption="Produção própria" />
+
+> [!note]
+> A renderização com configurações padrão demora em torno de 12 segundos em um MacBook Air M5, então não chega a ser tão absurdo dado a complexidade da tarefa.
+
+Inclusive, este recurso da aba **Animado** tem uma história interessante! Jeremy Yudkin da [EditFrame](https://editframe.com/) me mandou um e-mail me contando sobre um projeto que ele tinha acabado de lançar.
+
+Depois de conversar um pouco, fiquei muito interessado na possibilidade de renderizar vídeos diretamente no navegador, sem a necessidade de usar, por exemplo, o FFMPEG em um servidor para isso.
+
+Retornei para ele dizendo que iria experimentar e _voilà_! Não só achei a ideia muito boa, como foi muito bem arquitetada para agentes de IA, de forma que implementar no site foi bem fácil, bem mais do que eu imaginava.
+
+Queria deixar aqui o meu agradecimento ao Jeremy e à equipe da EditFrame pela implementação e pelo e-mail!
+
+## Conclusão
+
+Refatorar coisas é uma diversão, mesmo que não seja a escolha mais eficiente na maioria das vezes.
+
+Mas eu tive uma boa desculpa, e aproveitei para explorar novas possibilidades e melhorar a experiência do usuário no site da LuzTech, e acabei conhecendo uma excelente biblioteca no caminho.
