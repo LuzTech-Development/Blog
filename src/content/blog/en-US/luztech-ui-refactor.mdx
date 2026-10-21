@@ -1,0 +1,142 @@
+---
+title: LuzTech UI Refactor
+description: How LuzTech refactored it's UI guidelines to improve reach and engagement
+pubDatetime: 2026-10-21T18:13:31Z
+author: Giancarlo Luz
+tags:
+  - ui/ux
+  - luztech
+draft: false
+---
+
+import RainbowText from '@/components/RainbowText.astro'
+import Figure from '@/components/Figure.astro'
+
+import Instructions from '@/assets/posts/luztech-ui/instructions-en-us.png'
+import Licenses from '@/assets/posts/luztech-ui/licenses-en-us.png'
+import Icons1 from '@/assets/posts/luztech-ui/icons1-en-us.png'
+import Icons2 from '@/assets/posts/luztech-ui/icons2-en-us.png'
+import Font from '@/assets/posts/luztech-ui/font-en-us.png'
+import Backgrounds1 from '@/assets/posts/luztech-ui/backgrounds1-en-us.png'
+import Backgrounds2 from '@/assets/posts/luztech-ui/backgrounds2-en-us.png'
+import Backgrounds3 from '@/assets/posts/luztech-ui/backgrounds3-en-us.png'
+
+> Third article on the Blog and it's already a refactor?
+
+Yes! My intrusive thoughts won this time and I refactored LuzTech's UI guidelines.
+
+> But why? Didn't the old model already work?
+
+Yes, it worked, and quite well, actually. However, I had a new requirement: someone from outside needed to understand and apply our UI guidelines without depending on me.
+
+And, between us, Markdown and code are easy to read but also not ideal, especially for non-developers.
+
+So I decided to change, and turned the documentation into a static site.
+
+## Summary
+
+## The new prerequisite
+
+My wife started learning how to manage social media, and I asked her <RainbowText>✨very kindly✨</RainbowText> to be her first client.
+
+To my delight she accepted, and has been posting on [LuzTech's Instagram](https://www.instagram.com/luztech.development/) regularly.
+
+But this brought a new challenge: unlike an LLM, I couldn't tell her `"read a bunch of Markdown, Shell Script and JavaScript and create posts that match LuzTech's UI guidelines"`.
+
+And how does a developer solve problems? By doing everything all over again!
+
+## The new approach
+
+To deliver the same content in an accessible and palatable way, I decided to build [LuzTech's UI site](https://ui.luztech.dev.br), split into 5 sections:
+
+1. Instructions
+2. Licenses
+3. Icons
+4. Font
+5. Backgrounds
+
+All of them already existed in the old repository, but now they are organized so that developers and, **especially**, non-developers can find and apply LuzTech's UI guidelines intuitively.
+
+> [!tip]
+> The old repository actually didn't change; if you want to compare the versions, the current one is [here](https://github.com/LuzTech-Development/Typography) and the old one is [here](https://github.com/LuzTech-Development/Typography/tree/c4a0c0f65fc033178d7925e6f7b46af1e1b56287).
+
+Let's explore each section in detail.
+
+## Instructions
+
+This section is kind of a `Home` for the site, mostly so visitors aren't hit with specifications right away. Here you basically see the site's goal and what it covers.
+
+<Figure src={Instructions} alt="Screenshot of the instructions page of LuzTech's UI site" caption="Own production" />
+
+Additionally, like every public LuzTech site, it is bilingual, offering content in both Portuguese and English.
+
+## Licenses
+
+I'd say the most boring part, and the one almost everyone skips in a repository (unless you have to use the code in something you're going to sell), is the licenses. Even so, if you don't want legal trouble, it's important to always have a license ready. That's what `LICENSE` and `TRADEMARKS.md` did in the old repository.
+
+Since generally nobody likes reading that kind of text, I kept it very simplified on the site, with links to the full documents for those who really need them.
+
+<Figure src={Licenses} alt="Screenshot of the licenses page of LuzTech's UI site" caption="Own production" />
+
+## Icons
+
+Now we get to a fun part! The icons. In the old repository, they were generated via shell script plus a bunch of dependencies, which didn't make the process exactly intuitive.
+
+On the new site, it's basically a bunch of little buttons to select what you want, and download or copy an immutable URL, plus in the background, if the user wants, they can download everything as a ZIP, if they need several variants for their work.
+
+<Figure src={Icons1} alt="Screenshot of the icons page of LuzTech's UI site" caption="Own production" />
+
+<Figure src={Icons2} alt="Screenshot of the icons page of LuzTech's UI site" caption="Own production" />
+
+Besides giving the user easy access to all variants of an icon, the use of fixed URLs removed the need for the CDN that was previously used to serve the icons, now keeping everything centralized on the site itself.
+
+> Sure, I see there are some fixed variants there, why not allow the user to type custom text?
+
+Good question! But that would bring me a risk. You see, the site is the official source of assets for LuzTech. If I allowed any user to type custom text, theoretically what they typed would be an official LuzTech asset, even though it was never approved. Therefore, to maintain the integrity and reliability of the assets, I chose to allow only fixed variants, which I decide myself when writing the SVGs in the repository.
+
+## Font
+
+The font I generally use on LuzTech's sites and materials is [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk). It's a sans-serif font with a modern and legible style, suitable for user interfaces and LuzTech's visual communication materials.
+
+But it's not proprietary, so the download link redirects the user to the font's official page on Google Fonts.
+
+This page demonstrates the use of the font in various contexts, allowing the user to see how it behaves at different sizes, weights and styles, helping them decide if it's suitable for their project.
+
+<Figure src={Font} alt="Screenshot of the font page of LuzTech's UI site" caption="Own production" />
+
+## Backgrounds
+
+We've reached the last section, and, in my opinion, the coolest part of the site.
+
+This section covers LuzTech's backgrounds. Whether backgrounds for sites, social media, editing material, whatever.
+
+Previously, the base background was made using the [Mesh Gradient Generator](https://meshgradient.com/), which generated a complex gradient from LuzTech's 4 main colors. In the new version, the process was moved to the site itself, using WebGL, allowing gradients to be generated at any size requested by the user, plus at the end of the page there are the colors ready to be copied by the user, in case they need to use them in other contexts.
+
+<Figure src={Backgrounds1} alt="Screenshot of the backgrounds page of LuzTech's UI site, on the Flat tab" caption="Own production" />
+
+<RainbowText>✨BUT it doesn't stop there!✨</RainbowText> The site also has two new tabs: **Spiral** and **Animated**, which came directly from the `animations/` folder of the old repository.
+
+The spiral one uses `MeshGradient`, from the `@paper-design/shaders-react` package, which creates a spiral gradient from the provided colors, resulting in a dynamic and interesting visual effect.
+
+<Figure src={Backgrounds2} alt="Screenshot of the backgrounds page of LuzTech's UI site, on the Spiral tab" caption="Own production" />
+
+And the animated one uses the same `MeshGradient`, but instead of saving a single frame, like on the **Spiral** and **Flat** tabs, it generates a continuous MP4 animation, making it easier to use in videos, presentations and other contexts where an animated background is desired.
+
+<Figure src={Backgrounds3} alt="Screenshot of the backgrounds page of LuzTech's UI site, on the Animated tab" caption="Own production" />
+
+> [!note]
+> The rendering on default settings takes around 12 seconds on a MacBook Air M5, so it's not that bad given the complexity of the task.
+
+In fact, this **Animated** tab feature has an interesting story! Jeremy Yudkin from [EditFrame](https://editframe.com/) sent me an email telling me about a project he had just launched.
+
+After talking for a bit, I became very interested in the possibility of rendering videos directly in the browser, without the need to use, for example, FFMPEG on a server for that.
+
+I got back to him saying I would try it out and _voilà_! Not only did I find the idea very good, it was very well architected for AI agents, so implementing it on the site was quite easy, much more than I imagined.
+
+I'd like to leave here my thanks to Jeremy and the EditFrame team for the implementation and for the email!
+
+## Conclusion
+
+Refactoring things is fun, even if it's not the most efficient choice most of the time.
+
+But I had a good excuse, and I took the opportunity to explore new possibilities and improve the user experience on LuzTech's site, and ended up discovering an excellent library along the way.

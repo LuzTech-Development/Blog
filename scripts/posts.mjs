@@ -3,7 +3,7 @@
  * Post CRUD helper for the bilingual blog.
  *
  * Commands:
- *   pnpm post:new [name] [--mdx]
+ *   pnpm post:new [name] [--md]
  *       Creates a translation pair (en-US + pt-BR) under
  *       `src/content/blog/{locale}/<slug>.<ext>`. Both files start with
  *       `draft: true` so the coverage guard stays green until the author
@@ -37,7 +37,7 @@ function usage(exitCode = 1) {
   console.error(
     [
       "Usage:",
-      "  pnpm post:new [name] [--mdx]     # create a translation pair",
+      "  pnpm post:new [name] [--md]      # create a translation pair",
       "  pnpm post:edit [slug]            # mark the pair as draft",
       "  pnpm post:remove [slug]          # delete the pair",
     ].join("\n")
@@ -262,7 +262,7 @@ async function ensureAuthorProfile(author, authorSlug, authorEmail) {
 }
 
 async function cmdNew(args) {
-  const mdx = args.includes("--mdx");
+  const md = args.includes("--md");
   const positional = args.filter(a => !a.startsWith("--"));
   let raw = positional[0];
   if (!raw) raw = await makePrompt("Post name: ");
@@ -277,7 +277,7 @@ async function cmdNew(args) {
     process.exit(1);
   }
   const title = toTitle(raw);
-  const ext = mdx ? "mdx" : "md";
+  const ext = md ? "md" : "mdx";
   const pubDatetime = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   const author = getAuthor();
   const authorSlug = getAuthorSlug(author);
