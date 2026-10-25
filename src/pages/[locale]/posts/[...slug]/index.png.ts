@@ -4,7 +4,7 @@ import sharp from 'sharp';
 import { getPostSlug, getPostLocale } from '@/utils/getPostPaths';
 import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
 import { isPublished } from '@/utils/postFilter';
-import { LOCALES, localeToPath, type Locale } from '@/utils/i18n';
+import { LOCALES, localeToPath, type Locale } from '@/utils/locale';
 import { loadOgFonts } from '@/utils/ogFonts';
 import config from '@/config';
 

@@ -21,6 +21,9 @@ export function isPublished({ data }: CollectionEntry<'posts'>): boolean {
  * - In production, excludes scheduled posts until `pubDatetime` minus the configured margin.
  */
 export function postFilter(post: CollectionEntry<'posts'>) {
+  // `Date.now()` is the build machine's clock (UTC in CI). `pubDatetime`
+  // must therefore be authored in UTC (a `Z`-suffixed timestamp) so the
+  // scheduled-post gate matches the author's intent regardless of timezone.
   const isPublishTimePassed =
     Date.now() >
     new Date(post.data.pubDatetime).getTime() -

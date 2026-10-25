@@ -1,4 +1,4 @@
-import type { Locale } from '../i18n';
+import type { Locale } from '../locale';
 
 /**
  * Canonical Obsidian callout types recognized by `rehype-callouts` with the
@@ -36,7 +36,7 @@ export type CalloutTitles = Record<CalloutType, string>;
  * Localized titles for every callout type, keyed by locale.
  *
  * The `Record<Locale, ...>` shape is what enforces the "fail on new locale"
- * contract: adding a value to `LOCALES` in `@/utils/i18n` without extending
+ * contract: adding a value to `LOCALES` in `@/utils/locale` without extending
  * this map is a TypeScript error surfaced by `astro check` at build time.
  */
 export const CALLOUT_TITLES: Record<Locale, CalloutTitles> = {

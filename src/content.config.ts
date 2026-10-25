@@ -2,7 +2,7 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import config from '@/config';
-import { LOCALES, type Locale } from '@/utils/i18n';
+import { LOCALES, type Locale } from '@/utils/locale';
 
 export const BLOG_PATH = 'src/content/blog';
 export const AUTHORS_PATH = 'src/content/authors';

@@ -37,15 +37,12 @@ pnpm preview
 ## Deployment
 
 The blog deploys to **Azure Static Web Apps** via
-`.github/workflows/azure-static-web-apps.yml`. The workflow has two jobs:
+`.github/workflows/azure-static-web-apps.yml`. The workflow has a single job:
 
-- **Validate** — runs on every pull request against `main`. Installs
-  dependencies, runs `pnpm lint`, `pnpm format:check`, and the full
-  `pnpm run build` (which includes `astro check`, `astro build`, and
-  Pagefind indexing). **No deployment happens.**
 - **Build and Deploy** — runs on push to `main` (and on manual
-  `workflow_dispatch`). Builds and uploads `dist/` to the production
-  environment.
+  `workflow_dispatch`). Installs dependencies, runs `pnpm run build`
+  (which includes `astro check`, `astro build`, and Pagefind indexing),
+  then uploads `dist/` to the production environment.
 
 Runtime headers, cache policy, MIME types for Pagefind's binary index files,
 and the locale-aware 404 fallback live in [`staticwebapp.config.json`](./staticwebapp.config.json).

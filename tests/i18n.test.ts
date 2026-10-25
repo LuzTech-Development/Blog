@@ -5,7 +5,7 @@ import {
   localeToPath,
   resolveLocale,
   swapLocaleInPath
-} from '../src/utils/i18n';
+} from '../src/utils/locale';
 
 describe('isLocale', () => {
   it('recognizes canonical locale codes', () => {

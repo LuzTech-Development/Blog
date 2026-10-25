@@ -5,7 +5,7 @@ import { getLocalizedPosts } from '@/utils/getLocalizedPosts';
 import { getLocalizedAuthorProfiles } from '@/utils/getLocalizedAuthorProfiles';
 import { getPostUrl } from '@/utils/getPostPaths';
 import { resolveAuthorSlug } from '@/utils/getUniqueAuthors';
-import { assertLocaleParam, getStaticLocalePaths } from '@/utils/i18n';
+import { assertLocaleParam, getStaticLocalePaths } from '@/utils/locale';
 import config from '@/config';
 
 export const getStaticPaths = getStaticLocalePaths;

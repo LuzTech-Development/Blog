@@ -3,7 +3,12 @@ import { ClientRouter } from 'astro:transitions';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { resolveDefaultOgImagePath } from '@/utils/resolveDefaultOgImagePath';
 import { getAssetPath, stripBase, stripLocale } from '@/utils/withBase';
-import { LOCALES, isLocale, DEFAULT_LOCALE, localeToPath } from '@/utils/i18n';
+import {
+  LOCALES,
+  isLocale,
+  DEFAULT_LOCALE,
+  localeToPath
+} from '@/utils/locale';
 import config from '@/config';
 import '@/styles/global.css';
 import fontRegularHref from '@fontsource/space-grotesk/files/space-grotesk-latin-400-normal.woff2?url';
