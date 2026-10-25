@@ -1,6 +1,7 @@
 import kebabcase from 'lodash.kebabcase';
 import slugify from 'slugify';
 
+// eslint-disable-next-line no-control-regex -- \x00 is the lower bound of the non-ASCII range, not a control char
 const hasNonLatin = (str: string): boolean => /[^\x00-\x7F]/.test(str);
 
 /**

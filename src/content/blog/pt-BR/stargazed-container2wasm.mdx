@@ -9,8 +9,8 @@ tags:
 draft: false
 ---
 
-import RainbowText from "@/components/RainbowText.astro";
-import Figure from "@/components/Figure.astro";
+import RainbowText from '@/components/RainbowText.astro';
+import Figure from '@/components/Figure.astro';
 import Demo1Screenshot1 from '@/assets/posts/stargazed-container2wasm/demo-1-screenshot-1.png';
 import Demo1Screenshot2 from '@/assets/posts/stargazed-container2wasm/demo-1-screenshot-2.png';
 
@@ -48,14 +48,14 @@ export default async function convertToSmallVideoFormat(inputPath, outputPath) {
   );
 
   await new Promise((resolve, reject) => {
-    process.on("exit", code => {
+    process.on('exit', code => {
       if (!code) {
         resolve();
       } else {
         reject(new Error(`ffmpeg exited with code ${code}`));
       }
     });
-  })
+  });
 }
 ```
 
@@ -264,6 +264,7 @@ Então copiei o [`index.html`](https://github.com/container2wasm/container2wasm/
   </body>
 </html>
 ```
+
 </details>
 
 > [!note]
@@ -288,18 +289,21 @@ Por fim, para ver como ficou, rodei o comando [`serve` de Vercel](https://github
 
 ```json
 {
-    "headers": [{
-        "source": "**/*",
-        "headers": [
-            {
-                "key": "Cross-Origin-Embedder-Policy",
-                "value": "require-corp"
-            }, {
-                "key": "Cross-Origin-Opener-Policy",
-                "value": "same-origin"
-            }
-        ]
-    }]
+  "headers": [
+    {
+      "source": "**/*",
+      "headers": [
+        {
+          "key": "Cross-Origin-Embedder-Policy",
+          "value": "require-corp"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -308,9 +312,17 @@ Por fim, para ver como ficou, rodei o comando [`serve` de Vercel](https://github
 
 E assim funcionou! Olha como ficou:
 
-<Figure src={Demo1Screenshot1} alt="Neovim rodando no navegador no repositório de tipografia da LuzTech na pasta raíz" caption="Produção própria" />
+<Figure
+  src={Demo1Screenshot1}
+  alt="Neovim rodando no navegador no repositório de tipografia da LuzTech na pasta raíz"
+  caption="Produção própria"
+/>
 
-<Figure src={Demo1Screenshot2} alt="Neovim rodando no navegador no repositório de tipografia da LuzTech com o arquivo clean.svg aberto" caption="Produção própria" />
+<Figure
+  src={Demo1Screenshot2}
+  alt="Neovim rodando no navegador no repositório de tipografia da LuzTech com o arquivo clean.svg aberto"
+  caption="Produção própria"
+/>
 
 Se quiser testar: <RainbowText><a href="/posts/stargazed-container2wasm/emscripten-simple/index.html" alt="Link para testar o container2wasm" target="_blank" referrer="noreferrer">Clique aqui</a></RainbowText>
 
@@ -327,11 +339,10 @@ Sim! Eu me propus a explorar bem o repositório, mas o exemplo com rede consumiu
 
 Bom, é uma ideia bem interessante. Deixar contêineres mais portáteis do que já são. No entanto, sendo bem honesto, ainda há muitos desafios a serem superados para que isso seja realmente prático no dia a dia.
 
-Primeiro eu diria que a experiência de uso não é muito boa, já que há várias variações e flags relevantes para configurar. No Docker, por exemplo, é `docker build` e `docker run`. 
+Primeiro eu diria que a experiência de uso não é muito boa, já que há várias variações e flags relevantes para configurar. No Docker, por exemplo, é `docker build` e `docker run`.
 
 Em segundo lugar, apesar de ser compreensível, o tempo de compilação é bem longo, mesmo para imagens pequenas, o que torna iterações lentas e frustrantes.
 
 E por fim eu diria que o uso ainda não faz sentido no cenário atual. Contêineres já são portáteis, tempos de carregamento são vitais no navegador e muitas ferramentas (Vite+, por exemplo) estão otimizando para experiência de desenvolvimento.
 
 De qualquer forma, é um projeto legal para explorar e aprender sobre a arquitetura de contêineres e para ver até onde o navegador aguenta.
-

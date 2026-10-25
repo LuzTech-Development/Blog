@@ -1,6 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { splitLocaleFromAuthorsId } from '@/content.config';
-import type { Locale } from './i18n';
+import type { Locale } from './locale';
 import { slugifyStr } from './slugify';
 
 export type AuthorProfileEntry = CollectionEntry<'authors'>;

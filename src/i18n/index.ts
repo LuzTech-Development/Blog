@@ -1,5 +1,5 @@
 import type { UIStrings } from './types';
-import { DEFAULT_LOCALE } from '@/utils/i18n';
+import { DEFAULT_LOCALE } from '@/utils/locale';
 
 export { tplStr } from './format';
 

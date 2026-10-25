@@ -8,12 +8,12 @@ tags:
   - luztech
 ---
 
-import RainbowText from "@/components/RainbowText.astro";
-import Counter from "@/components/Counter.astro";
-import Figure from "@/components/Figure.astro";
+import RainbowText from '@/components/RainbowText.astro';
+import Counter from '@/components/Counter.astro';
+import Figure from '@/components/Figure.astro';
 
-import VectorTheme from "@/assets/posts/welcome-to-luztech-blog/vector-theme.webp";
-import AstroPaperTheme from "@/assets/posts/welcome-to-luztech-blog/astro-paper-theme.png";
+import VectorTheme from '@/assets/posts/welcome-to-luztech-blog/vector-theme.webp';
+import AstroPaperTheme from '@/assets/posts/welcome-to-luztech-blog/astro-paper-theme.png';
 
 Welcome to **LuzTech**'s official tech blog!
 
@@ -51,16 +51,17 @@ After chatting with my imaginary friends (ChatGPT and Gemini), I concluded that 
 
 Well, because on top of SSG, Astro lets me use MDX, which allows me to do things like drop React's famous counter on the very next line:
 
-<Counter remember='sessionStorage' />
+<Counter remember="sessionStorage" />
 
-<figcaption class="text-center">It even remembers the value if you reload the page, pretty cool, right? 😎</figcaption>
+<figcaption class="text-center">
+  It even remembers the value if you reload the page, pretty cool, right? 😎
+</figcaption>
 
 And the integration between text and components is really good, so it ended up winning.
 
 ## Theme
 
 After that came my search for a theme I actually liked. I went to the [Astro themes page for blogs](https://astro.build/themes/1/?search=&categories%5B%5D=blog) and, to be honest, the current theme wasn't the first one to catch my eye — that was [Vector](https://astro.build/themes/details/vector/).
-
 
 <Figure src={VectorTheme} alt="Screenshot of the Vector theme homepage for Astro">
   <Fragment slot="caption">

@@ -1,7 +1,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { BLOG_PATH, splitLocaleFromId } from '@/content.config';
 import { slugifyStr } from './slugify';
-import { LOCALES, type Locale, resolveLocale } from './i18n';
+import { LOCALES, type Locale, resolveLocale } from './locale';
 import config from '@/config';
 
 function getPostPathSegments(
@@ -35,7 +35,7 @@ function getIdSlug(id: string): string {
   return last ?? id;
 }
 
-function getPostSlugPath(
+export function getPostSlugPath(
   id: string,
   filePath: string | undefined,
   locale: Locale
@@ -66,10 +66,10 @@ export function getPostSlugId(id: string): string {
 /**
  * Returns the slug-only path for use as a route param in `getStaticPaths`.
  * No base prefix, no locale — Astro handles those at a higher level.
- * e.g. `/examples/my-post`
+ * e.g. `examples/my-post`
  */
 export function getPostSlug(id: string, filePath: string | undefined): string {
-  return `/${getPostSlugPath(id, filePath, getPostLocale(id))}`;
+  return getPostSlugPath(id, filePath, getPostLocale(id));
 }
 
 /**

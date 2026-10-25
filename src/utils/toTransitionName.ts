@@ -11,6 +11,7 @@ export const toTransitionName = (str: string): string => {
   let result = base
     // encode non-ASCII chars (Chinese, Japanese, etc.)
     .replace(
+      // eslint-disable-next-line no-control-regex -- \x00 is the lower bound of the non-ASCII range, not a control char
       /[^\x00-\x7F]/gu,
       c => 'u' + c.codePointAt(0)!.toString(16).padStart(6, '0')
     )

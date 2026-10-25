@@ -3,7 +3,7 @@ import satori from 'satori';
 import sharp from 'sharp';
 import config from '@/config';
 import { loadOgFonts } from '@/utils/ogFonts';
-import { getStaticLocalePaths } from '@/utils/i18n';
+import { getStaticLocalePaths } from '@/utils/locale';
 
 export const getStaticPaths = getStaticLocalePaths;
 

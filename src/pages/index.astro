@@ -16,9 +16,9 @@ import { getAssetPath } from '@/utils/withBase';
 import {
   LOCALES,
   LOCALE_LABELS,
-  LOCALE_URL_PATH,
-  DEFAULT_LOCALE
-} from '@/utils/i18n';
+  DEFAULT_LOCALE,
+  buildLocaleDetectorScript
+} from '@/utils/locale';
 import config from '@/config';
 
 const alternates = LOCALES.map(locale => ({
@@ -27,9 +27,7 @@ const alternates = LOCALES.map(locale => ({
   label: LOCALE_LABELS[locale]
 }));
 const defaultTarget = getRelativeLocaleUrl(DEFAULT_LOCALE, '');
-// The detector needs to map canonical codes ("en-US") to their URL path
-// segment ("en-us") because Astro's routes are lowercase.
-const supportedJson = JSON.stringify(LOCALE_URL_PATH);
+const detectorScript = buildLocaleDetectorScript('');
 ---
 
 <!doctype html>
@@ -50,40 +48,10 @@ const supportedJson = JSON.stringify(LOCALE_URL_PATH);
       href={new URL(defaultTarget, Astro.site ?? Astro.url).href}
     />
     <meta http-equiv="refresh" content={`0; url=${defaultTarget}`} />
-    <script is:inline define:vars={{ supportedJson, defaultTarget }}>
+    <script is:inline define:vars={{ detectorScript }}>
       // @ts-nocheck
-      (function () {
-        try {
-          // Map of canonical BCP-47 code -> URL path segment (lowercase).
-          const localeToPath = JSON.parse(supportedJson);
-          const stored = localStorage.getItem('preferred-locale');
-          const pick = tag => {
-            if (!tag) return null;
-            if (localeToPath[tag]) return tag;
-            const lower = tag.toLowerCase();
-            if (lower.startsWith('pt')) return 'pt-BR';
-            if (lower.startsWith('en')) return 'en-US';
-            return null;
-          };
-          let target = pick(stored);
-          if (!target) {
-            const candidates =
-              (navigator.languages && navigator.languages.length
-                ? navigator.languages
-                : [navigator.language]) || [];
-            for (const c of candidates) {
-              target = pick(c);
-              if (target) break;
-            }
-          }
-          if (!target) target = 'en-US';
-          const path = localeToPath[target] || target.toLowerCase();
-          const base = document.baseURI.replace(/\/?$/, '/');
-          location.replace(base + path + '/');
-        } catch (_) {
-          location.replace(defaultTarget);
-        }
-      })();
+      // eslint-disable-next-line no-eval -- executes a server-built inline IIFE for locale detection
+      eval(detectorScript);
     </script>
   </head>
   <body>

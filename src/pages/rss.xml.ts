@@ -19,12 +19,13 @@ import {
   LOCALES,
   LOCALE_URL_PATH,
   DEFAULT_LOCALE,
-  LOCALE_LABELS
-} from '@/utils/i18n';
+  LOCALE_LABELS,
+  buildLocaleDetectorScript
+} from '@/utils/locale';
 import config from '@/config';
 
 const defaultTarget = `/${LOCALE_URL_PATH[DEFAULT_LOCALE]}/rss.xml`;
-const supportedJson = JSON.stringify(LOCALE_URL_PATH);
+const detectorScript = buildLocaleDetectorScript('rss.xml');
 const title = `${config.site.title} — RSS`;
 
 const alternates = LOCALES.map(locale => ({
@@ -49,37 +50,7 @@ ${alternates
     <link rel="alternate" type="application/rss+xml" hreflang="x-default" href="${defaultTarget}" title="${title}" />
     <meta http-equiv="refresh" content="0; url=${defaultTarget}" />
     <script>
-      (function () {
-        try {
-          var localeToPath = ${supportedJson};
-          var stored = null;
-          try { stored = localStorage.getItem("preferred-locale"); } catch (_) {}
-          function pick(tag) {
-            if (!tag) return null;
-            if (localeToPath[tag]) return tag;
-            var lower = tag.toLowerCase();
-            if (lower.indexOf("pt") === 0) return "pt-BR";
-            if (lower.indexOf("en") === 0) return "en-US";
-            return null;
-          }
-          var target = pick(stored);
-          if (!target) {
-            var candidates =
-              (navigator.languages && navigator.languages.length
-                ? navigator.languages
-                : [navigator.language]) || [];
-            for (var i = 0; i < candidates.length; i++) {
-              target = pick(candidates[i]);
-              if (target) break;
-            }
-          }
-          if (!target) target = "en-US";
-          var path = localeToPath[target] || target.toLowerCase();
-          location.replace("/" + path + "/rss.xml");
-        } catch (_) {
-          location.replace(${JSON.stringify(defaultTarget)});
-        }
-      })();
+      ${detectorScript}
     </script>
   </head>
   <body>

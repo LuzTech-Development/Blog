@@ -1,21 +1,23 @@
+interface FileNameTransformerOptions {
+  style?: 'v1' | 'v2';
+  hideDot?: boolean;
+}
+
 /**
- * CustomShiki transformer that adds file name labels to code blocks.
+ * Custom Shiki transformer that adds file name labels to code blocks.
  *
  * This transformer looks for the `file="filename"` meta attribute in code blocks
  * and creates a styled label showing the filename. It supports two different
  * styling options and can optionally hide the green dot indicator.
- *
- * @param {Object} options - Configuration options for the transformer
- * @param {string} [options.style="v2"] - The styling variant to use
- *   - `"v1"`: Tab-style with rounded top corners, positioned at top-left
- *   - `"v2"`: Badge-style with border, positioned at top-left with offset
- * @param {boolean} [options.hideDot=false] - Whether to hide the green dot indicator
  */
 export const transformerFileName = ({
   style = 'v2',
   hideDot = false
-} = {}) => ({
-  pre(node) {
+}: FileNameTransformerOptions = {}) => ({
+  // The `this` context and `node` are Shiki's HAST types, which are not
+  // exported from a direct dependency. We keep them loosely typed to avoid
+  // a fragile transitive import; the original `.js` file was untyped here.
+  pre(this: any, node: any) {
     // Add CSS custom property to the node
     const fileNameOffset = style === 'v1' ? '0.75rem' : '-0.75rem';
     node.properties.style =
@@ -25,7 +27,7 @@ export const transformerFileName = ({
 
     if (!raw) return;
 
-    const metaMap = new Map();
+    const metaMap = new Map<string, string>();
 
     for (const item of raw) {
       const [key, value] = item.split('=');

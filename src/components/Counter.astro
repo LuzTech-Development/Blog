@@ -1,6 +1,6 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
-import { defineLocalizedStrings, pickLocalized } from '@/utils/i18n';
+import { defineLocalizedStrings, pickLocalized } from '@/utils/locale';
 
 type Props = {
   /**
@@ -17,11 +17,7 @@ type Props = {
   storageKey?: string;
 } & HTMLAttributes<'div'>;
 
-const {
-  remember = 'none',
-  storageKey = 'react-counter',
-  ...attrs
-} = Astro.props;
+const { remember = 'none', storageKey = 'counter', ...attrs } = Astro.props;
 
 const strings = defineLocalizedStrings({
   'en-US': {
@@ -85,7 +81,7 @@ const t = pickLocalized(strings, Astro.currentLocale);
 
     const $value = $button.querySelector<HTMLElement>('b')!;
     const mode = $button.dataset.counterRemember as StorageMode | undefined;
-    const key = $button.dataset.counterKey ?? 'react-counter';
+    const key = $button.dataset.counterKey ?? 'counter';
     const storage = getStorage(mode);
 
     // Hydrate from storage before the user sees `0`.

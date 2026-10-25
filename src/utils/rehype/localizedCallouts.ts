@@ -1,6 +1,6 @@
 import { unified, type Processor } from 'unified';
 import rehypeCallouts, { type UserOptions } from 'rehype-callouts';
-import { LOCALES, DEFAULT_LOCALE, type Locale } from '../i18n';
+import { LOCALES, DEFAULT_LOCALE, type Locale } from '../locale';
 import { CALLOUT_TITLES } from './calloutTitles';
 
 /**

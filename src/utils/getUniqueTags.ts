@@ -15,14 +15,16 @@ type Tag = {
  * - Uniqueness is based on the slug (so differently-cased labels collapse)
  */
 export function getUniqueTags(posts: CollectionEntry<'posts'>[]) {
-  const tags: Tag[] = posts
-    .filter(postFilter)
-    .flatMap(post => post.data.tags)
-    .map(tag => ({ tag: slugifyStr(tag), tagName: tag }))
-    .filter(
-      (value, index, self) =>
-        self.findIndex(tag => tag.tag === value.tag) === index
-    )
-    .sort((tagA, tagB) => tagA.tag.localeCompare(tagB.tag));
-  return tags;
+  const seen = new Map<string, Tag>();
+  for (const post of posts.filter(postFilter)) {
+    for (const tag of post.data.tags) {
+      const slug = slugifyStr(tag);
+      if (!seen.has(slug)) {
+        seen.set(slug, { tag: slug, tagName: tag });
+      }
+    }
+  }
+  return [...seen.values()].sort((tagA, tagB) =>
+    tagA.tag.localeCompare(tagB.tag)
+  );
 }

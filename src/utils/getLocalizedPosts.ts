@@ -1,6 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getPostLocale, getPostSlugId } from './getPostPaths';
-import { LOCALES, type Locale } from './i18n';
+import { LOCALES, type Locale } from './locale';
 
 type Post = CollectionEntry<'posts'>;
 
