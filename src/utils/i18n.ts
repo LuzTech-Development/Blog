@@ -41,6 +41,56 @@ export const LOCALE_SHORT_LABELS: Record<Locale, string> = {
 /** localStorage key used to persist an explicit user choice. */
 export const LOCALE_STORAGE_KEY = 'preferred-locale';
 
+/**
+ * Shared client-side locale detector, embedded as an inline script by the
+ * root landing page, the root 404 page, and the root RSS redirect. It maps a
+ * BCP-47 tag (or a stored preference) to the lowercase URL path segment,
+ * collapsing `pt-*` → `pt-br` and `en-*` → `en-us`, falling back to `en-us`.
+ *
+ * The returned string is a self-contained IIFE that reads `localStorage` and
+ * `navigator.languages` and calls `location.replace` with the resolved path
+ * plus the given `suffix` (e.g. `''`, `'404/'`, `'rss.xml'`). It is
+ * intentionally dependency-free so it can be inlined verbatim.
+ */
+export function buildLocaleDetectorScript(suffix: string): string {
+  const localeToPath = JSON.stringify(LOCALE_URL_PATH);
+  const defaultPath = JSON.stringify(
+    `/${LOCALE_URL_PATH[DEFAULT_LOCALE]}/${suffix}`
+  );
+  return `(function () {
+  try {
+    var localeToPath = ${localeToPath};
+    var stored = null;
+    try { stored = localStorage.getItem(${JSON.stringify(
+      LOCALE_STORAGE_KEY
+    )}); } catch (_) {}
+    function pick(tag) {
+      if (!tag) return null;
+      if (localeToPath[tag]) return localeToPath[tag];
+      var lower = tag.toLowerCase();
+      if (lower.indexOf('pt') === 0) return 'pt-br';
+      if (lower.indexOf('en') === 0) return 'en-us';
+      return null;
+    }
+    var target = pick(stored);
+    if (!target) {
+      var candidates =
+        (navigator.languages && navigator.languages.length
+          ? navigator.languages
+          : [navigator.language]) || [];
+      for (var i = 0; i < candidates.length; i++) {
+        target = pick(candidates[i]);
+        if (target) break;
+      }
+    }
+    if (!target) target = 'en-us';
+    location.replace('/' + target + '/' + ${JSON.stringify(suffix)});
+  } catch (_) {
+    location.replace(${defaultPath});
+  }
+})();`;
+}
+
 export function isLocale(value: string | undefined | null): value is Locale {
   return !!value && (LOCALES as readonly string[]).includes(value);
 }
@@ -158,7 +208,7 @@ type KeysOfUnion<T> = T extends unknown ? keyof T : never;
  */
 export function pickLocalized<T extends { [L in Locale]: unknown }>(
   strings: T,
-  locale: string | Locale | undefined | null
+  locale: string | undefined | null
 ): T[Locale] {
   return strings[isLocale(locale) ? locale : DEFAULT_LOCALE];
 }

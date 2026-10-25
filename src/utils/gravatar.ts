@@ -43,7 +43,7 @@ export function gravatarSrcSet(
   email: string | undefined | null,
   basePx: number,
   densities: readonly number[] = [1, 2, 3],
-  fallback: 'identicon' | 'retro' | 'robohash' | 'mp' | 'wavatar' = 'identicon'
+  fallback: 'identicon' | 'retro' | 'robohash' | 'mp' | 'wavatar' = 'mp'
 ): string {
   return densities
     .map(d => `${gravatarUrl(email, basePx * d, fallback)} ${d}x`)

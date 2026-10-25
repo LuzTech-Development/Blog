@@ -9,17 +9,17 @@ tags:
 draft: false
 ---
 
-import RainbowText from '@/components/RainbowText.astro'
-import Figure from '@/components/Figure.astro'
+import RainbowText from '@/components/RainbowText.astro';
+import Figure from '@/components/Figure.astro';
 
-import Instructions from '@/assets/posts/luztech-ui/instructions-pt-br.png'
-import Licenses from '@/assets/posts/luztech-ui/licenses-pt-br.png'
-import Icons1 from '@/assets/posts/luztech-ui/icons1-pt-br.png'
-import Icons2 from '@/assets/posts/luztech-ui/icons2-pt-br.png'
-import Font from '@/assets/posts/luztech-ui/font-pt-br.png'
-import Backgrounds1 from '@/assets/posts/luztech-ui/backgrounds1-pt-br.png'
-import Backgrounds2 from '@/assets/posts/luztech-ui/backgrounds2-pt-br.png'
-import Backgrounds3 from '@/assets/posts/luztech-ui/backgrounds3-pt-br.png'
+import Instructions from '@/assets/posts/luztech-ui-refactor/instructions-pt-br.png';
+import Licenses from '@/assets/posts/luztech-ui-refactor/licenses-pt-br.png';
+import Icons1 from '@/assets/posts/luztech-ui-refactor/icons1-pt-br.png';
+import Icons2 from '@/assets/posts/luztech-ui-refactor/icons2-pt-br.png';
+import Font from '@/assets/posts/luztech-ui-refactor/font-pt-br.png';
+import Backgrounds1 from '@/assets/posts/luztech-ui-refactor/backgrounds1-pt-br.png';
+import Backgrounds2 from '@/assets/posts/luztech-ui-refactor/backgrounds2-pt-br.png';
+import Backgrounds3 from '@/assets/posts/luztech-ui-refactor/backgrounds3-pt-br.png';
 
 > Terceiro artigo do Blog e já é uma refatoração?
 
@@ -66,7 +66,11 @@ Vamos explorar cada sessão em detalhes.
 
 Essa seção é meio que uma `Home` do site, mais pra não já chegar enfiando especificação na cara de quem acessa. Aqui aparece basicamente o objetivo do site e o que ele cobre.
 
-<Figure src={Instructions} alt="Screenshot da página de instruções do site de UI da LuzTech" caption="Produção própria" />
+<Figure
+  src={Instructions}
+  alt="Screenshot da página de instruções do site de UI da LuzTech"
+  caption="Produção própria"
+/>
 
 Além disso, como todo site público da LuzTech, ele é bilíngue, oferecendo conteúdo tanto em português quanto em inglês.
 
@@ -76,7 +80,11 @@ Diria que a parte mais chata e que quase todo mundo pula em um repositório (a n
 
 Como em geral ninguém gosta de ler esse tipo de texto, deixei bem simplificado no site, com links para os documentos completos para quem realmente precisar.
 
-<Figure src={Licenses} alt="Screenshot da página de licenças do site de UI da LuzTech" caption="Produção própria" />
+<Figure
+  src={Licenses}
+  alt="Screenshot da página de licenças do site de UI da LuzTech"
+  caption="Produção própria"
+/>
 
 ## Ícones
 
@@ -84,9 +92,17 @@ Agora sim chegamos em uma parte legal! Os ícones. No repositório antigo, eles 
 
 No novo site, é basicamente um monte de botãozinho para selecionar o que quer, e baixar ou copiar uma URL imutável, além de ao fundo, se o usuário quiser, ele pode baixar tudo como um ZIP, se precisar de várias variantes para seu trabalho.
 
-<Figure src={Icons1} alt="Screenshot da página de ícones do site de UI da LuzTech" caption="Produção própria" />
+<Figure
+  src={Icons1}
+  alt="Screenshot da página de ícones do site de UI da LuzTech"
+  caption="Produção própria"
+/>
 
-<Figure src={Icons2} alt="Screenshot da página de ícones do site de UI da LuzTech" caption="Produção própria" />
+<Figure
+  src={Icons2}
+  alt="Screenshot da página de ícones do site de UI da LuzTech"
+  caption="Produção própria"
+/>
 
 Além de dar fácil acesso a todas as variantes de um ícone para o usuário, o uso de URLs fixas tirou a necessidade da CDN que antes era usada para servir os ícones, agora ficando tudo centralizado no próprio site.
 
@@ -102,7 +118,11 @@ Mas não é própria, então o link de download redireciona o usuário para a p�
 
 Esta página demonstra o uso da fonte em diversos contextos, permitindo ao usuário visualizar como ela se comporta em diferentes tamanhos, pesos e estilos, ajudando a decidir se é adequada para seu projeto.
 
-<Figure src={Font} alt="Screenshot da página de fonte do site de UI da LuzTech" caption="Produção própria" />
+<Figure
+  src={Font}
+  alt="Screenshot da página de fonte do site de UI da LuzTech"
+  caption="Produção própria"
+/>
 
 ## Fundos
 
@@ -112,17 +132,31 @@ Esta seção aborda os fundos da LuzTech. Seja fundos para sites, redes sociais,
 
 Antigamente, o fundo base era feito usando o [Mesh Gradient Generator](https://meshgradient.com/), que gerava um gradiente complexo a partir das 4 cores principais da LuzTech. Na nova versão, o processo foi movido para o próprio site, usando WebGL, permitindo gerar gradientes usando qualquer tamanho solicitado pelo usuário, além de ao final da página ter as cores prontas para serem copiadas pelo usuário, caso ele precise utilizá-las em outros contextos.
 
-<Figure src={Backgrounds1} alt="Screenshot da página de fundos do site de UI da LuzTech, na aba Plano" caption="Produção própria" />
+<Figure
+  src={Backgrounds1}
+  alt="Screenshot da página de fundos do site de UI da LuzTech, na aba Plano"
+  caption="Produção própria"
+/>
 
-<RainbowText>✨MAS não para por aí!✨</RainbowText> O site também tem duas novas abas: **Espiralado** e **Animado**, que vieram diretamente da pasta `animations/` do repositório antigo.
+<RainbowText>✨MAS não para por aí!✨</RainbowText> O site também tem duas novas
+abas: **Espiralado** e **Animado**, que vieram diretamente da pasta
+`animations/` do repositório antigo.
 
 O espiralado usa o `MeshGradient`, vindo do pacote `@paper-design/shaders-react`, que cria um gradiente em espiral a partir das cores fornecidas, resultando em um efeito visual dinâmico e interessante.
 
-<Figure src={Backgrounds2} alt="Screenshot da página de fundos do site de UI da LuzTech, na aba Espiralado" caption="Produção própria" />
+<Figure
+  src={Backgrounds2}
+  alt="Screenshot da página de fundos do site de UI da LuzTech, na aba Espiralado"
+  caption="Produção própria"
+/>
 
 E o animado utiliza o mesmo `MeshGradient`, mas em vez de salvar um único frame, como nas abas **Espiralado** e **Plano**, ele gera uma animação contínua em MP4, facilitando o uso em vídeos, apresentações e outros contextos onde um fundo animado é desejado.
 
-<Figure src={Backgrounds3} alt="Screenshot da página de fundos do site de UI da LuzTech, na aba Animado" caption="Produção própria" />
+<Figure
+  src={Backgrounds3}
+  alt="Screenshot da página de fundos do site de UI da LuzTech, na aba Animado"
+  caption="Produção própria"
+/>
 
 > [!note]
 > A renderização com configurações padrão demora em torno de 12 segundos em um MacBook Air M5, então não chega a ser tão absurdo dado a complexidade da tarefa.

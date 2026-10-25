@@ -5,6 +5,7 @@ import { getPostAuthor } from '@/utils/getUniqueAuthors';
 import { toTransitionName } from '@/utils/toTransitionName';
 import AuthorLink from './AuthorLink.astro';
 import Datetime from './Datetime.astro';
+import config from '@/config';
 
 type Props = {
   variant?: 'h2' | 'h3';
@@ -19,7 +20,7 @@ const author = getPostAuthor(post);
 
 <li class="my-6">
   <a
-    href={getPostUrl(id, filePath, Astro.currentLocale)}
+    href={getPostUrl(id, filePath, Astro.currentLocale ?? config.site.lang)}
     class:list={[
       'text-accent inline-block text-lg font-medium',
       'decoration-dashed underline-offset-4 hover:underline',

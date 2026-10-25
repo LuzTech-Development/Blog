@@ -66,10 +66,10 @@ export function getPostSlugId(id: string): string {
 /**
  * Returns the slug-only path for use as a route param in `getStaticPaths`.
  * No base prefix, no locale — Astro handles those at a higher level.
- * e.g. `/examples/my-post`
+ * e.g. `examples/my-post`
  */
 export function getPostSlug(id: string, filePath: string | undefined): string {
-  return `/${getPostSlugPath(id, filePath, getPostLocale(id))}`;
+  return getPostSlugPath(id, filePath, getPostLocale(id));
 }
 
 /**
