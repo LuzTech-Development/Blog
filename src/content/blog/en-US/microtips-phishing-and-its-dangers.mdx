@@ -1,0 +1,44 @@
+---
+title: 'microTIPS: Phishing and Its Dangers'
+description: How a simple email can lead to digital disaster.
+pubDatetime: 2026-11-18T03:13:13Z
+author: Giancarlo Luz
+tags:
+  - microtips
+  - security
+  - social-engineering
+draft: false
+---
+
+> [!note]
+> This is the first article in the `microTIPS` series, featuring short articles with tips and recommendations across the wide field of IT.
+
+## Table of Contents
+
+## The Attack
+
+Have you ever received _spam_? I know I have. Quite a lot, actually.
+
+One message in particular caught my attention a few days ago: it claimed to be a **Brazilian electronic invoice (NF-e)**. Given its formatting, it could have fooled me.
+
+It also instructed me to extract the file and view it in my browser.
+
+> Alright, this is getting weird...
+
+And, well, it wasn't in the SPAM folder for nothing. Outlook did a good job filtering that email.
+
+The link went through a few pages before reaching an “Open document” button. Clicking it opened a search in Windows Explorer for ZIP files in a WebDAV folder controlled by the attacker. The `search-ms:` protocol can open this kind of search, and the window appeared with the name `Downloads`.
+
+So, basically, the folder the victim saw was on a server controlled by the attacker, pretending to be the computer's `Downloads` folder.
+
+Inside the ZIP was a VBScript (`.vbs`) with a name that looked like a PDF invoice. When run, it downloaded and started other components in the chain, obfuscated so they would not be easily detected.
+
+The final program had functions to stream the screen, control the keyboard and mouse, collect contacts, and resend emails. In the end, the invoice was just bait: the goal was to install a remote-access program.
+
+## Conclusion
+
+**Phishing** is a social-engineering technique widely used today to trick people into compromising their personal or professional security.
+
+As we saw here, a convincing email could lead to a catastrophic security incident, such as leaked credentials, stolen sensitive information, and compromised corporate systems.
+
+Always be wary of unexpected emails, suspicious links, and attachments from unknown senders. Caution is the best defense against phishing attacks and malware.

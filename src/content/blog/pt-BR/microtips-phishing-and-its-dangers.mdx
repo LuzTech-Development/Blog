@@ -1,0 +1,44 @@
+---
+title: 'microTIPS: Phishing e seus perigos'
+description: Como um simples e-mail pode levar a catástrofes digitais.
+pubDatetime: 2026-11-18T03:13:13Z
+author: Giancarlo Luz
+tags:
+  - microtips
+  - security
+  - social-engineering
+draft: false
+---
+
+> [!note]
+> Este é o primeiro artigo da série `microTIPS`, que traz pequenos artigos com dicas e recomendações sobre a vasta área de TI.
+
+## Sumário
+
+## O ataque
+
+Você já recebeu _spam_? Eu sei que eu já. E bastante, inclusive.
+
+Teve um em particular que me chamou atenção uns dias atrás: era um e-mail que se dizia uma **NF-e**. Um e-mail que, dado a formatação, poderia me enganar.
+
+Ele também instruía a descompactar o arquivo e visualizá-lo no navegador.
+
+> Bom, daí já ficou estranho...
+
+E bom, não estava na caixa de SPAM por nada, o Outlook fez um bom trabalho em filtrar este e-mail.
+
+O link passava por algumas páginas até chegar a um botão “Open document”. Ao clicar nele, o Windows Explorer abria uma busca por arquivos ZIP numa pasta WebDAV controlada pelo atacante. O endereço `search-ms:` permite abrir esse tipo de busca, e a janela aparecia com o nome `Downloads`.
+
+Então, basicamente, a pasta que a vítima via era uma pasta em um servidor controlado pelo atacante, que tentava se passar pela pasta `Downloads` do computador.
+
+Dentro do ZIP havia um VBScript (`.vbs`) com um nome que parecia ser de um PDF de Nota Fiscal. Ao executar, ele baixava e iniciava outros componentes da cadeia, ofuscados para não serem facilmente detectados.
+
+O programa final tinha funções para transmitir a tela, controlar teclado e mouse, coletar contatos e reenviar e-mails. No fim, a nota fiscal era só a isca: o objetivo era instalar um programa de acesso remoto.
+
+## Conclusão
+
+**Phishing** é uma técnica de engenharia social muito usada atualmente para enganar as pessoas e induzir elas a comprometer sua segurança pessoal ou profissional.
+
+Vimos aqui que um simples e-mail convincente poderia levar a um problema catastrófico de segurança, como vazamento de credenciais, roubo de informações sensíveis e comprometimento de sistemas corporativos.
+
+Sempre desconfie de e-mails inesperados, links suspeitos e arquivos anexados de remetentes desconhecidos. A cautela é a melhor defesa contra ataques de phishing e programas maliciosos.
