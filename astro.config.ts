@@ -51,11 +51,6 @@ export default defineConfig({
       { path: 'en-us', codes: ['en-US', 'en'] },
       { path: 'pt-br', codes: ['pt-BR', 'pt'] }
     ],
-    // Runtime expects a value matching one of the `path` entries above, while
-    // Astro's TypeScript types constrain this field to values from `codes`.
-    // The runtime check is authoritative for URL generation — see astro build
-    // error "default locale ... is not present in the i18n.locales array".
-    // @ts-expect-error — astro/config typing mismatch when using object-form locales.
     defaultLocale: 'en-us',
     routing: {
       prefixDefaultLocale: true,
