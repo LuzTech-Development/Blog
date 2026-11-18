@@ -51,7 +51,7 @@ export default defineConfig({
       { path: 'en-us', codes: ['en-US', 'en'] },
       { path: 'pt-br', codes: ['pt-BR', 'pt'] }
     ],
-    defaultLocale: 'en-us',
+    defaultLocale: 'en-us' as any,
     routing: {
       prefixDefaultLocale: true,
       redirectToDefaultLocale: false
